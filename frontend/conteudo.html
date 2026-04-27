@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todos os Conteúdos | PsiBlog</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="header">
+    <nav class="navbar">
+      <div class="logo">PsiBlog</div>
+
+      <ul class="menu">
+        <li><a href="psifacil.html">Início</a></li>
+        <li><a href="psifacil.html#sobre">Sobre</a></li>
+        <li><a href="conteudo.html">Conteúdos</a></li>
+        <li><a href="psifacil.html#contato">Contato</a></li>
+      </ul>
+
+      <a href="login.html" class="btn-perfil">
+        <i data-lucide="circle-user-round"></i>
+        <span>Perfil</span>
+      </a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="posts-section">
+      <div class="section-title">
+        <span>Conteúdos</span>
+        <h2>Todos os artigos</h2>
+      </div>
+
+      <div class="posts-grid" id="todosPosts"></div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+  <script src="js/conteudo.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Admin | PsiBlog</title>
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+  <main class="login-page">
+    <section class="login-card">
+      <div class="login-logo">
+        <h1>PsiBlog</h1>
+        <p>Acesso administrativo</p>
+      </div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label>E-mail</label>
+          <input type="email" id="email" placeholder="Digite seu e-mail" required>
+        </div>
+
+        <div class="form-group">
+          <label>Senha</label>
+          <input type="password" id="senha" placeholder="Digite sua senha" required>
+        </div>
+
+        <p id="mensagemErro" class="mensagem-erro"></p>
+
+        <button type="submit">Entrar no painel</button>
+      </form>
+
+      <a href="psifacil.html" class="voltar-blog">← Voltar para o blog</a>
+    </section>
+  </main>
+
+  <script src="js/login.js"></script>
+</body>
+</html>

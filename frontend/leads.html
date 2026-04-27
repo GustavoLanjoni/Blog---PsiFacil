@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leads Capturados | PsiBlog</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+
+  <div class="admin-container">
+
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h2>PsiBlog</h2>
+        <span>Painel Admin</span>
+      </div>
+
+      <nav class="sidebar-menu">
+        <a href="admin.html">
+          <i data-lucide="layout-dashboard"></i>
+          Dashboard
+        </a>
+
+        <a href="leads.html" class="active">
+          <i data-lucide="mail"></i>
+          Leads Capturados
+        </a>
+
+        <a href="admin.html#novo-post">
+          <i data-lucide="file-plus"></i>
+          Criar Post
+        </a>
+
+        <a href="admin.html#posts-criados">
+          <i data-lucide="newspaper"></i>
+          Posts Criados
+        </a>
+
+        <a href="psifacil.html">
+          <i data-lucide="external-link"></i>
+          Ver Blog
+        </a>
+
+        <a href="#" onclick="sairAdmin()">
+          <i data-lucide="log-out"></i>
+          Sair
+        </a>
+      </nav>
+    </aside>
+
+    <main class="admin-main">
+
+      <header class="admin-topbar">
+        <div>
+          <h1>Leads Capturados</h1>
+          <p>Controle quem solicitou o ebook e quem já recebeu por e-mail.</p>
+        </div>
+
+        <div class="admin-user">
+          <i data-lucide="mail"></i>
+          <span id="totalLeads">0 leads</span>
+        </div>
+      </header>
+
+      <section class="leads-admin-section">
+        <div class="leads-list" id="listaLeadsAdmin">
+          <div class="empty-posts">
+            <i data-lucide="inbox"></i>
+            <p>Nenhum lead capturado ainda.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+  <script src="js/leads.js"></script>
+
+  <script>
+    if (!localStorage.getItem("tokenAdmin")) {
+      window.location.href = "login.html";
+    }
+  </script>
+
+</body>
+
+</html>

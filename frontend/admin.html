@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | PsiBlog</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+
+  <div class="admin-container">
+
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h2>PsiBlog</h2>
+        <span>Painel Admin</span>
+      </div>
+
+      <nav class="sidebar-menu">
+        <a href="#" class="active">
+          <i data-lucide="layout-dashboard"></i>
+          Dashboard
+        </a>
+
+        <a href="leads.html">
+          <i data-lucide="mail"></i>
+          Leads Capturados
+        </a>
+
+        <a href="#novo-post">
+          <i data-lucide="file-plus"></i>
+          Criar Post
+        </a>
+
+        <a href="#posts-criados">
+          <i data-lucide="newspaper"></i>
+          Posts Criados
+        </a>
+
+        <a href="psifacil.html">
+          <i data-lucide="external-link"></i>
+          Ver Blog
+        </a>
+
+        <a href="login.html" onclick="sairAdmin()">
+          <i data-lucide="log-out"></i>
+          Sair
+        </a>
+      </nav>
+    </aside>
+
+    <main class="admin-main">
+
+      <header class="admin-topbar">
+        <div>
+          <h1>Painel de Conteúdo</h1>
+          <p>Crie, visualize e gerencie os artigos do blog.</p>
+        </div>
+
+        <div class="admin-user">
+          <i data-lucide="shield-check"></i>
+          <span>Administrador</span>
+        </div>
+      </header>
+
+      <section class="admin-stats">
+        <div class="stat-card">
+          <i data-lucide="newspaper"></i>
+          <div>
+            <strong id="totalPosts">0</strong>
+            <span>Posts criados</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <i data-lucide="mail"></i>
+          <div>
+            <strong id="totalLeads">0</strong>
+            <span>Leads capturados</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-layout" id="novo-post">
+
+        <form id="formPost" class="admin-form-card">
+
+          <div class="form-header">
+            <span class="tag">Novo artigo</span>
+            <h2>Cadastrar Novo Post</h2>
+            <p>Preencha as informações abaixo para publicar um artigo.</p>
+          </div>
+
+          <div class="form-group">
+            <label for="titulo">Título do artigo</label>
+            <input type="text" id="titulo" placeholder="Ex: Como controlar a ansiedade no dia a dia">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="categoria">Categoria</label>
+              <input type="text" id="categoria" placeholder="Ex: Ansiedade">
+            </div>
+
+            <div class="form-group">
+              <label for="imagem">Imagem de capa</label>
+              <input type="text" id="imagem" placeholder="Cole a URL da imagem">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="resumo">Resumo curto</label>
+            <textarea id="resumo" rows="3" placeholder="Resumo que aparecerá no card do artigo"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="conteudo">Conteúdo completo</label>
+            <textarea id="conteudo" rows="10" placeholder="Escreva o artigo completo aqui"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="reset" class="btn-limpar">Limpar</button>
+
+            <button type="submit" class="btn-publicar">
+              <i data-lucide="send"></i>
+              Publicar Artigo
+            </button>
+          </div>
+
+        </form>
+
+        <aside class="preview-card">
+          <span class="preview-label">Prévia do post</span>
+
+          <div class="preview-image" id="previewImagem">
+            <i data-lucide="image"></i>
+          </div>
+
+          <div class="preview-content">
+            <span id="previewCategoria">Categoria</span>
+            <h3 id="previewTitulo">Título do artigo</h3>
+            <p id="previewResumo">
+              O resumo do artigo aparecerá aqui para visualizar como ficará no blog.
+            </p>
+          </div>
+        </aside>
+
+      </section>
+
+      <section class="posts-admin-section" id="posts-criados">
+        <div class="section-admin-title">
+          <div>
+            <span class="tag">Gerenciamento</span>
+            <h2>Posts Criados</h2>
+          </div>
+        </div>
+
+        <div class="posts-admin-list" id="listaPostsAdmin">
+          <div class="empty-posts">
+            <i data-lucide="inbox"></i>
+            <p>Nenhum post criado ainda.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <div id="modalConfirmacao" class="modal-overlay">
+    <div class="modal-box">
+      <h3>Confirmar ação</h3>
+      <p id="modalTexto">Deseja realmente continuar?</p>
+
+      <div class="modal-actions">
+        <button id="btnCancelarModal" class="btn-modal-cancelar">Cancelar</button>
+        <button id="btnConfirmarModal" class="btn-modal-confirmar">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+  <script src="js/admin.js"></script>
+
+  <script>
+    if (!localStorage.getItem("tokenAdmin")) {
+      window.location.href = "login.html";
+    }
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,110 @@
+/* Página individual do post */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+
+* {
+  font-family: "Inter", sans-serif;
+}
+
+.post-page {
+  max-width: 980px;
+  margin: auto;
+  padding: 70px 24px;
+}
+
+/* Oculta o menu e botão admin apenas na página do post */
+.post-page ~ .header .menu,
+.post-page ~ .header .btn-admin {
+  display: none;
+}
+
+.post-detail {
+  background: #fff;
+  padding: 42px;
+  border-radius: 28px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+}
+
+.post-detail h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 44px;
+  color: #2f2a28;
+  margin: 16px 0;
+  line-height: 1.15;
+}
+
+.post-meta {
+  color: #777;
+  margin-bottom: 28px;
+  font-size: 15px;
+}
+
+.post-banner {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  border-radius: 24px;
+  margin-bottom: 34px;
+}
+
+.post-text {
+  overflow: hidden;
+}
+
+.post-text p,
+.post-text h2,
+.post-detail h1,
+.post-meta {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.post-text p {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 22px;
+  max-width: 100%;
+}
+
+.post-text h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 30px;
+  color: #7a5c58;
+  margin: 34px 0 16px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 24px;
+  text-decoration: none;
+  color: #7a5c58;
+  font-weight: 700;
+}
+
+.back-link:hover {
+  opacity: 0.8;
+}
+
+@media (max-width: 700px) {
+  .post-detail {
+    padding: 26px;
+  }
+
+  .post-detail h1 {
+    font-size: 32px;
+  }
+
+  .post-banner {
+    height: 260px;
+  }
+
+  .post-text p {
+    font-size: 16px;
+  }
+
+  .post-text h2 {
+    font-size: 24px;
+  }
+}

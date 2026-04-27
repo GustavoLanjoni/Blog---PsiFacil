@@ -1,0 +1,95 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  background: #f8f4ef;
+  color: #2f2f2f;
+}
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 430px;
+  background: #fff;
+  padding: 38px;
+  border-radius: 28px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.login-logo h1 {
+  color: #7a5c58;
+  font-size: 34px;
+}
+
+.login-logo p {
+  color: #777;
+  margin-top: 6px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  font-size: 15px;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: #7a5c58;
+}
+
+.mensagem-erro {
+  color: #b23b3b;
+  font-weight: 700;
+  margin-bottom: 14px;
+  min-height: 20px;
+}
+
+button {
+  width: 100%;
+  border: none;
+  background: #7a5c58;
+  color: #fff;
+  padding: 16px;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.voltar-blog {
+  display: block;
+  text-align: center;
+  margin-top: 22px;
+  color: #7a5c58;
+  text-decoration: none;
+  font-weight: 700;
+}
