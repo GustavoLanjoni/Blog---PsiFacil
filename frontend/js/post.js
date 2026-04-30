@@ -53,4 +53,87 @@ async function carregarPost() {
   }
 }
 
+
+const apiInteracoes = "/interacoes";
+
+const btnCurtir = document.getElementById("btnCurtir");
+const totalCurtidas = document.getElementById("totalCurtidas");
+const btnCompartilhar = document.getElementById("btnCompartilhar");
+const formComentario = document.getElementById("formComentario");
+const listaComentarios = document.getElementById("listaComentarios");
+
+async function carregarCurtidas() {
+  const resposta = await fetch(`${apiInteracoes}/curtidas/${id}`);
+  const dados = await resposta.json();
+  totalCurtidas.textContent = dados.total;
+}
+
+btnCurtir.addEventListener("click", async () => {
+  await fetch(`${apiInteracoes}/curtidas`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ post_id: id })
+  });
+
+  carregarCurtidas();
+});
+
+btnCompartilhar.addEventListener("click", async () => {
+  const url = window.location.href;
+
+  if (navigator.share) {
+    await navigator.share({
+      title: document.title,
+      url
+    });
+  } else {
+    await navigator.clipboard.writeText(url);
+    alert("Link copiado!");
+  }
+});
+
+formComentario.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const nome = document.getElementById("nomeComentario").value.trim();
+  const comentario = document.getElementById("textoComentario").value.trim();
+
+  await fetch(`${apiInteracoes}/comentarios`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      post_id: id,
+      nome,
+      comentario
+    })
+  });
+
+  formComentario.reset();
+  carregarComentarios();
+});
+
+async function carregarComentarios() {
+  const resposta = await fetch(`${apiInteracoes}/comentarios/${id}`);
+  const comentarios = await resposta.json();
+
+  listaComentarios.innerHTML = "";
+
+  comentarios.forEach((item) => {
+    listaComentarios.innerHTML += `
+      <div class="comentario-card">
+        <strong>${item.nome}</strong>
+        <p>${item.comentario}</p>
+        <small>${new Date(item.criado_em).toLocaleDateString("pt-BR")}</small>
+      </div>
+    `;
+  });
+}
+
+carregarCurtidas();
+carregarComentarios();
+
 carregarPost();

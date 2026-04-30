@@ -20,6 +20,23 @@
     <article class="post-detail" id="postDetalhe">
       <p>Carregando artigo...</p>
     </article>
+
+    <section class="post-actions">
+      <button id="btnCurtir">Curtir <span id="totalCurtidas">0</span></button>
+      <button id="btnCompartilhar">Compartilhar</button>
+    </section>
+
+    <section class="comentarios-section">
+      <h2>Comentários</h2>
+
+      <form id="formComentario">
+        <input type="text" id="nomeComentario" placeholder="Seu nome" required>
+        <textarea id="textoComentario" placeholder="Escreva seu comentário" required></textarea>
+        <button type="submit">Enviar comentário</button>
+      </form>
+
+      <div id="listaComentarios"></div>
+    </section>
   </main>
 
   <script src="js/post.js"></script>
