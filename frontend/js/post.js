@@ -1,8 +1,17 @@
 const apiPosts = "/posts";
+const apiInteracoes = "/interacoes";
+
 const postDetalhe = document.getElementById("postDetalhe");
+const btnCurtir = document.getElementById("btnCurtir");
+const totalCurtidas = document.getElementById("totalCurtidas");
+const btnCompartilhar = document.getElementById("btnCompartilhar");
+const formComentario = document.getElementById("formComentario");
+const listaComentarios = document.getElementById("listaComentarios");
 
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
+
+const chaveCurtida = `curtiu_post_${id}`;
 
 async function carregarPost() {
   if (!id) {
@@ -32,7 +41,7 @@ async function carregarPost() {
       </div>
 
       <img
-        src="${post.imagem || 'https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=1200&q=80'}"
+        src="${post.imagem || "https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=1200&q=80"}"
         alt="${post.titulo}"
         class="post-banner"
       >
@@ -40,44 +49,56 @@ async function carregarPost() {
       <div class="post-text">
         ${post.conteudo
           .split("\n")
-          .map(paragrafo => `<p>${paragrafo}</p>`)
+          .map((paragrafo) => `<p>${paragrafo}</p>`)
           .join("")}
       </div>
 
       <a href="psifacil.html" class="back-link">← Voltar para o blog</a>
     `;
-
   } catch (error) {
     console.error(error);
     postDetalhe.innerHTML = "<p>Erro ao carregar o artigo.</p>";
   }
 }
 
-
-const apiInteracoes = "/interacoes";
-
-const btnCurtir = document.getElementById("btnCurtir");
-const totalCurtidas = document.getElementById("totalCurtidas");
-const btnCompartilhar = document.getElementById("btnCompartilhar");
-const formComentario = document.getElementById("formComentario");
-const listaComentarios = document.getElementById("listaComentarios");
-
 async function carregarCurtidas() {
-  const resposta = await fetch(`${apiInteracoes}/curtidas/${id}`);
-  const dados = await resposta.json();
-  totalCurtidas.textContent = dados.total;
+  try {
+    const resposta = await fetch(`${apiInteracoes}/curtidas/${id}`);
+    const dados = await resposta.json();
+
+    totalCurtidas.textContent = dados.total;
+  } catch (error) {
+    console.error("Erro ao carregar curtidas:", error);
+  }
+}
+
+function atualizarEstadoCurtir() {
+  if (localStorage.getItem(chaveCurtida)) {
+    btnCurtir.classList.add("curtido");
+  }
 }
 
 btnCurtir.addEventListener("click", async () => {
-  await fetch(`${apiInteracoes}/curtidas`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ post_id: id })
-  });
+  if (localStorage.getItem(chaveCurtida)) {
+    return;
+  }
 
-  carregarCurtidas();
+  try {
+    await fetch(`${apiInteracoes}/curtidas`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ post_id: id })
+    });
+
+    localStorage.setItem(chaveCurtida, "true");
+    btnCurtir.classList.add("curtido");
+
+    carregarCurtidas();
+  } catch (error) {
+    console.error("Erro ao curtir:", error);
+  }
 });
 
 btnCompartilhar.addEventListener("click", async () => {
@@ -100,40 +121,53 @@ formComentario.addEventListener("submit", async (e) => {
   const nome = document.getElementById("nomeComentario").value.trim();
   const comentario = document.getElementById("textoComentario").value.trim();
 
-  await fetch(`${apiInteracoes}/comentarios`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      post_id: id,
-      nome,
-      comentario
-    })
-  });
+  if (!nome || !comentario) {
+    alert("Preencha seu nome e comentário.");
+    return;
+  }
 
-  formComentario.reset();
-  carregarComentarios();
+  try {
+    await fetch(`${apiInteracoes}/comentarios`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        post_id: id,
+        nome,
+        comentario
+      })
+    });
+
+    formComentario.reset();
+    carregarComentarios();
+  } catch (error) {
+    console.error("Erro ao comentar:", error);
+  }
 });
 
 async function carregarComentarios() {
-  const resposta = await fetch(`${apiInteracoes}/comentarios/${id}`);
-  const comentarios = await resposta.json();
+  try {
+    const resposta = await fetch(`${apiInteracoes}/comentarios/${id}`);
+    const comentarios = await resposta.json();
 
-  listaComentarios.innerHTML = "";
+    listaComentarios.innerHTML = "";
 
-  comentarios.forEach((item) => {
-    listaComentarios.innerHTML += `
-      <div class="comentario-card">
-        <strong>${item.nome}</strong>
-        <p>${item.comentario}</p>
-        <small>${new Date(item.criado_em).toLocaleDateString("pt-BR")}</small>
-      </div>
-    `;
-  });
+    comentarios.forEach((item) => {
+      listaComentarios.innerHTML += `
+        <div class="comentario-card">
+          <strong>${item.nome}</strong>
+          <p>${item.comentario}</p>
+          <small>${new Date(item.criado_em).toLocaleDateString("pt-BR")}</small>
+        </div>
+      `;
+    });
+  } catch (error) {
+    console.error("Erro ao carregar comentários:", error);
+  }
 }
 
+carregarPost();
 carregarCurtidas();
 carregarComentarios();
-
-carregarPost();
+atualizarEstadoCurtir();

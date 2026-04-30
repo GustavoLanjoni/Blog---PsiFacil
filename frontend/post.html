@@ -4,12 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
     rel="stylesheet">
+
   <title>Artigo | PsiBlog</title>
   <link rel="stylesheet" href="css/post.css">
 </head>
@@ -17,27 +19,94 @@
 <body>
 
   <main class="post-page">
-    <article class="post-detail" id="postDetalhe">
-      <p>Carregando artigo...</p>
-    </article>
 
-    <section class="post-actions">
-      <button id="btnCurtir">Curtir <span id="totalCurtidas">0</span></button>
-      <button id="btnCompartilhar">Compartilhar</button>
-    </section>
+    <div class="post-layout">
 
-    <section class="comentarios-section">
-      <h2>Comentários</h2>
+      <!-- CONTEÚDO -->
+      <article class="post-detail" id="postDetalhe">
+        <p>Carregando artigo...</p>
+      </article>
 
-      <form id="formComentario">
-        <input type="text" id="nomeComentario" placeholder="Seu nome" required>
-        <textarea id="textoComentario" placeholder="Escreva seu comentário" required></textarea>
-        <button type="submit">Enviar comentário</button>
-      </form>
+      <!-- SIDEBAR -->
+      <aside class="post-sidebar">
 
-      <div id="listaComentarios"></div>
-    </section>
+        <div class="post-actions">
+
+          <!-- CURTIR -->
+          <button id="btnCurtir" class="action-btn like-btn">
+            <i data-lucide="heart"></i>
+            <div class="action-text">
+              <span class="label">Curtir</span>
+              <span id="totalCurtidas" class="count">0</span>
+            </div>
+          </button>
+
+          <!-- COMPARTILHAR -->
+          <button id="btnCompartilhar" class="action-btn share-btn">
+            <i data-lucide="share-2"></i>
+            <div class="action-text">
+              <span class="label">Compartilhar</span>
+              <span class="sub">Enviar</span>
+            </div>
+          </button>
+
+          <!-- REDES SOCIAIS (ÍCONES REAIS) -->
+          <div class="social-box">
+
+            <span class="social-title">Siga também</span>
+
+            <div class="social-icons">
+
+              <!-- INSTAGRAM -->
+              <a href="https://www.instagram.com/psifacil.oficial/" target="_blank" class="social-btn instagram">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M7.5 2C4.46 2 2 4.46 2 7.5v9C2 19.54 4.46 22 7.5 22h9c3.04 0 5.5-2.46 5.5-5.5v-9C22 4.46 19.54 2 16.5 2h-9zm0 2h9c1.93 0 3.5 1.57 3.5 3.5v9c0 1.93-1.57 3.5-3.5 3.5h-9C5.57 20 4 18.43 4 16.5v-9C4 5.57 5.57 4 7.5 4zm9.75 1a.75.75 0 100 1.5.75.75 0 000-1.5zM12 7a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6z"/>
+                </svg>
+              </a>
+
+              <!-- YOUTUBE -->
+              <a href="https://www.youtube.com/@PSIFACIL.OFICIAL" target="_blank" class="social-btn youtube">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.5 6.2s-.2-1.6-.8-2.3c-.8-.9-1.7-.9-2.1-1C17.5 2.6 12 2.6 12 2.6h0s-5.5 0-8.6.3c-.5.1-1.3.1-2.1 1C.7 4.6.5 6.2.5 6.2S.2 8 .2 9.8v1.4c0 1.8.3 3.6.3 3.6s.2 1.6.8 2.3c.8.9 1.9.9 2.4 1 1.7.2 7.3.3 7.3.3s5.5 0 8.6-.3c.5-.1 1.3-.1 2.1-1 .6-.7.8-2.3.8-2.3s.3-1.8.3-3.6V9.8c0-1.8-.3-3.6-.3-3.6zM9.8 14.7V7.8l6 3.5-6 3.4z"/>
+                </svg>
+              </a>
+
+              <!-- TIKTOK -->
+              <a href="#" target="_blank" class="social-btn tiktok">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12.5 2h2.3c.2 1.6 1.1 3 2.7 3.7v2.4c-1.2 0-2.4-.4-3.4-1.1v6.1c0 3.1-2.5 5.6-5.6 5.6S2.9 16.2 2.9 13.1s2.5-5.6 5.6-5.6c.3 0 .6 0 .9.1v2.5c-.3-.1-.6-.2-.9-.2-1.8 0-3.2 1.4-3.2 3.2s1.4 3.2 3.2 3.2 3.2-1.4 3.2-3.2V2z"/>
+                </svg>
+              </a>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <section class="comentarios-section">
+          <h2>Comentários</h2>
+
+          <form id="formComentario">
+            <input type="text" id="nomeComentario" placeholder="Seu nome" required>
+            <textarea id="textoComentario" placeholder="Escreva seu comentário" required></textarea>
+            <button type="submit">Enviar</button>
+          </form>
+
+          <div id="listaComentarios"></div>
+        </section>
+
+      </aside>
+
+    </div>
+
   </main>
+
+  <!-- Lucide só para curtir/compartilhar -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
 
   <script src="js/post.js"></script>
 </body>
