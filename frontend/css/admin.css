@@ -21,7 +21,7 @@ body {
 
 .sidebar {
   width: 280px;
-  background: #ffffff;
+  background: #fff;
   border-right: 1px solid #eee;
   padding: 32px 24px;
   position: sticky;
@@ -230,12 +230,20 @@ body {
 }
 
 .btn-limpar,
-.btn-publicar {
+.btn-publicar,
+.btn-editar,
+.btn-excluir,
+.btn-modal-cancelar,
+.btn-modal-confirmar {
   border: none;
-  padding: 15px 20px;
-  border-radius: 14px;
   font-weight: 700;
   cursor: pointer;
+}
+
+.btn-limpar,
+.btn-publicar {
+  padding: 15px 20px;
+  border-radius: 14px;
 }
 
 .btn-limpar {
@@ -245,10 +253,58 @@ body {
 
 .btn-publicar {
   background: #7a5c58;
-  color: white;
+  color: #fff;
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+/* EDITOR QUILL */
+
+.editor-box {
+  background: #fff;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.editor-box .ql-toolbar {
+  border-radius: 16px 16px 0 0;
+  border-color: #ddd;
+  background: #fff;
+}
+
+.editor-box .ql-container {
+  min-height: 180px;
+  border-radius: 0 0 16px 16px;
+  border-color: #ddd;
+  font-size: 15px;
+}
+
+.editor-conteudo .ql-container {
+  min-height: 480px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.ql-editor {
+  line-height: 1.8;
+  padding: 18px;
+}
+
+.ql-editor p,
+.ql-editor li,
+.ql-editor blockquote {
+  font-size: 16px;
+  height: 150px;
+  border-radius: 0;
+}
+
+/* REMOVE BORDA ARREDONDADA DO EDITOR */
+
+.editor-box,
+.editor-box .ql-toolbar,
+.editor-box .ql-container {
+  border-radius: 0 !important;
 }
 
 /* PREVIEW */
@@ -319,7 +375,8 @@ body {
 
 /* POSTS CRIADOS */
 
-.posts-admin-section {
+.posts-admin-section,
+.leads-admin-section {
   margin-top: 20px;
 }
 
@@ -329,7 +386,8 @@ body {
   margin-bottom: 24px;
 }
 
-.posts-admin-list {
+.posts-admin-list,
+.leads-list {
   display: grid;
   gap: 18px;
 }
@@ -375,11 +433,8 @@ body {
 
 .btn-editar,
 .btn-excluir {
-  border: none;
   padding: 10px 14px;
   border-radius: 12px;
-  font-weight: 700;
-  cursor: pointer;
   transition: 0.3s;
 }
 
@@ -414,6 +469,64 @@ body {
   height: 40px;
   margin-bottom: 14px;
   color: #7a5c58;
+}
+
+/* LEADS */
+
+.lead-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.lead-enviado {
+  border-left: 5px solid #2f7d50;
+}
+
+.lead-card h3,
+.lead-info h3 {
+  color: #2f2a28;
+  margin-bottom: 6px;
+  font-size: 18px;
+  word-break: break-word;
+}
+
+.lead-card p,
+.lead-info p {
+  color: #666;
+  margin-bottom: 6px;
+  word-break: break-word;
+}
+
+.lead-card span {
+  color: #7a5c58;
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.lead-info small {
+  color: #999;
+}
+
+.lead-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  color: #7a5c58;
+  cursor: pointer;
+}
+
+.lead-check input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
 }
 
 /* TOAST */
@@ -494,11 +607,8 @@ body {
 
 .btn-modal-cancelar,
 .btn-modal-confirmar {
-  border: none;
   padding: 13px 18px;
   border-radius: 14px;
-  font-weight: 700;
-  cursor: pointer;
 }
 
 .btn-modal-cancelar {
@@ -509,134 +619,6 @@ body {
 .btn-modal-confirmar {
   background: #b23b3b;
   color: #fff;
-}
-
-.leads-admin-section {
-  margin-top: 20px;
-}
-
-.leads-list {
-  display: grid;
-  gap: 16px;
-}
-
-.lead-card {
-  background: #fff;
-  border-radius: 20px;
-  padding: 20px 24px;
-  box-shadow: 0 12px 35px rgba(0,0,0,0.05);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-}
-
-.lead-card h3 {
-  color: #2f2a28;
-  margin-bottom: 6px;
-  font-size: 18px;
-  word-break: break-word;
-}
-
-.lead-card p {
-  color: #666;
-  word-break: break-word;
-}
-
-.lead-card span {
-  color: #7a5c58;
-  font-weight: 700;
-  font-size: 14px;
-  white-space: nowrap;
-}
-
-.lead-card {
-  background: #fff;
-  border-radius: 20px;
-  padding: 20px 24px;
-  box-shadow: 0 12px 35px rgba(0,0,0,0.05);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-}
-
-.lead-enviado {
-  border-left: 5px solid #2f7d50;
-}
-
-.lead-info h3 {
-  color: #2f2a28;
-  margin-bottom: 6px;
-}
-
-.lead-info p {
-  color: #666;
-  margin-bottom: 6px;
-}
-
-.lead-info small {
-  color: #999;
-}
-
-.lead-check {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  color: #7a5c58;
-  cursor: pointer;
-}
-
-.lead-check input {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-
-
-.editor-box {
-  background: #fff;
- 
-  overflow: hidden;
-}
-
-.editor-box .ql-toolbar {
-  border-radius: 16px 16px 0 0;
-  border-color: #ddd;
-}
-
-.editor-box .ql-container {
-  min-height: 130px;
-  border-radius: 0 0 16px 16px;
-  border-color: #ddd;
-  font-size: 15px;
-}
-
-.editor-conteudo .ql-container {
-  min-height: 320px;
-}
-
-
-
-
-
-@media (max-width: 600px) {
-  .lead-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-@media (max-width: 600px) {
-  .lead-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .lead-card span {
-    white-space: normal;
-  }
 }
 
 /* RESPONSIVO */
@@ -691,6 +673,15 @@ body {
   .modal-actions,
   .post-admin-actions {
     flex-direction: column;
+  }
+
+  .lead-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lead-card span {
+    white-space: normal;
   }
 
   .btn-limpar,
