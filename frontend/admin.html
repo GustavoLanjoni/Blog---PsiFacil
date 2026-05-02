@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin | PsiBlog</title>
   <link rel="stylesheet" href="css/admin.css">
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 </head>
 
 <body>
@@ -112,12 +113,14 @@
 
           <div class="form-group">
             <label for="resumo">Resumo curto</label>
-            <textarea id="resumo" rows="3" placeholder="Resumo que aparecerá no card do artigo"></textarea>
+            <input type="hidden" id="resumo">
+            <div id="editorResumo" class="editor-box"></div>
           </div>
 
           <div class="form-group">
             <label for="conteudo">Conteúdo completo</label>
-            <textarea id="conteudo" rows="10" placeholder="Escreva o artigo completo aqui"></textarea>
+            <input type="hidden" id="conteudo">
+            <div id="editorConteudo" class="editor-box editor-conteudo"></div>
           </div>
 
           <div class="form-actions">
@@ -187,6 +190,8 @@
   <script>
     lucide.createIcons();
   </script>
+  
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
   <script src="js/admin.js"></script>
 
   <script>

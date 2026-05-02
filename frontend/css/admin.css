@@ -594,6 +594,33 @@ body {
   cursor: pointer;
 }
 
+
+.editor-box {
+  background: #fff;
+ 
+  overflow: hidden;
+}
+
+.editor-box .ql-toolbar {
+  border-radius: 16px 16px 0 0;
+  border-color: #ddd;
+}
+
+.editor-box .ql-container {
+  min-height: 130px;
+  border-radius: 0 0 16px 16px;
+  border-color: #ddd;
+  font-size: 15px;
+}
+
+.editor-conteudo .ql-container {
+  min-height: 320px;
+}
+
+
+
+
+
 @media (max-width: 600px) {
   .lead-card {
     flex-direction: column;

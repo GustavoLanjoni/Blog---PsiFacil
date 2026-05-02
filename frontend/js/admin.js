@@ -25,6 +25,57 @@ const btnConfirmarModal = document.getElementById("btnConfirmarModal");
 let postEditandoId = null;
 let acaoConfirmada = null;
 
+/* EDITORES */
+
+const editorResumo = new Quill("#editorResumo", {
+  theme: "snow",
+  placeholder: "Resumo que aparecerá no card do artigo",
+  modules: {
+    toolbar: [
+      ["bold", "italic", "underline"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link"],
+      ["clean"]
+    ]
+  }
+});
+
+const editorConteudo = new Quill("#editorConteudo", {
+  theme: "snow",
+  placeholder: "Escreva o artigo completo aqui",
+  modules: {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["blockquote", "link"],
+      [{ align: [] }],
+      ["clean"]
+    ]
+  }
+});
+
+function limparHtmlVazio(html) {
+  if (!html) return "";
+
+  const texto = pegarTextoLimpo(html);
+
+  if (!texto) return "";
+
+  return html.trim();
+}
+
+function pegarTextoLimpo(html) {
+  const div = document.createElement("div");
+  div.innerHTML = html || "";
+  return div.textContent.trim();
+}
+
+function sincronizarEditores() {
+  resumo.value = limparHtmlVazio(editorResumo.root.innerHTML);
+  conteudo.value = limparHtmlVazio(editorConteudo.root.innerHTML);
+}
+
 /* TOAST */
 
 function mostrarToast(mensagem, tipo = "success") {
@@ -62,11 +113,15 @@ btnConfirmarModal.addEventListener("click", () => {
 /* PREVIEW */
 
 function atualizarPreview() {
+  sincronizarEditores();
+
+  const resumoTexto = pegarTextoLimpo(resumo.value);
+
   previewTitulo.textContent = titulo.value.trim() || "Título do artigo";
   previewCategoria.textContent = categoria.value.trim() || "Categoria";
 
   previewResumo.textContent =
-    resumo.value.trim() ||
+    resumoTexto ||
     "O resumo do artigo aparecerá aqui para visualizar como ficará no blog.";
 
   if (imagem.value.trim() !== "") {
@@ -86,8 +141,20 @@ function atualizarPreview() {
 
 titulo.addEventListener("input", atualizarPreview);
 categoria.addEventListener("input", atualizarPreview);
-resumo.addEventListener("input", atualizarPreview);
 imagem.addEventListener("input", atualizarPreview);
+
+editorResumo.on("text-change", atualizarPreview);
+editorConteudo.on("text-change", sincronizarEditores);
+
+formPost.addEventListener("reset", () => {
+  setTimeout(() => {
+    editorResumo.root.innerHTML = "";
+    editorConteudo.root.innerHTML = "";
+    postEditandoId = null;
+    sincronizarEditores();
+    atualizarPreview();
+  }, 0);
+});
 
 /* CARREGAR POSTS */
 
@@ -116,10 +183,12 @@ async function carregarPostsAdmin() {
     listaPostsAdmin.innerHTML = "";
 
     posts.forEach((post) => {
+      const resumoTexto = pegarTextoLimpo(post.resumo || "");
+
       listaPostsAdmin.innerHTML += `
         <div class="post-admin-card">
           <h3>${post.titulo}</h3>
-          <p>${post.resumo || "Sem resumo cadastrado."}</p>
+          <p>${resumoTexto || "Sem resumo cadastrado."}</p>
 
           <div class="post-admin-actions">
             <button class="btn-editar" onclick="prepararEdicao(${post.id})">
@@ -145,6 +214,8 @@ async function carregarPostsAdmin() {
 formPost.addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  sincronizarEditores();
+
   const post = {
     titulo: titulo.value.trim(),
     categoria: categoria.value.trim(),
@@ -153,7 +224,9 @@ formPost.addEventListener("submit", async (e) => {
     imagem: imagem.value.trim()
   };
 
-  if (!post.titulo || !post.conteudo) {
+  const conteudoTexto = pegarTextoLimpo(post.conteudo);
+
+  if (!post.titulo || !conteudoTexto) {
     mostrarToast("Preencha pelo menos o título e o conteúdo.", "error");
     return;
   }
@@ -185,6 +258,11 @@ formPost.addEventListener("submit", async (e) => {
 
     postEditandoId = null;
     formPost.reset();
+
+    editorResumo.root.innerHTML = "";
+    editorConteudo.root.innerHTML = "";
+
+    sincronizarEditores();
     atualizarPreview();
     carregarPostsAdmin();
 
@@ -211,10 +289,12 @@ async function prepararEdicao(id) {
 
     titulo.value = post.titulo || "";
     categoria.value = post.categoria || "";
-    resumo.value = post.resumo || "";
-    conteudo.value = post.conteudo || "";
     imagem.value = post.imagem || "";
 
+    editorResumo.root.innerHTML = post.resumo || "";
+    editorConteudo.root.innerHTML = post.conteudo || "";
+
+    sincronizarEditores();
     atualizarPreview();
 
     window.scrollTo({
@@ -259,5 +339,13 @@ async function excluirPost(id) {
   }
 }
 
+/* SAIR */
+
+function sairAdmin() {
+  localStorage.removeItem("tokenAdmin");
+  window.location.href = "login.html";
+}
+
+sincronizarEditores();
 atualizarPreview();
 carregarPostsAdmin();
