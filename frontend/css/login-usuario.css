@@ -1,0 +1,200 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+/* FUNDO */
+body {
+  background: linear-gradient(135deg, #f8f4ef, #efe7e2);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* CONTAINER */
+.login-page {
+  width: 100%;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+/* CARD */
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  padding: 36px 32px;
+  border-radius: 28px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+  text-align: center;
+  animation: fadeIn 0.4s ease;
+}
+
+/* ANIMAÇÃO */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* TAG */
+.tag {
+  display: inline-block;
+  background: #eaded7;
+  color: #7a5c58;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+/* TITULO */
+.login-card h1 {
+  font-size: 28px;
+  margin-bottom: 8px;
+  color: #2f2a28;
+}
+
+/* TEXTO */
+.login-card p {
+  color: #777;
+  font-size: 14px;
+  margin-bottom: 26px;
+}
+
+/* FORM */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* INPUTS */
+.form-group {
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #555;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px 15px;
+  border-radius: 14px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+  transition: 0.25s;
+}
+
+/* INPUT FOCUS */
+.form-group input:focus {
+  border-color: #7a5c58;
+  box-shadow: 0 0 0 4px rgba(122, 92, 88, 0.08);
+}
+
+/* BOTÃO */
+button {
+  margin-top: 6px;
+  border: none;
+  background: #7a5c58;
+  color: #fff;
+  padding: 14px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* HOVER BOTÃO */
+button:hover {
+  background: #684c49;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(122, 92, 88, 0.2);
+}
+
+/* ERRO */
+.mensagem-erro {
+  font-size: 13px;
+  color: #c0392b;
+  text-align: left;
+}
+
+/* LINKS */
+.back-link {
+  display: block;
+  margin-top: 14px;
+  font-size: 13px;
+  color: #7a5c58;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.back-link:hover {
+  opacity: 0.7;
+}
+
+/* TOAST MODERNO */
+
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #2f2a28;
+  color: #fff;
+  padding: 14px 18px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+
+  box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+
+  transition: 0.3s ease;
+  z-index: 9999;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast.success {
+  background: #2f7d50;
+}
+
+.toast.error {
+  background: #b23b3b;
+}
+
+/* RESPONSIVO */
+@media (max-width: 500px) {
+  .login-card {
+    padding: 28px 22px;
+  }
+
+  .login-card h1 {
+    font-size: 24px;
+  }
+}
