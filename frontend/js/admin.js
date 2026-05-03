@@ -8,6 +8,10 @@ const resumo = document.getElementById("resumo");
 const conteudo = document.getElementById("conteudo");
 const imagem = document.getElementById("imagem");
 
+const statusPost = document.getElementById("status");
+const agendadoPara = document.getElementById("agendadoPara");
+const grupoAgendamento = document.getElementById("grupoAgendamento");
+
 const previewTitulo = document.getElementById("previewTitulo");
 const previewCategoria = document.getElementById("previewCategoria");
 const previewResumo = document.getElementById("previewResumo");
@@ -55,6 +59,8 @@ const editorConteudo = new Quill("#editorConteudo", {
   }
 });
 
+/* FUNÇÕES AUXILIARES */
+
 function limparHtmlVazio(html) {
   if (!html) return "";
 
@@ -74,6 +80,25 @@ function pegarTextoLimpo(html) {
 function sincronizarEditores() {
   resumo.value = limparHtmlVazio(editorResumo.root.innerHTML);
   conteudo.value = limparHtmlVazio(editorConteudo.root.innerHTML);
+}
+
+function controlarAgendamento() {
+  if (statusPost.value === "agendado") {
+    grupoAgendamento.style.display = "block";
+  } else {
+    grupoAgendamento.style.display = "none";
+    agendadoPara.value = "";
+  }
+}
+
+function formatarDataAdmin(data) {
+  if (!data) return "";
+
+  return new Date(data).toLocaleString("pt-BR", {
+    timeZone: "America/Sao_Paulo",
+    dateStyle: "short",
+    timeStyle: "short"
+  });
 }
 
 /* TOAST */
@@ -139,9 +164,13 @@ function atualizarPreview() {
   }
 }
 
+/* EVENTOS */
+
 titulo.addEventListener("input", atualizarPreview);
 categoria.addEventListener("input", atualizarPreview);
 imagem.addEventListener("input", atualizarPreview);
+
+statusPost.addEventListener("change", controlarAgendamento);
 
 editorResumo.on("text-change", atualizarPreview);
 editorConteudo.on("text-change", sincronizarEditores);
@@ -150,7 +179,12 @@ formPost.addEventListener("reset", () => {
   setTimeout(() => {
     editorResumo.root.innerHTML = "";
     editorConteudo.root.innerHTML = "";
+
+    statusPost.value = "publicado";
+    agendadoPara.value = "";
     postEditandoId = null;
+
+    controlarAgendamento();
     sincronizarEditores();
     atualizarPreview();
   }, 0);
@@ -160,7 +194,7 @@ formPost.addEventListener("reset", () => {
 
 async function carregarPostsAdmin() {
   try {
-    const resposta = await fetch(apiPosts);
+    const resposta = await fetch("/posts/admin/todos");
     const posts = await resposta.json();
 
     totalPosts.textContent = posts.length;
@@ -185,8 +219,25 @@ async function carregarPostsAdmin() {
     posts.forEach((post) => {
       const resumoTexto = pegarTextoLimpo(post.resumo || "");
 
+      const agora = new Date();
+      const dataAgendada = post.agendado_para ? new Date(post.agendado_para) : null;
+
+      let statusTexto = "Publicado";
+      let statusClasse = "status-publicado";
+
+      if (post.status === "agendado" && dataAgendada > agora) {
+        statusTexto = `Agendado para ${formatarDataAdmin(post.agendado_para)}`;
+        statusClasse = "status-agendado";
+      }
+
       listaPostsAdmin.innerHTML += `
         <div class="post-admin-card">
+          <div class="post-admin-top">
+            <span class="post-status ${statusClasse}">
+              ${statusTexto}
+            </span>
+          </div>
+
           <h3>${post.titulo}</h3>
           <p>${resumoTexto || "Sem resumo cadastrado."}</p>
 
@@ -221,13 +272,22 @@ formPost.addEventListener("submit", async (e) => {
     categoria: categoria.value.trim(),
     resumo: resumo.value.trim(),
     conteudo: conteudo.value.trim(),
-    imagem: imagem.value.trim()
+    imagem: imagem.value.trim(),
+    status: statusPost.value,
+    agendado_para: agendadoPara.value
+      ? `${agendadoPara.value}:00-03:00`
+      : null
   };
 
   const conteudoTexto = pegarTextoLimpo(post.conteudo);
 
   if (!post.titulo || !conteudoTexto) {
     mostrarToast("Preencha pelo menos o título e o conteúdo.", "error");
+    return;
+  }
+
+  if (post.status === "agendado" && !post.agendado_para) {
+    mostrarToast("Escolha a data e hora do agendamento.", "error");
     return;
   }
 
@@ -252,7 +312,9 @@ formPost.addEventListener("submit", async (e) => {
     mostrarToast(
       postEditandoId
         ? "Artigo atualizado com sucesso!"
-        : "Artigo publicado com sucesso!",
+        : post.status === "agendado"
+          ? "Artigo agendado com sucesso!"
+          : "Artigo publicado com sucesso!",
       "success"
     );
 
@@ -262,6 +324,10 @@ formPost.addEventListener("submit", async (e) => {
     editorResumo.root.innerHTML = "";
     editorConteudo.root.innerHTML = "";
 
+    statusPost.value = "publicado";
+    agendadoPara.value = "";
+
+    controlarAgendamento();
     sincronizarEditores();
     atualizarPreview();
     carregarPostsAdmin();
@@ -291,9 +357,18 @@ async function prepararEdicao(id) {
     categoria.value = post.categoria || "";
     imagem.value = post.imagem || "";
 
+    statusPost.value = post.status || "publicado";
+
+    if (post.agendado_para) {
+      agendadoPara.value = post.agendado_para.slice(0, 16);
+    } else {
+      agendadoPara.value = "";
+    }
+
     editorResumo.root.innerHTML = post.resumo || "";
     editorConteudo.root.innerHTML = post.conteudo || "";
 
+    controlarAgendamento();
     sincronizarEditores();
     atualizarPreview();
 
@@ -346,6 +421,9 @@ function sairAdmin() {
   window.location.href = "login.html";
 }
 
+/* INICIAR */
+
+controlarAgendamento();
 sincronizarEditores();
 atualizarPreview();
 carregarPostsAdmin();
