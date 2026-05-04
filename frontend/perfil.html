@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Perfil | PsiFácil</title>
+
+  <link rel="stylesheet" href="css/perfil.css">
+</head>
+
+<body>
+
+  <main class="perfil-page">
+    <section class="perfil-card">
+      <span class="tag">Meu perfil</span>
+
+      <!-- FOTO COM MENU -->
+      <div class="foto-wrapper">
+
+        <img 
+          id="fotoPreview" 
+          src="https://ui-avatars.com/api/?name=Usuario" 
+          class="perfil-foto"
+          alt="Foto do usuário"
+        >
+
+        <div class="foto-menu" id="fotoMenu">
+          <button type="button" id="btnVerFoto">Visualizar foto</button>
+          <button type="button" id="btnTrocarFoto">Trocar foto</button>
+        </div>
+
+        <input type="file" id="foto" accept="image/*" hidden>
+
+      </div>
+
+      <h1 id="nomeTitulo">Meu perfil</h1>
+      <p id="emailUsuario" class="perfil-email"></p>
+
+      <form id="formPerfil">
+
+        <div class="form-group">
+          <label for="nome">Nome</label>
+          <input type="text" id="nome" placeholder="Seu nome">
+        </div>
+
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea id="bio" placeholder="Fale um pouco sobre você"></textarea>
+        </div>
+
+        <p id="mensagemErro" class="mensagem-erro"></p>
+
+        <button type="submit" class="btn-salvar">
+          Salvar alterações
+        </button>
+      </form>
+
+      <!-- NOVO BLOCO DE AÇÕES -->
+      <div class="perfil-actions">
+
+        <a href="psifacil.html" class="btn-voltar">
+          ← Voltar ao site
+        </a>
+
+        <button type="button" onclick="sairUsuario()" class="btn-sair">
+          Sair da conta
+        </button>
+
+      </div>
+
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="js/perfil.js"></script>
+</body>
+
+</html>
