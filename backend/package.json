@@ -1,7 +1,16 @@
 {
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1",
+    "pg": "^8.20.0"
+  },
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "��#\u0000 \u0000B\u0000l\u0000o\u0000g\u0000-\u0000-\u0000-\u0000P\u0000s\u0000i\u0000F\u0000a\u0000c\u0000i\u0000l\u0000\r\u0000 \u0000",
   "main": "db.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,18 +19,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
-  "dependencies": {
-    "axios": "^1.15.2",
-    "bcrypt": "^6.0.0",
-    "cors": "^2.8.6",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "nodemailer": "^8.0.6",
-    "pg": "^8.20.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.14"
-  }
+  "type": "commonjs"
 }
