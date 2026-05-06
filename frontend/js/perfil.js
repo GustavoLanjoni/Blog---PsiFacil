@@ -15,6 +15,50 @@ const fotoMenu = document.getElementById("fotoMenu");
 const btnVerFoto = document.getElementById("btnVerFoto");
 const btnTrocarFoto = document.getElementById("btnTrocarFoto");
 
+
+
+const listaSalvos = document.getElementById("listaSalvos");
+
+async function carregarSalvos() {
+  try {
+    const resposta = await fetch("/salvos", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const posts = await resposta.json();
+
+    if (!resposta.ok) {
+      listaSalvos.innerHTML = `<p class="salvos-vazio">Erro ao carregar salvos.</p>`;
+      return;
+    }
+
+    if (posts.length === 0) {
+      listaSalvos.innerHTML = `<p class="salvos-vazio">Nenhum conteúdo salvo ainda.</p>`;
+      return;
+    }
+
+    listaSalvos.innerHTML = "";
+
+    posts.forEach((post) => {
+      listaSalvos.innerHTML += `
+        <a href="post.html?id=${post.id}" class="salvo-card">
+          <img src="${post.imagem || 'https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=900&q=80'}" alt="${post.titulo}">
+          <div>
+            <span>${post.categoria || "Blog"}</span>
+            <h3>${post.titulo}</h3>
+          </div>
+        </a>
+      `;
+    });
+
+  } catch (error) {
+    listaSalvos.innerHTML = `<p class="salvos-vazio">Erro ao conectar com o servidor.</p>`;
+  }
+}
+
+
 if (!token) {
   window.location.href = "login-usuario.html";
 }
@@ -145,6 +189,8 @@ formPerfil.addEventListener("submit", async (e) => {
   }
 });
 
+
+
 /* SAIR */
 function sairUsuario() {
   localStorage.removeItem("tokenUsuario");
@@ -154,3 +200,4 @@ function sairUsuario() {
 
 /* INICIAR */
 carregarPerfil();
+carregarSalvos();
