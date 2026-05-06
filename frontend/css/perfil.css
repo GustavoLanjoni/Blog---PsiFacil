@@ -275,6 +275,77 @@ button[type="submit"]:hover {
   background: #b23b3b;
 }
 
+.salvos-section {
+  margin-top: 34px;
+  text-align: left;
+  border-top: 1px solid #eaded7;
+  padding-top: 28px;
+}
+
+.salvos-header h2 {
+  font-size: 22px;
+  color: #2f2a28;
+  margin-bottom: 6px;
+}
+
+.salvos-header p {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 18px;
+}
+
+.lista-salvos {
+  display: grid;
+  gap: 14px;
+}
+
+.salvo-card {
+  display: grid;
+  grid-template-columns: 82px 1fr;
+  gap: 14px;
+  align-items: center;
+  text-decoration: none;
+  background: #fbfaf9;
+  border: 1px solid #eaded7;
+  border-radius: 18px;
+  padding: 12px;
+  transition: 0.25s;
+}
+
+.salvo-card:hover {
+  background: #f8f4ef;
+  transform: translateY(-2px);
+}
+
+.salvo-card img {
+  width: 82px;
+  height: 70px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.salvo-card span {
+  color: #7a5c58;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.salvo-card h3 {
+  color: #2f2a28;
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.salvos-vazio {
+  background: #fbfaf9;
+  border: 1px dashed #d8c7bf;
+  border-radius: 16px;
+  padding: 18px;
+  text-align: center;
+  color: #777;
+  font-size: 14px;
+}
+
 @media (max-width: 500px) {
   .perfil-page {
     padding: 18px;
