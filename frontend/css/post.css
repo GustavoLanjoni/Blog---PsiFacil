@@ -365,6 +365,24 @@ body {
   font-size: 12px;
 }
 
+.salvar-btn {
+  color: #7a5c58;
+}
+
+.salvar-btn:hover {
+  background: #eaded7;
+  transform: translateY(-2px);
+}
+
+.salvar-btn.salvo {
+  background: #7a5c58;
+  color: #fff;
+}
+
+.salvar-btn.salvo .sub {
+  color: #f3e9e7;
+}
+
 /* RESPONSIVO */
 
 @media (max-width: 980px) {

@@ -346,6 +346,105 @@ button[type="submit"]:hover {
   font-size: 14px;
 }
 
+.perfil-card {
+  max-width: 1050px;
+  padding: 18px;
+  border-radius: 32px;
+}
+
+.perfil-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 18px;
+}
+
+.perfil-sidebar,
+.perfil-content {
+  background: #fff;
+  border: 1px solid #eaded7;
+  border-radius: 26px;
+  padding: 30px;
+}
+
+.perfil-sidebar {
+  text-align: center;
+  background: linear-gradient(180deg, #fff, #fbf7f4);
+}
+
+.perfil-content {
+  text-align: left;
+}
+
+.foto-wrapper {
+  margin-top: 10px;
+}
+
+.perfil-sidebar h1 {
+  font-size: 28px;
+  margin-top: 18px;
+}
+
+.perfil-email {
+  margin-bottom: 22px;
+}
+
+.perfil-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.btn-voltar,
+.btn-sair {
+  height: 48px;
+  border-radius: 16px;
+}
+
+.perfil-content form {
+  background: #fbfaf9;
+  border: 1px solid #eaded7;
+  border-radius: 24px;
+  padding: 26px;
+  margin-bottom: 24px;
+}
+
+.salvos-section {
+  margin-top: 0;
+  border-top: none;
+  padding-top: 0;
+  background: #fbfaf9;
+  border: 1px solid #eaded7;
+  border-radius: 24px;
+  padding: 26px;
+}
+
+.salvos-header h2 {
+  font-size: 24px;
+}
+
+.lista-salvos {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+@media (max-width: 850px) {
+  .perfil-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .perfil-card {
+    padding: 14px;
+  }
+
+  .perfil-sidebar,
+  .perfil-content {
+    padding: 24px;
+  }
+}
+
+
 @media (max-width: 500px) {
   .perfil-page {
     padding: 18px;

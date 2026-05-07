@@ -7,11 +7,99 @@ const totalCurtidas = document.getElementById("totalCurtidas");
 const btnCompartilhar = document.getElementById("btnCompartilhar");
 const formComentario = document.getElementById("formComentario");
 const listaComentarios = document.getElementById("listaComentarios");
+const btnSalvar = document.getElementById("btnSalvar");
+
+const token = localStorage.getItem("tokenUsuario");
 
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
 const chaveCurtida = `curtiu_post_${id}`;
+
+/* SALVAR POST */
+
+async function verificarSalvo() {
+  if (!token || !id || !btnSalvar) return;
+
+  try {
+    const resposta = await fetch(`/salvos/${id}/status`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const dados = await resposta.json();
+
+    if (dados.salvo) {
+      atualizarBotaoSalvar(true);
+    }
+
+  } catch (error) {
+    console.error("Erro ao verificar salvo:", error);
+  }
+}
+
+function atualizarBotaoSalvar(salvo) {
+  if (!btnSalvar) return;
+
+  if (salvo) {
+    btnSalvar.classList.add("salvo");
+
+    btnSalvar.innerHTML = `
+      <i data-lucide="bookmark-check"></i>
+
+      <div class="action-text">
+        <span class="label">Salvo</span>
+        <span class="sub">Nos favoritos</span>
+      </div>
+    `;
+  } else {
+    btnSalvar.classList.remove("salvo");
+
+    btnSalvar.innerHTML = `
+      <i data-lucide="bookmark"></i>
+
+      <div class="action-text">
+        <span class="label">Salvar</span>
+        <span class="sub">Ler depois</span>
+      </div>
+    `;
+  }
+
+  if (window.lucide) {
+    lucide.createIcons();
+  }
+}
+
+if (btnSalvar) {
+  btnSalvar.addEventListener("click", async () => {
+    if (!token) {
+      window.location.href = "login-usuario.html";
+      return;
+    }
+
+    try {
+      const salvo = btnSalvar.classList.contains("salvo");
+      const metodo = salvo ? "DELETE" : "POST";
+
+      const resposta = await fetch(`/salvos/${id}`, {
+        method: metodo,
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (!resposta.ok) return;
+
+      atualizarBotaoSalvar(!salvo);
+
+    } catch (error) {
+      console.error("Erro ao salvar/remover post:", error);
+    }
+  });
+}
+
+/* CARREGAR POST */
 
 async function carregarPost() {
   if (!id) {
@@ -47,10 +135,7 @@ async function carregarPost() {
       >
 
       <div class="post-text">
-        ${post.conteudo
-          .split("\n")
-          .map((paragrafo) => `<p>${paragrafo}</p>`)
-          .join("")}
+        ${post.conteudo || ""}
       </div>
 
       <a href="psifacil.html" class="back-link">← Voltar para o blog</a>
@@ -60,6 +145,8 @@ async function carregarPost() {
     postDetalhe.innerHTML = "<p>Erro ao carregar o artigo.</p>";
   }
 }
+
+/* CURTIDAS */
 
 async function carregarCurtidas() {
   try {
@@ -101,6 +188,8 @@ btnCurtir.addEventListener("click", async () => {
   }
 });
 
+/* COMPARTILHAR */
+
 btnCompartilhar.addEventListener("click", async () => {
   const url = window.location.href;
 
@@ -114,6 +203,8 @@ btnCompartilhar.addEventListener("click", async () => {
     alert("Link copiado!");
   }
 });
+
+/* COMENTÁRIOS */
 
 formComentario.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -167,7 +258,10 @@ async function carregarComentarios() {
   }
 }
 
+/* INICIAR */
+
 carregarPost();
 carregarCurtidas();
 carregarComentarios();
 atualizarEstadoCurtir();
+verificarSalvo();
