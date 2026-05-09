@@ -184,6 +184,7 @@ body {
 .form-header h2 {
   font-size: 30px;
   margin-bottom: 8px;
+  color: #2f2a28;
 }
 
 .form-header p {
@@ -201,19 +202,22 @@ body {
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
   width: 100%;
   padding: 15px;
   border: 1px solid #ddd;
   border-radius: 14px;
   font-size: 15px;
   outline: none;
-  resize: vertical;
+  background: #fff;
 }
 
 .form-group input:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-group select:focus {
   border-color: #7a5c58;
+  box-shadow: 0 0 0 4px rgba(122, 92, 88, 0.1);
 }
 
 .form-row {
@@ -259,52 +263,56 @@ body {
   gap: 8px;
 }
 
-/* EDITOR QUILL */
+/* SELECT */
 
-.editor-box {
-  background: #fff;
-  overflow: hidden;
-  border-radius: 16px;
+.form-group select {
+  font-weight: 600;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='%237a5c58' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 18px;
+  padding-right: 40px;
 }
 
-.editor-box .ql-toolbar {
-  border-radius: 16px 16px 0 0;
-  border-color: #ddd;
-  background: #fff;
+.form-group select:hover {
+  border-color: #7a5c58;
+  background-color: #f8f4ef;
 }
 
-.editor-box .ql-container {
-  min-height: 180px;
-  border-radius: 0 0 16px 16px;
-  border-color: #ddd;
-  font-size: 15px;
+/* TINYMCE */
+
+.tox-tinymce {
+  border: 1px solid #ddd !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
 }
 
-.editor-conteudo .ql-container {
-  min-height: 480px;
-  max-height: 70vh;
-  overflow-y: auto;
+.tox .tox-toolbar,
+.tox .tox-toolbar__primary,
+.tox .tox-toolbar__overflow {
+  background: #fff !important;
 }
 
-.ql-editor {
-  line-height: 1.8;
-  padding: 18px;
+.tox .tox-edit-area__iframe {
+  background: #fff !important;
 }
 
-.ql-editor p,
-.ql-editor li,
-.ql-editor blockquote {
-  font-size: 16px;
-  height: 150px;
-  border-radius: 0;
+.tox-statusbar {
+  border-top: 1px solid #eee !important;
 }
 
-/* REMOVE BORDA ARREDONDADA DO EDITOR */
+.tox .tox-tbtn:hover {
+  background: #f8f4ef !important;
+}
 
-.editor-box,
-.editor-box .ql-toolbar,
-.editor-box .ql-container {
-  border-radius: 0 !important;
+.tox .tox-tbtn--enabled,
+.tox .tox-tbtn--enabled:hover {
+  background: #eaded7 !important;
+  color: #7a5c58 !important;
 }
 
 /* PREVIEW */
@@ -384,6 +392,7 @@ body {
   font-size: 32px;
   margin-top: 8px;
   margin-bottom: 24px;
+  color: #2f2a28;
 }
 
 .posts-admin-list,
@@ -469,6 +478,30 @@ body {
   height: 40px;
   margin-bottom: 14px;
   color: #7a5c58;
+}
+
+/* STATUS */
+
+.post-admin-top {
+  margin-bottom: 12px;
+}
+
+.post-status {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.status-publicado {
+  background: #e8f6ee;
+  color: #2f7d50;
+}
+
+.status-agendado {
+  background: #fff2d8;
+  color: #9a6a00;
 }
 
 /* LEADS */
@@ -619,88 +652,6 @@ body {
 .btn-modal-confirmar {
   background: #b23b3b;
   color: #fff;
-}
-
-.post-admin-top {
-  margin-bottom: 12px;
-}
-
-.post-status {
-  display: inline-block;
-  padding: 7px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.status-publicado {
-  background: #e8f6ee;
-  color: #2f7d50;
-}
-
-.status-agendado {
-  background: #fff2d8;
-  color: #9a6a00;
-}
-
-
-
-/* SELECT STATUS PUBLICAÇÃO */
-
-.form-group select {
-  width: 100%;
-  padding: 14px 16px;
-  border-radius: 14px;
-  border: 1px solid #ddd;
-  background: #fff;
-  font-size: 15px;
-  font-weight: 600;
-  color: #2f2f2f;
-
-  cursor: pointer;
-  outline: none;
-
-  transition: all 0.25s ease;
-
-  /* remove estilo padrão feio */
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  /* seta personalizada */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='%237a5c58' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  background-size: 18px;
-
-  padding-right: 40px;
-}
-
-/* HOVER */
-
-.form-group select:hover {
-  border-color: #7a5c58;
-  background-color: #f8f4ef;
-}
-
-/* FOCUS (quando clica) */
-
-.form-group select:focus {
-  border-color: #7a5c58;
-  box-shadow: 0 0 0 4px rgba(122, 92, 88, 0.1);
-}
-
-/* OPÇÕES */
-
-.form-group select option {
-  font-weight: 500;
-  padding: 10px;
-}
-
-/* VARIAÇÃO: AGENDADO */
-
-.form-group select[value="agendado"] {
-  background-color: #fff7e8;
 }
 
 /* RESPONSIVO */

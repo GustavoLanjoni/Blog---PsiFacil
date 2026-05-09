@@ -29,7 +29,7 @@ body {
 }
 
 .post-detail {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.95);
   border: 1px solid rgba(234, 222, 215, 0.9);
   border-radius: 34px;
   padding: 48px;
@@ -83,32 +83,145 @@ body {
   box-shadow: 0 18px 45px rgba(0,0,0,0.12);
 }
 
+/* CONTEÚDO DO TINYMCE */
+
 .post-text {
   max-width: 790px;
   margin: auto;
   overflow: hidden;
-}
-
-.post-text p,
-.post-text h2,
-.post-meta {
+  font-size: 18px;
+  line-height: 1.9;
+  color: #4f4a47;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  white-space: normal;
 }
 
 .post-text p {
   font-size: 18px;
-  line-height: 1.95;
+  line-height: 1.9;
   color: #514b48;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
+}
+
+.post-text p:empty,
+.post-text p:has(br:only-child) {
+  display: none;
+}
+
+.post-text h1,
+.post-text h2,
+.post-text h3,
+.post-text h4 {
+  font-family: "Playfair Display", serif;
+  color: #2f2a28;
+  line-height: 1.25;
+  font-weight: 700;
+  margin: 38px 0 18px;
+}
+
+.post-text h1 {
+  font-size: 38px;
 }
 
 .post-text h2 {
-  font-family: "Playfair Display", serif;
-  font-size: 34px;
+  font-size: 32px;
+}
+
+.post-text h3 {
+  font-size: 26px;
+}
+
+.post-text h4 {
+  font-size: 22px;
+}
+
+.post-text strong,
+.post-text b {
+  color: #2f2a28;
+  font-weight: 800;
+}
+
+.post-text em,
+.post-text i {
+  font-style: italic;
+}
+
+.post-text u {
+  text-underline-offset: 4px;
+}
+
+.post-text a {
   color: #7a5c58;
-  margin: 42px 0 18px;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.post-text ul,
+.post-text ol {
+  margin: 18px 0 26px 28px;
+  padding-left: 18px;
+}
+
+.post-text li {
+  margin-bottom: 10px;
+  line-height: 1.75;
+  color: #514b48;
+}
+
+.post-text blockquote {
+  margin: 28px 0;
+  padding: 18px 22px;
+  border-left: 5px solid #7a5c58;
+  background: #f8f4ef;
+  border-radius: 14px;
+  color: #5f514d;
+  font-style: italic;
+}
+
+.post-text img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 20px;
+  margin: 24px 0;
+  display: block;
+}
+
+.post-text table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 26px 0;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.post-text table th,
+.post-text table td {
+  border: 1px solid #eaded7;
+  padding: 12px 14px;
+  text-align: left;
+}
+
+.post-text table th {
+  background: #f8f4ef;
+  color: #2f2a28;
+  font-weight: 800;
+}
+
+.post-text table td {
+  color: #514b48;
+}
+
+.post-text [style*="text-align: center"] {
+  text-align: center;
+}
+
+.post-text [style*="text-align: right"] {
+  text-align: right;
+}
+
+.post-text [style*="text-align: left"] {
+  text-align: left;
 }
 
 .back-link {
@@ -128,65 +241,8 @@ body {
   transform: translateX(-3px);
 }
 
-
-/* REDES SOCIAIS */
-
-.social-box {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #eee1da;
-}
-
-.social-title {
-  font-size: 13px;
-  color: #999;
-  font-weight: 600;
-  margin-bottom: 8px;
-  display: block;
-}
-
-.social-icons {
-  display: flex;
-  gap: 10px;
-}
-
-/* botão social */
-.social-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f8f4ef;
-  color: #555;
-  transition: 0.25s;
-}
-
-.social-btn svg {
-  width: 20px;
-  height: 20px;
-}
-
-/* hover cores */
-
-.social-btn.instagram:hover {
-  background: #e1306c;
-  color: #fff;
-}
-
-.social-btn.youtube:hover {
-  background: #ff0000;
-  color: #fff;
-}
-
-.social-btn.tiktok:hover {
-  background: #000;
-  color: #fff;
-}
-
-
 /* AÇÕES LATERAIS */
+
 .post-actions {
   width: 100%;
   display: flex;
@@ -245,18 +301,21 @@ body {
   color: #7a5c58;
 }
 
-.like-btn:hover {
+.like-btn:hover,
+.salvar-btn:hover {
   transform: translateY(-2px);
   background: #eaded7;
 }
 
-.like-btn.curtido {
+.like-btn.curtido,
+.salvar-btn.salvo {
   background: #7a5c58;
   color: #fff;
 }
 
-.like-btn.curtido .count {
-  color: #eee;
+.like-btn.curtido .count,
+.salvar-btn.salvo .sub {
+  color: #f3e9e7;
 }
 
 .share-btn {
@@ -268,9 +327,64 @@ body {
   background: #eeeeee;
 }
 
+.salvar-btn {
+  color: #7a5c58;
+}
 
+/* REDES SOCIAIS */
 
-/* COMENTÁRIOS LATERAIS */
+.social-box {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee1da;
+}
+
+.social-title {
+  font-size: 13px;
+  color: #999;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.social-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f4ef;
+  color: #555;
+  transition: 0.25s;
+}
+
+.social-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.social-btn.instagram:hover {
+  background: #e1306c;
+  color: #fff;
+}
+
+.social-btn.youtube:hover {
+  background: #ff0000;
+  color: #fff;
+}
+
+.social-btn.tiktok:hover {
+  background: #000;
+  color: #fff;
+}
+
+/* COMENTÁRIOS */
 
 .comentarios-section {
   width: 100%;
@@ -365,24 +479,6 @@ body {
   font-size: 12px;
 }
 
-.salvar-btn {
-  color: #7a5c58;
-}
-
-.salvar-btn:hover {
-  background: #eaded7;
-  transform: translateY(-2px);
-}
-
-.salvar-btn.salvo {
-  background: #7a5c58;
-  color: #fff;
-}
-
-.salvar-btn.salvo .sub {
-  color: #f3e9e7;
-}
-
 /* RESPONSIVO */
 
 @media (max-width: 980px) {
@@ -420,14 +516,26 @@ body {
     border-radius: 20px;
   }
 
+  .post-text {
+    font-size: 16px;
+  }
+
   .post-text p {
     font-size: 16px;
     line-height: 1.8;
   }
 
-  .post-text h2,
-  .comentarios-section h2 {
+  .post-text h1 {
+    font-size: 30px;
+  }
+
+  .post-text h2 {
     font-size: 27px;
+  }
+
+  .post-text h3,
+  .comentarios-section h2 {
+    font-size: 23px;
   }
 
   .post-actions,
