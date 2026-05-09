@@ -29,57 +29,106 @@ const btnConfirmarModal = document.getElementById("btnConfirmarModal");
 let postEditandoId = null;
 let acaoConfirmada = null;
 
-/* EDITORES */
+/* TINYMCE */
 
-const editorResumo = new Quill("#editorResumo", {
-  theme: "snow",
+tinymce.init({
+  selector: "#resumo",
+  height: 190,
+  menubar: false,
+  branding: false,
+  plugins: "lists link wordcount",
+  toolbar: "bold italic underline | bullist numlist | link | removeformat",
   placeholder: "Resumo que aparecerá no card do artigo",
-  modules: {
-    toolbar: [
-      ["bold", "italic", "underline"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link"],
-      ["clean"]
-    ]
-  }
+  setup: (editor) => {
+    editor.on("keyup change input setcontent", atualizarPreview);
+  },
+  content_style: `
+    body {
+      font-family: Inter, Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #2f2a28;
+    }
+
+    p {
+      margin: 0 0 10px;
+    }
+  `
 });
 
-const editorConteudo = new Quill("#editorConteudo", {
-  theme: "snow",
+tinymce.init({
+  selector: "#conteudo",
+  height: 540,
+  menubar: false,
+  branding: false,
+  plugins: "lists link table code wordcount",
+  toolbar:
+    "undo redo | blocks | bold italic underline strikethrough | " +
+    "bullist numlist | blockquote link | alignleft aligncenter alignright | " +
+    "table | code | removeformat",
   placeholder: "Escreva o artigo completo aqui",
-  modules: {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["blockquote", "link"],
-      [{ align: [] }],
-      ["clean"]
-    ]
-  }
+  content_style: `
+    body {
+      font-family: Inter, Arial, sans-serif;
+      font-size: 17px;
+      line-height: 1.8;
+      color: #2f2a28;
+      padding: 18px;
+    }
+
+    h1, h2, h3 {
+      color: #2f2a28;
+      line-height: 1.25;
+      margin: 24px 0 12px;
+    }
+
+    p {
+      margin: 0 0 16px;
+    }
+
+    ul, ol {
+      margin: 12px 0 18px 24px;
+    }
+
+    blockquote {
+      border-left: 4px solid #7a5c58;
+      padding: 12px 16px;
+      background: #f8f4ef;
+      border-radius: 10px;
+    }
+  `
 });
 
-/* FUNÇÕES AUXILIARES */
+/* HELPERS */
+
+function pegarConteudoEditor(id) {
+  const editor = tinymce.get(id);
+  return editor ? editor.getContent().trim() : document.getElementById(id).value.trim();
+}
+
+function setarConteudoEditor(id, valor) {
+  const editor = tinymce.get(id);
+  if (editor) {
+    editor.setContent(valor || "");
+  } else {
+    document.getElementById(id).value = valor || "";
+  }
+}
 
 function limparHtmlVazio(html) {
   if (!html) return "";
 
-  const texto = pegarTextoLimpo(html);
-
-  if (!texto) return "";
-
-  return html.trim();
+  return html
+    .replace(/<p>\s*(<br\s*\/?>)?\s*<\/p>/gi, "")
+    .replace(/<p>\s*&nbsp;\s*<\/p>/gi, "")
+    .replace(/(<br\s*\/?>\s*){2,}/gi, "<br>")
+    .trim();
 }
 
 function pegarTextoLimpo(html) {
   const div = document.createElement("div");
   div.innerHTML = html || "";
   return div.textContent.trim();
-}
-
-function sincronizarEditores() {
-  resumo.value = limparHtmlVazio(editorResumo.root.innerHTML);
-  conteudo.value = limparHtmlVazio(editorConteudo.root.innerHTML);
 }
 
 function controlarAgendamento() {
@@ -138,9 +187,8 @@ btnConfirmarModal.addEventListener("click", () => {
 /* PREVIEW */
 
 function atualizarPreview() {
-  sincronizarEditores();
-
-  const resumoTexto = pegarTextoLimpo(resumo.value);
+  const resumoHtml = pegarConteudoEditor("resumo");
+  const resumoTexto = pegarTextoLimpo(resumoHtml);
 
   previewTitulo.textContent = titulo.value.trim() || "Título do artigo";
   previewCategoria.textContent = categoria.value.trim() || "Categoria";
@@ -169,23 +217,18 @@ function atualizarPreview() {
 titulo.addEventListener("input", atualizarPreview);
 categoria.addEventListener("input", atualizarPreview);
 imagem.addEventListener("input", atualizarPreview);
-
 statusPost.addEventListener("change", controlarAgendamento);
-
-editorResumo.on("text-change", atualizarPreview);
-editorConteudo.on("text-change", sincronizarEditores);
 
 formPost.addEventListener("reset", () => {
   setTimeout(() => {
-    editorResumo.root.innerHTML = "";
-    editorConteudo.root.innerHTML = "";
+    setarConteudoEditor("resumo", "");
+    setarConteudoEditor("conteudo", "");
 
     statusPost.value = "publicado";
     agendadoPara.value = "";
     postEditandoId = null;
 
     controlarAgendamento();
-    sincronizarEditores();
     atualizarPreview();
   }, 0);
 });
@@ -265,13 +308,14 @@ async function carregarPostsAdmin() {
 formPost.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  sincronizarEditores();
+  const resumoHtml = limparHtmlVazio(pegarConteudoEditor("resumo"));
+  const conteudoHtml = limparHtmlVazio(pegarConteudoEditor("conteudo"));
 
   const post = {
     titulo: titulo.value.trim(),
     categoria: categoria.value.trim(),
-    resumo: resumo.value.trim(),
-    conteudo: conteudo.value.trim(),
+    resumo: resumoHtml,
+    conteudo: conteudoHtml,
     imagem: imagem.value.trim(),
     status: statusPost.value,
     agendado_para: agendadoPara.value
@@ -321,14 +365,13 @@ formPost.addEventListener("submit", async (e) => {
     postEditandoId = null;
     formPost.reset();
 
-    editorResumo.root.innerHTML = "";
-    editorConteudo.root.innerHTML = "";
+    setarConteudoEditor("resumo", "");
+    setarConteudoEditor("conteudo", "");
 
     statusPost.value = "publicado";
     agendadoPara.value = "";
 
     controlarAgendamento();
-    sincronizarEditores();
     atualizarPreview();
     carregarPostsAdmin();
 
@@ -365,11 +408,10 @@ async function prepararEdicao(id) {
       agendadoPara.value = "";
     }
 
-    editorResumo.root.innerHTML = post.resumo || "";
-    editorConteudo.root.innerHTML = post.conteudo || "";
+    setarConteudoEditor("resumo", post.resumo || "");
+    setarConteudoEditor("conteudo", post.conteudo || "");
 
     controlarAgendamento();
-    sincronizarEditores();
     atualizarPreview();
 
     window.scrollTo({
@@ -409,7 +451,7 @@ async function excluirPost(id) {
     carregarPostsAdmin();
 
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao excluir:", error);
     mostrarToast("Erro ao excluir post.", "error");
   }
 }
@@ -424,6 +466,9 @@ function sairAdmin() {
 /* INICIAR */
 
 controlarAgendamento();
-sincronizarEditores();
 atualizarPreview();
 carregarPostsAdmin();
+
+if (window.lucide) {
+  lucide.createIcons();
+}

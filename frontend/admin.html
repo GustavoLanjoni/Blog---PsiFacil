@@ -4,9 +4,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Admin | PsiBlog</title>
+
   <link rel="stylesheet" href="css/admin.css">
-  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+  <script
+    src="https://cdn.tiny.cloud/1/77lbhgugvudkk00pnl39cluaswmuxthi13c33we5jdyvzlv8/tinymce/8/tinymce.min.js"
+    referrerpolicy="origin"
+    crossorigin="anonymous">
+  </script>
 </head>
 
 <body>
@@ -91,7 +98,7 @@
           <div class="form-header">
             <span class="tag">Novo artigo</span>
             <h2>Cadastrar Novo Post</h2>
-            <p>Preencha as informações abaixo para publicar um artigo.</p>
+            <p>Preencha as informações abaixo para publicar ou agendar um artigo.</p>
           </div>
 
           <div class="form-group">
@@ -128,14 +135,12 @@
 
           <div class="form-group">
             <label for="resumo">Resumo curto</label>
-            <input type="hidden" id="resumo">
-            <div id="editorResumo" class="editor-box"></div>
+            <textarea id="resumo" placeholder="Resumo que aparecerá no card do artigo"></textarea>
           </div>
 
           <div class="form-group">
             <label for="conteudo">Conteúdo completo</label>
-            <input type="hidden" id="conteudo">
-            <div id="editorConteudo" class="editor-box editor-conteudo"></div>
+            <textarea id="conteudo" placeholder="Escreva o artigo completo aqui"></textarea>
           </div>
 
           <div class="form-actions">
@@ -201,20 +206,14 @@
     </div>
   </div>
 
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>
-    lucide.createIcons();
-  </script>
-
-  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-  <script src="js/admin.js"></script>
-
   <script>
     if (!localStorage.getItem("tokenAdmin")) {
       window.location.href = "login.html";
     }
   </script>
 
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/admin.js"></script>
 </body>
 
 </html>
