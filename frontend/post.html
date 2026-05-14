@@ -8,15 +8,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
-    rel="stylesheet">
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap"
+  rel="stylesheet">">
 
   <title>Artigo | PsiBlog</title>
   <link rel="stylesheet" href="css/post.css">
 </head>
 
 <body>
+
+  <div class="reading-progress">
+    <div class="reading-progress-bar" id="readingBar"></div>
+  </div>
 
   <main class="post-page">
 
@@ -96,6 +100,9 @@
 
         </div>
 
+
+
+
         <section class="comentarios-section">
           <h2>Comentários</h2>
 
@@ -110,9 +117,22 @@
 
       </aside>
 
+      <section class="relacionados-section">
+        <div class="relacionados-header">
+          <span class="tag">Continue lendo</span>
+          <h2>Você também pode gostar</h2>
+          <p>Outros conteúdos que combinam com este artigo.</p>
+        </div>
+
+        <div class="relacionados-grid" id="postsRelacionados"></div>
+      </section>
+
     </div>
 
   </main>
+
+
+
 
   <!-- Lucide só para curtir/compartilhar -->
   <script src="https://unpkg.com/lucide@latest"></script>

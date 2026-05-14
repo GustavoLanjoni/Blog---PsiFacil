@@ -8,6 +8,8 @@ const btnCompartilhar = document.getElementById("btnCompartilhar");
 const formComentario = document.getElementById("formComentario");
 const listaComentarios = document.getElementById("listaComentarios");
 const btnSalvar = document.getElementById("btnSalvar");
+const readingBar = document.getElementById("readingBar");
+const postsRelacionados = document.getElementById("postsRelacionados");
 
 const token = localStorage.getItem("tokenUsuario");
 
@@ -33,7 +35,6 @@ async function verificarSalvo() {
     if (dados.salvo) {
       atualizarBotaoSalvar(true);
     }
-
   } catch (error) {
     console.error("Erro ao verificar salvo:", error);
   }
@@ -92,11 +93,19 @@ if (btnSalvar) {
       if (!resposta.ok) return;
 
       atualizarBotaoSalvar(!salvo);
-
     } catch (error) {
       console.error("Erro ao salvar/remover post:", error);
     }
   });
+}
+
+/* TEMPO DE LEITURA */
+
+function calcularTempoLeitura(texto) {
+  const palavras = texto.trim().split(/\s+/).filter(Boolean).length;
+  const minutos = Math.ceil(palavras / 200);
+
+  return minutos || 1;
 }
 
 /* CARREGAR POST */
@@ -116,6 +125,10 @@ async function carregarPost() {
     }
 
     const post = await resposta.json();
+    carregarRelacionados(post);
+
+    const textoLimpo = (post.conteudo || "").replace(/<[^>]+>/g, " ");
+    const tempoLeitura = calcularTempoLeitura(textoLimpo);
 
     document.title = `${post.titulo} | PsiBlog`;
 
@@ -125,7 +138,15 @@ async function carregarPost() {
       <h1>${post.titulo}</h1>
 
       <div class="post-meta">
-        Publicado em ${new Date(post.criado_em).toLocaleDateString("pt-BR")}
+        <span>
+          Publicado em ${new Date(post.criado_em).toLocaleDateString("pt-BR")}
+        </span>
+
+        <span class="dot"></span>
+
+        <span>
+          ${tempoLeitura} min de leitura
+        </span>
       </div>
 
       <img
@@ -144,6 +165,8 @@ async function carregarPost() {
     console.error(error);
     postDetalhe.innerHTML = "<p>Erro ao carregar o artigo.</p>";
   }
+
+  
 }
 
 /* CURTIDAS */
@@ -256,6 +279,90 @@ async function carregarComentarios() {
   } catch (error) {
     console.error("Erro ao carregar comentários:", error);
   }
+}
+
+/* BARRA DE LEITURA */
+
+window.addEventListener("scroll", () => {
+  if (!readingBar) return;
+
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+  if (docHeight <= 0) {
+    readingBar.style.width = "0%";
+    return;
+  }
+
+  const progresso = (scrollTop / docHeight) * 100;
+
+  readingBar.style.width = `${Math.min(progresso, 100)}%`;
+});
+
+
+async function carregarRelacionados(postAtual) {
+  if (!postsRelacionados) return;
+
+  try {
+    const resposta = await fetch(apiPosts);
+    const posts = await resposta.json();
+
+    const relacionados = posts
+      .filter((post) => {
+        return (
+          post.id !== postAtual.id &&
+          post.categoria &&
+          postAtual.categoria &&
+          post.categoria.toLowerCase() === postAtual.categoria.toLowerCase()
+        );
+      })
+      .slice(0, 3);
+
+    postsRelacionados.innerHTML = "";
+
+    if (relacionados.length === 0) {
+      postsRelacionados.innerHTML = `
+        <p class="sem-relacionados">
+          Nenhum artigo relacionado encontrado.
+        </p>
+      `;
+      return;
+    }
+
+    relacionados.forEach((post) => {
+      postsRelacionados.innerHTML += `
+        <a href="post.html?id=${post.id}" class="relacionado-card">
+          <img
+            src="${post.imagem || "https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=900&q=80"}"
+            alt="${post.titulo}"
+          >
+
+          <div class="relacionado-content">
+            <span>${post.categoria || "Blog"}</span>
+            <h3>${post.titulo}</h3>
+            <p>${limitarTexto(pegarTextoLimpo(post.resumo || post.conteudo || ""), 110)}</p>
+          </div>
+        </a>
+      `;
+    });
+
+  } catch (error) {
+    console.error("Erro ao carregar relacionados:", error);
+  }
+}
+
+function pegarTextoLimpo(html) {
+  const div = document.createElement("div");
+  div.innerHTML = html || "";
+  return div.textContent.trim();
+}
+
+function limitarTexto(texto, limite) {
+  if (!texto) return "Clique para ler este conteúdo completo.";
+
+  if (texto.length <= limite) return texto;
+
+  return texto.substring(0, limite).trim() + "...";
 }
 
 /* INICIAR */
