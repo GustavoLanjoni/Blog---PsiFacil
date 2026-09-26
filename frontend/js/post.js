@@ -132,6 +132,43 @@ async function carregarPost() {
 
     document.title = `${post.titulo} | PsiBlog`;
 
+    const descricaoBase = post.resumo || textoLimpo;
+
+    const descricao = descricaoBase
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 160);
+
+    const metaDescription = document.getElementById("metaDescription");
+
+    if (metaDescription) {
+      metaDescription.setAttribute("content", descricao);
+    }
+
+    const canonicalUrl = document.getElementById("canonicalUrl");
+
+    if (canonicalUrl) {
+      canonicalUrl.setAttribute("href", window.location.href);
+    }
+
+    const ogTitle = document.getElementById("ogTitle");
+
+    if (ogTitle) {
+      ogTitle.setAttribute("content", `${post.titulo} | PsiBlog`);
+    }
+
+    const ogDescription = document.getElementById("ogDescription");
+
+    if (ogDescription) {
+      ogDescription.setAttribute("content", descricao);
+    }
+
+    const ogUrl = document.getElementById("ogUrl");
+
+    if (ogUrl) {
+      ogUrl.setAttribute("content", window.location.href);
+    }
+
     postDetalhe.innerHTML = `
       <span class="category">${post.categoria || "Blog"}</span>
 
@@ -166,7 +203,7 @@ async function carregarPost() {
     postDetalhe.innerHTML = "<p>Erro ao carregar o artigo.</p>";
   }
 
-  
+
 }
 
 /* CURTIDAS */
