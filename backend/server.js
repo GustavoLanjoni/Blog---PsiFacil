@@ -28,34 +28,56 @@ app.use("/salvos", postsSalvosRoutes);
 
 
 
-app.get("/sitemap.xml", (req, res) => {
-  res.type("application/xml");
+app.get("/sitemap.xml", async (req, res) => {
+  try {
+    const resposta = await fetch(
+      "https://psifacil-blog.onrender.com/posts"
+    );
 
-  res.send(`<?xml version="1.0" encoding="UTF-8"?>
+    if (!resposta.ok) {
+      throw new Error("Erro ao buscar os posts.");
+    }
+
+    const posts = await resposta.json();
+
+    const urlsFixas = [
+      "https://psifacil-blog.onrender.com/",
+      "https://psifacil-blog.onrender.com/psifacil.html",
+      "https://psifacil-blog.onrender.com/conteudo.html",
+      "https://psifacil-blog.onrender.com/ebooks.html",
+      "https://psifacil-blog.onrender.com/escuta.html"
+    ];
+
+    const urlsPosts = posts.map((post) => {
+      return `https://psifacil-blog.onrender.com/post.html?id=${post.id}`;
+    });
+
+    const todasUrls = [...urlsFixas, ...urlsPosts];
+
+    const urlsXml = todasUrls
+      .map((url) => {
+        return `  <url>
+    <loc>${url}</loc>
+  </url>`;
+      })
+      .join("\n");
+
+    res.type("application/xml");
+
+    res.send(`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <url>
-    <loc>https://psifacil-blog.onrender.com/</loc>
-  </url>
-
-  <url>
-    <loc>https://psifacil-blog.onrender.com/psifacil.html</loc>
-  </url>
-
-  <url>
-    <loc>https://psifacil-blog.onrender.com/conteudo.html</loc>
-  </url>
-
-  <url>
-    <loc>https://psifacil-blog.onrender.com/ebooks.html</loc>
-  </url>
-
-  <url>
-    <loc>https://psifacil-blog.onrender.com/escuta.html</loc>
-  </url>
-
+${urlsXml}
 </urlset>`);
+  } catch (error) {
+    console.error("Erro ao gerar sitemap:", error);
+
+    res
+      .status(500)
+      .type("text/plain")
+      .send("Erro ao gerar sitemap.");
+  }
 });
+
 
 
 app.get("/robots.txt", (req, res) => {
