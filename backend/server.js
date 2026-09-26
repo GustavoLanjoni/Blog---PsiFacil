@@ -26,6 +26,34 @@ app.use("/usuarios", usuariosRoutes);
 app.use("/perfil", perfilUserRoutes);
 app.use("/salvos", postsSalvosRoutes);
 
+app.get("/sitemap.xml", (req, res) => {
+  res.type("application/xml");
+
+  res.send(`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://psifacil-blog.onrender.com/</loc>
+  </url>
+
+  <url>
+    <loc>https://psifacil-blog.onrender.com/psifacil.html</loc>
+  </url>
+
+  <url>
+    <loc>https://psifacil-blog.onrender.com/conteudo.html</loc>
+  </url>
+
+  <url>
+    <loc>https://psifacil-blog.onrender.com/ebooks.html</loc>
+  </url>
+
+  <url>
+    <loc>https://psifacil-blog.onrender.com/escuta.html</loc>
+  </url>
+
+</urlset>`);
+});
 
 
 app.get("/", (req, res) => {
