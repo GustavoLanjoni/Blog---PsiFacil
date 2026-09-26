@@ -14,40 +14,36 @@ async function carregarPosts() {
 
     postsRecentes.forEach((post) => {
       postsGrid.innerHTML += `
-        <article class="post-card">
+    <article class="post-card">
 
-          <a href="post.html?id=${post.id}" aria-label="Ler o artigo: ${post.titulo}">
-            <img
-              src="${post.imagem || 'https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=900&q=80'}"
-              alt="${post.titulo}"
-            >
-          </a>
+      <a href="post.html?id=${post.id}" aria-label="Ler o artigo: ${post.titulo}">
+        <img
+          src="${post.imagem || 'https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=900&q=80'}"
+          alt="${post.titulo}"
+        >
+      </a>
 
-          <div class="post-content">
+      <div class="post-content">
 
-            <span class="category">${post.categoria || "Blog"}</span>
+        <span class="category">${post.categoria || "Blog"}</span>
 
-            <h3>
-              <a href="post.html?id=${post.id}">
-                ${post.titulo}
-              </a>
-            </h3>
+        <h3>${post.titulo}</h3>
 
-            <p>
-              ${post.resumo || "Clique para ler o conteúdo completo deste artigo."}
-            </p>
+        <p>
+          ${post.resumo || "Clique para ler o conteúdo completo deste artigo."}
+        </p>
 
-            <a
-              href="post.html?id=${post.id}"
-              class="read-more"
-              aria-label="Ler o artigo: ${post.titulo}"
-            >
-              Ler mais
-            </a>
+        <a
+          href="post.html?id=${post.id}"
+          class="read-more"
+          aria-label="Ler o artigo: ${post.titulo}"
+        >
+          Ler mais
+        </a>
 
-          </div>
-        </article>
-      `;
+      </div>
+    </article>
+  `;
     });
 
   } catch (error) {

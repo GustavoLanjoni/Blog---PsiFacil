@@ -169,6 +169,27 @@ async function carregarPost() {
       ogUrl.setAttribute("content", window.location.href);
     }
 
+    const articleSchema = document.getElementById("articleSchema");
+
+    if (articleSchema) {
+      const schema = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": post.titulo,
+        "description": descricao,
+        "url": window.location.href,
+        "datePublished": post.criado_em,
+        "image": post.imagem || "https://psifacil-blog.onrender.com/img/favicon.svg",
+        "publisher": {
+          "@type": "Organization",
+          "name": "PsiFácil",
+          "url": "https://psifacil-blog.onrender.com/"
+        }
+      };
+
+      articleSchema.textContent = JSON.stringify(schema);
+    }
+
     postDetalhe.innerHTML = `
       <span class="category">${post.categoria || "Blog"}</span>
 
