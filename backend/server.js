@@ -26,6 +26,8 @@ app.use("/usuarios", usuariosRoutes);
 app.use("/perfil", perfilUserRoutes);
 app.use("/salvos", postsSalvosRoutes);
 
+
+
 app.get("/sitemap.xml", (req, res) => {
   res.type("application/xml");
 
@@ -54,6 +56,17 @@ app.get("/sitemap.xml", (req, res) => {
 
 </urlset>`);
 });
+
+
+app.get("/robots.txt", (req, res) => {
+  res.type("text/plain");
+
+  res.send(`User-agent: *
+Allow: /
+
+Sitemap: https://psifacil-blog.onrender.com/sitemap.xml`);
+});
+
 
 
 app.get("/", (req, res) => {
