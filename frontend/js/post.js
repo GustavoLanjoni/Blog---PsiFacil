@@ -35,7 +35,6 @@ function limparTexto(texto) {
 
 function criarDescricao(post) {
   const textoResumo = limparTexto(post.resumo || "");
-
   const textoConteudo = limparTexto(post.conteudo || "");
 
   const base = textoResumo || textoConteudo;
@@ -49,12 +48,6 @@ function criarDescricao(post) {
 
 function obterUrlDoArtigo() {
   const url = new URL(window.location.href);
-
-  /*
-    Mantém somente a URL real do artigo.
-    Isso evita que parâmetros adicionais de rastreamento
-    sejam utilizados como canonical.
-  */
 
   return `${url.origin}${url.pathname}?id=${encodeURIComponent(id)}`;
 }
@@ -247,20 +240,10 @@ function atualizarSEO(post) {
     };
 
 
-    /*
-      Só adiciona a imagem ao Schema quando o artigo
-      realmente possui uma imagem própria.
-    */
-
     if (imagem) {
       schema.image = [imagem];
     }
 
-
-    /*
-      Só adiciona dateModified se o banco realmente
-      fornecer uma data de alteração.
-    */
 
     const dataModificacao =
       post.atualizado_em ||
@@ -398,6 +381,80 @@ function calcularTempoLeitura(texto) {
 
 
 /* =========================================================
+   FONTES E CRÉDITOS
+========================================================= */
+
+function gerarFontesCreditos(fontes) {
+
+  if (!fontes || !fontes.trim()) {
+    return "";
+  }
+
+  const linhas = fontes
+    .split(/\r?\n/)
+    .map((linha) => linha.trim())
+    .filter(Boolean);
+
+  if (linhas.length === 0) {
+    return "";
+  }
+
+  const fontesHtml = linhas
+    .map((linha) => {
+
+      const urlRegex =
+        /(https?:\/\/[^\s]+)/g;
+
+      const partes = linha.split(urlRegex);
+
+      const conteudo = partes
+        .map((parte) => {
+
+          if (/^https?:\/\//i.test(parte)) {
+
+            const urlLimpa = parte.replace(
+              /[),.;]+$/,
+              ""
+            );
+
+            return `
+              <a
+                href="${urlLimpa}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                ${urlLimpa}
+              </a>
+            `;
+          }
+
+          return parte;
+        })
+        .join("");
+
+      return `
+        <li>
+          ${conteudo}
+        </li>
+      `;
+    })
+    .join("");
+
+  return `
+    <section class="fontes-creditos">
+
+      <h2>Fontes e créditos</h2>
+
+      <ul>
+        ${fontesHtml}
+      </ul>
+
+    </section>
+  `;
+}
+
+
+/* =========================================================
    CARREGAR POST
 ========================================================= */
 
@@ -446,6 +503,12 @@ async function carregarPost() {
 
     const tempoLeitura =
       calcularTempoLeitura(textoLimpo);
+
+
+    /* FONTES */
+
+    const fontesHtml =
+      gerarFontesCreditos(post.fontes);
 
 
     /* CONTEÚDO */
@@ -499,6 +562,9 @@ async function carregarPost() {
       <div class="post-text">
         ${post.conteudo || ""}
       </div>
+
+
+      ${fontesHtml}
 
 
       <a

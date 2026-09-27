@@ -72,6 +72,7 @@ router.post("/", async (req, res) => {
     resumo,
     conteudo,
     imagem,
+    fontes,
     status,
     agendado_para
   } = req.body;
@@ -83,7 +84,8 @@ router.post("/", async (req, res) => {
   }
 
   const statusFinal = status === "agendado" ? "agendado" : "publicado";
-  const agendamentoFinal = statusFinal === "agendado" ? agendado_para : null;
+  const agendamentoFinal =
+    statusFinal === "agendado" ? agendado_para : null;
 
   if (statusFinal === "agendado" && !agendamentoFinal) {
     return res.status(400).json({
@@ -93,9 +95,18 @@ router.post("/", async (req, res) => {
 
   try {
     const resultado = await db.query(
-      `INSERT INTO posts 
-      (titulo, categoria, resumo, conteudo, imagem, status, agendado_para)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `INSERT INTO posts
+      (
+        titulo,
+        categoria,
+        resumo,
+        conteudo,
+        imagem,
+        fontes,
+        status,
+        agendado_para
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *`,
       [
         titulo,
@@ -103,6 +114,7 @@ router.post("/", async (req, res) => {
         resumo,
         conteudo,
         imagem,
+        fontes,
         statusFinal,
         agendamentoFinal
       ]
@@ -125,12 +137,14 @@ router.put("/:id", async (req, res) => {
     resumo,
     conteudo,
     imagem,
+    fontes,
     status,
     agendado_para
   } = req.body;
 
   const statusFinal = status === "agendado" ? "agendado" : "publicado";
-  const agendamentoFinal = statusFinal === "agendado" ? agendado_para : null;
+  const agendamentoFinal =
+    statusFinal === "agendado" ? agendado_para : null;
 
   if (statusFinal === "agendado" && !agendamentoFinal) {
     return res.status(400).json({
@@ -146,9 +160,10 @@ router.put("/:id", async (req, res) => {
            resumo = $3,
            conteudo = $4,
            imagem = $5,
-           status = $6,
-           agendado_para = $7
-       WHERE id = $8
+           fontes = $6,
+           status = $7,
+           agendado_para = $8
+       WHERE id = $9
        RETURNING *`,
       [
         titulo,
@@ -156,6 +171,7 @@ router.put("/:id", async (req, res) => {
         resumo,
         conteudo,
         imagem,
+        fontes,
         statusFinal,
         agendamentoFinal,
         id
@@ -163,13 +179,17 @@ router.put("/:id", async (req, res) => {
     );
 
     if (resultado.rows.length === 0) {
-      return res.status(404).json({ erro: "Post não encontrado" });
+      return res.status(404).json({
+        erro: "Post não encontrado"
+      });
     }
 
     res.json(resultado.rows[0]);
   } catch (error) {
     console.error("ERRO AO ATUALIZAR POST:", error);
-    res.status(500).json({ erro: "Erro ao atualizar post" });
+    res.status(500).json({
+      erro: "Erro ao atualizar post"
+    });
   }
 });
 
@@ -184,13 +204,19 @@ router.delete("/:id", async (req, res) => {
     );
 
     if (resultado.rows.length === 0) {
-      return res.status(404).json({ erro: "Post não encontrado" });
+      return res.status(404).json({
+        erro: "Post não encontrado"
+      });
     }
 
-    res.json({ mensagem: "Post excluído com sucesso" });
+    res.json({
+      mensagem: "Post excluído com sucesso"
+    });
   } catch (error) {
     console.error("ERRO AO EXCLUIR POST:", error);
-    res.status(500).json({ erro: "Erro ao excluir post" });
+    res.status(500).json({
+      erro: "Erro ao excluir post"
+    });
   }
 });
 
