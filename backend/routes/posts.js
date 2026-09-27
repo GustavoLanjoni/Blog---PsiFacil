@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const autenticarAdmin = require("../middleware/authAdmin");
 
 /* LISTAR POSTS PÚBLICOS */
 /* Mostra posts publicados ou agendados que já chegaram na data */
@@ -28,7 +29,7 @@ router.get("/", async (req, res) => {
 });
 
 /* LISTAR TODOS NO ADMIN */
-router.get("/admin/todos", async (req, res) => {
+router.get("/admin/todos", autenticarAdmin, async (req, res) => {
   try {
     const resultado = await db.query(`
       SELECT *
@@ -65,7 +66,7 @@ router.get("/:id", async (req, res) => {
 });
 
 /* CRIAR */
-router.post("/", async (req, res) => {
+router.post("/", autenticarAdmin, async (req, res) => {
   const {
     titulo,
     categoria,
@@ -128,7 +129,7 @@ router.post("/", async (req, res) => {
 });
 
 /* EDITAR */
-router.put("/:id", async (req, res) => {
+router.put("/:id", autenticarAdmin, async (req, res) => {
   const { id } = req.params;
 
   const {
@@ -194,7 +195,7 @@ router.put("/:id", async (req, res) => {
 });
 
 /* EXCLUIR */
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", autenticarAdmin, async (req, res) => {
   const { id } = req.params;
 
   try {

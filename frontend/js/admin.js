@@ -14,44 +14,60 @@ const imagem = document.getElementById("imagem");
 
 const imagemArquivo = document.getElementById("imagemArquivo");
 
-const statusUploadImagem = document.getElementById("statusUploadImagem");
+const statusUploadImagem =
+  document.getElementById("statusUploadImagem");
 
 const fontes = document.getElementById("fontes");
 
 const statusPost = document.getElementById("status");
 
-const agendadoPara = document.getElementById("agendadoPara");
+const agendadoPara =
+  document.getElementById("agendadoPara");
 
-const grupoAgendamento = document.getElementById("grupoAgendamento");
+const grupoAgendamento =
+  document.getElementById("grupoAgendamento");
 
-const previewTitulo = document.getElementById("previewTitulo");
+const previewTitulo =
+  document.getElementById("previewTitulo");
 
-const previewCategoria = document.getElementById("previewCategoria");
+const previewCategoria =
+  document.getElementById("previewCategoria");
 
-const previewResumo = document.getElementById("previewResumo");
+const previewResumo =
+  document.getElementById("previewResumo");
 
-const previewImagem = document.getElementById("previewImagem");
+const previewImagem =
+  document.getElementById("previewImagem");
 
-const listaPostsAdmin = document.getElementById("listaPostsAdmin");
+const listaPostsAdmin =
+  document.getElementById("listaPostsAdmin");
 
-const totalPosts = document.getElementById("totalPosts");
+const totalPosts =
+  document.getElementById("totalPosts");
 
-const toast = document.getElementById("toast");
+const toast =
+  document.getElementById("toast");
 
-const modalConfirmacao = document.getElementById("modalConfirmacao");
+const modalConfirmacao =
+  document.getElementById("modalConfirmacao");
 
-const modalTexto = document.getElementById("modalTexto");
+const modalTexto =
+  document.getElementById("modalTexto");
 
-const btnCancelarModal = document.getElementById("btnCancelarModal");
+const btnCancelarModal =
+  document.getElementById("btnCancelarModal");
 
-const btnConfirmarModal = document.getElementById("btnConfirmarModal");
+const btnConfirmarModal =
+  document.getElementById("btnConfirmarModal");
 
 let postEditandoId = null;
 
 let acaoConfirmada = null;
 
 
-/* TINYMCE */
+/* =========================================
+   TINYMCE
+========================================= */
 
 tinymce.init({
 
@@ -65,13 +81,18 @@ tinymce.init({
 
   plugins: "lists link wordcount",
 
-  toolbar: "bold italic underline | bullist numlist | link | removeformat",
+  toolbar:
+    "bold italic underline | bullist numlist | link | removeformat",
 
-  placeholder: "Resumo que aparecerá no card do artigo",
+  placeholder:
+    "Resumo que aparecerá no card do artigo",
 
   setup: (editor) => {
 
-    editor.on("keyup change input setcontent", atualizarPreview);
+    editor.on(
+      "keyup change input setcontent",
+      atualizarPreview
+    );
 
   },
 
@@ -87,7 +108,6 @@ tinymce.init({
       margin: 0 0 10px;
     }
   `
-
 });
 
 
@@ -101,14 +121,16 @@ tinymce.init({
 
   branding: false,
 
-  plugins: "lists link table code wordcount",
+  plugins:
+    "lists link table code wordcount",
 
   toolbar:
     "undo redo | blocks | bold italic underline strikethrough | " +
     "bullist numlist | blockquote link | alignleft aligncenter alignright | " +
     "table | code | removeformat",
 
-  placeholder: "Escreva o artigo completo aqui",
+  placeholder:
+    "Escreva o artigo completo aqui",
 
   content_style: `
     body {
@@ -140,11 +162,12 @@ tinymce.init({
       border-radius: 10px;
     }
   `
-
 });
 
 
-/* HELPERS */
+/* =========================================
+   HELPERS
+========================================= */
 
 function pegarConteudoEditor(id) {
 
@@ -153,7 +176,6 @@ function pegarConteudoEditor(id) {
   return editor
     ? editor.getContent().trim()
     : document.getElementById(id).value.trim();
-
 }
 
 
@@ -167,10 +189,10 @@ function setarConteudoEditor(id, valor) {
 
   } else {
 
-    document.getElementById(id).value = valor || "";
+    document.getElementById(id).value =
+      valor || "";
 
   }
-
 }
 
 
@@ -179,22 +201,31 @@ function limparHtmlVazio(html) {
   if (!html) return "";
 
   return html
-    .replace(/<p>\s*(<br\s*\/?>)?\s*<\/p>/gi, "")
-    .replace(/<p>\s*&nbsp;\s*<\/p>/gi, "")
-    .replace(/(<br\s*\/?>\s*){2,}/gi, "<br>")
+    .replace(
+      /<p>\s*(<br\s*\/?>)?\s*<\/p>/gi,
+      ""
+    )
+    .replace(
+      /<p>\s*&nbsp;\s*<\/p>/gi,
+      ""
+    )
+    .replace(
+      /(<br\s*\/?>\s*){2,}/gi,
+      "<br>"
+    )
     .trim();
-
 }
 
 
 function pegarTextoLimpo(html) {
 
-  const div = document.createElement("div");
+  const div =
+    document.createElement("div");
 
-  div.innerHTML = html || "";
+  div.innerHTML =
+    html || "";
 
   return div.textContent.trim();
-
 }
 
 
@@ -202,16 +233,18 @@ function controlarAgendamento() {
 
   if (statusPost.value === "agendado") {
 
-    grupoAgendamento.style.display = "block";
+    grupoAgendamento.style.display =
+      "block";
 
   } else {
 
-    grupoAgendamento.style.display = "none";
+    grupoAgendamento.style.display =
+      "none";
 
-    agendadoPara.value = "";
+    agendadoPara.value =
+      "";
 
   }
-
 }
 
 
@@ -219,87 +252,126 @@ function formatarDataAdmin(data) {
 
   if (!data) return "";
 
-  return new Date(data).toLocaleString("pt-BR", {
-
-    timeZone: "America/Sao_Paulo",
-
-    dateStyle: "short",
-
-    timeStyle: "short"
-
-  });
-
+  return new Date(data).toLocaleString(
+    "pt-BR",
+    {
+      timeZone: "America/Sao_Paulo",
+      dateStyle: "short",
+      timeStyle: "short"
+    }
+  );
 }
 
 
-/* TOAST */
+/* =========================================
+   AUTENTICAÇÃO
+========================================= */
 
-function mostrarToast(mensagem, tipo = "success") {
+function obterTokenAdmin() {
 
-  toast.textContent = mensagem;
+  return localStorage.getItem(
+    "tokenAdmin"
+  );
+}
 
-  toast.className = `toast show ${tipo}`;
+
+/* =========================================
+   TOAST
+========================================= */
+
+function mostrarToast(
+  mensagem,
+  tipo = "success"
+) {
+
+  toast.textContent =
+    mensagem;
+
+  toast.className =
+    `toast show ${tipo}`;
 
   setTimeout(() => {
 
-    toast.className = "toast";
+    toast.className =
+      "toast";
 
   }, 3000);
-
 }
 
 
-/* MODAL */
+/* =========================================
+   MODAL
+========================================= */
 
-function abrirModalConfirmacao(texto, callback) {
+function abrirModalConfirmacao(
+  texto,
+  callback
+) {
 
-  modalTexto.textContent = texto;
+  modalTexto.textContent =
+    texto;
 
-  modalConfirmacao.classList.add("show");
+  modalConfirmacao.classList.add(
+    "show"
+  );
 
-  acaoConfirmada = callback;
-
+  acaoConfirmada =
+    callback;
 }
 
 
 function fecharModalConfirmacao() {
 
-  modalConfirmacao.classList.remove("show");
+  modalConfirmacao.classList.remove(
+    "show"
+  );
 
-  acaoConfirmada = null;
-
+  acaoConfirmada =
+    null;
 }
 
 
-btnCancelarModal.addEventListener("click", fecharModalConfirmacao);
+btnCancelarModal.addEventListener(
+  "click",
+  fecharModalConfirmacao
+);
 
 
-btnConfirmarModal.addEventListener("click", () => {
+btnConfirmarModal.addEventListener(
+  "click",
+  () => {
 
-  if (acaoConfirmada) {
+    if (acaoConfirmada) {
 
-    acaoConfirmada();
+      acaoConfirmada();
+
+    }
+
+    fecharModalConfirmacao();
 
   }
-
-  fecharModalConfirmacao();
-
-});
+);
 
 
-/* PREVIEW */
+/* =========================================
+   PREVIEW
+========================================= */
 
 function atualizarPreview() {
 
-  const resumoHtml = pegarConteudoEditor("resumo");
+  const resumoHtml =
+    pegarConteudoEditor("resumo");
 
-  const resumoTexto = pegarTextoLimpo(resumoHtml);
+  const resumoTexto =
+    pegarTextoLimpo(resumoHtml);
 
   previewTitulo.textContent =
-    titulo.value.trim() || "Título do artigo";
+    titulo.value.trim() ||
+    "Título do artigo";
 
   previewCategoria.textContent =
-    categoria.value.trim() || "Categoria";
+    categoria.value.trim() ||
+    "Categoria";
 
   previewResumo.textContent =
     resumoTexto ||
@@ -326,21 +398,26 @@ function atualizarPreview() {
     }
 
   }
-
 }
 
 
-/* UPLOAD DE IMAGEM */
+/* =========================================
+   UPLOAD DE IMAGEM
+========================================= */
 
 async function enviarImagem() {
 
-  if (!imagemArquivo || !imagemArquivo.files.length) {
+  if (
+    !imagemArquivo ||
+    !imagemArquivo.files.length
+  ) {
 
     return true;
 
   }
 
-  const arquivo = imagemArquivo.files[0];
+  const arquivo =
+    imagemArquivo.files[0];
 
   const tiposPermitidos = [
     "image/jpeg",
@@ -349,100 +426,157 @@ async function enviarImagem() {
     "image/gif"
   ];
 
-  if (!tiposPermitidos.includes(arquivo.type)) {
+  if (
+    !tiposPermitidos.includes(
+      arquivo.type
+    )
+  ) {
 
     mostrarToast(
       "Formato de imagem não permitido. Use JPG, PNG, WEBP ou GIF.",
       "error"
     );
 
-    imagemArquivo.value = "";
+    imagemArquivo.value =
+      "";
 
     return false;
 
   }
 
-  const tamanhoMaximo = 5 * 1024 * 1024;
 
-  if (arquivo.size > tamanhoMaximo) {
+  const tamanhoMaximo =
+    5 * 1024 * 1024;
+
+  if (
+    arquivo.size >
+    tamanhoMaximo
+  ) {
 
     mostrarToast(
       "A imagem deve ter no máximo 5 MB.",
       "error"
     );
 
-    imagemArquivo.value = "";
+    imagemArquivo.value =
+      "";
 
     return false;
 
   }
+
 
   try {
 
     if (statusUploadImagem) {
 
-      statusUploadImagem.textContent = "Enviando imagem...";
+      statusUploadImagem.textContent =
+        "Enviando imagem...";
 
     }
 
-    const formData = new FormData();
 
-    formData.append("imagem", arquivo);
+    const formData =
+      new FormData();
 
-    const tokenAdmin = localStorage.getItem("tokenAdmin");
+    formData.append(
+      "imagem",
+      arquivo
+    );
 
-    const resposta = await fetch("/upload", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${tokenAdmin}`
-      },
-      body: formData
-    });
-    const resultado = await resposta.json();
 
-    if (!resposta.ok) {
+    const tokenAdmin =
+      obterTokenAdmin();
+
+
+    if (!tokenAdmin) {
 
       throw new Error(
-        resultado.erro || "Erro ao enviar imagem."
+        "Sessão administrativa não encontrada. Faça login novamente."
       );
 
     }
 
-    imagem.value = resultado.url;
+
+    const resposta =
+      await fetch(
+        "/upload",
+        {
+          method: "POST",
+
+          headers: {
+            Authorization:
+              `Bearer ${tokenAdmin}`
+          },
+
+          body: formData
+        }
+      );
+
+
+    const resultado =
+      await resposta.json();
+
+
+    if (!resposta.ok) {
+
+      throw new Error(
+        resultado.erro ||
+        "Erro ao enviar imagem."
+      );
+
+    }
+
+
+    imagem.value =
+      resultado.url;
+
 
     atualizarPreview();
 
+
     if (statusUploadImagem) {
 
-      statusUploadImagem.textContent = "✓ Imagem enviada com sucesso.";
+      statusUploadImagem.textContent =
+        "✓ Imagem enviada com sucesso.";
 
     }
+
 
     return true;
 
   } catch (error) {
 
-    console.error("Erro no upload da imagem:", error);
+    console.error(
+      "Erro no upload da imagem:",
+      error
+    );
+
 
     if (statusUploadImagem) {
 
-      statusUploadImagem.textContent = "";
+      statusUploadImagem.textContent =
+        "";
 
     }
 
+
     mostrarToast(
-      error.message || "Erro ao enviar imagem.",
+      error.message ||
+      "Erro ao enviar imagem.",
       "error"
     );
+
 
     return false;
 
   }
-
 }
 
 
-/* EVENTOS */
+/* =========================================
+   EVENTOS
+========================================= */
 
 titulo.addEventListener(
   "input",
@@ -464,11 +598,14 @@ imagem.addEventListener(
 
 if (imagemArquivo) {
 
-  imagemArquivo.addEventListener("change", async () => {
+  imagemArquivo.addEventListener(
+    "change",
+    async () => {
 
-    await enviarImagem();
+      await enviarImagem();
 
-  });
+    }
+  );
 
 }
 
@@ -479,65 +616,117 @@ statusPost.addEventListener(
 );
 
 
-formPost.addEventListener("reset", () => {
+formPost.addEventListener(
+  "reset",
+  () => {
 
-  setTimeout(() => {
+    setTimeout(() => {
 
-    setarConteudoEditor(
-      "resumo",
-      ""
-    );
+      setarConteudoEditor(
+        "resumo",
+        ""
+      );
 
-    setarConteudoEditor(
-      "conteudo",
-      ""
-    );
+      setarConteudoEditor(
+        "conteudo",
+        ""
+      );
 
-    fontes.value = "";
+      fontes.value =
+        "";
 
-    imagem.value = "";
+      imagem.value =
+        "";
 
-    if (imagemArquivo) {
+      if (imagemArquivo) {
 
-      imagemArquivo.value = "";
+        imagemArquivo.value =
+          "";
 
-    }
+      }
 
-    if (statusUploadImagem) {
+      if (statusUploadImagem) {
 
-      statusUploadImagem.textContent = "";
+        statusUploadImagem.textContent =
+          "";
 
-    }
+      }
 
-    statusPost.value = "publicado";
+      statusPost.value =
+        "publicado";
 
-    agendadoPara.value = "";
+      agendadoPara.value =
+        "";
 
-    postEditandoId = null;
+      postEditandoId =
+        null;
 
-    controlarAgendamento();
+      controlarAgendamento();
 
-    atualizarPreview();
+      atualizarPreview();
 
-  }, 0);
+    }, 0);
 
-});
+  }
+);
 
 
-/* CARREGAR POSTS */
+/* =========================================
+   CARREGAR POSTS
+========================================= */
 
 async function carregarPostsAdmin() {
 
   try {
 
+    const tokenAdmin =
+      obterTokenAdmin();
+
+
+    if (!tokenAdmin) {
+
+      throw new Error(
+        "Sessão administrativa não encontrada. Faça login novamente."
+      );
+
+    }
+
+
     const resposta =
-      await fetch("/posts/admin/todos");
+      await fetch(
+        "/posts/admin/todos",
+        {
+          headers: {
+            Authorization:
+              `Bearer ${tokenAdmin}`
+          }
+        }
+      );
+
+
+    if (!resposta.ok) {
+
+      const erro =
+        await resposta
+          .json()
+          .catch(() => ({}));
+
+
+      throw new Error(
+        erro.erro ||
+        "Erro ao carregar posts."
+      );
+
+    }
+
 
     const posts =
       await resposta.json();
 
+
     totalPosts.textContent =
       posts.length;
+
 
     if (posts.length === 0) {
 
@@ -553,17 +742,22 @@ async function carregarPostsAdmin() {
         </div>
       `;
 
+
       if (window.lucide) {
 
         lucide.createIcons();
 
       }
 
+
       return;
 
     }
 
-    listaPostsAdmin.innerHTML = "";
+
+    listaPostsAdmin.innerHTML =
+      "";
+
 
     posts.forEach((post) => {
 
@@ -572,19 +766,26 @@ async function carregarPostsAdmin() {
           post.resumo || ""
         );
 
+
       const agora =
         new Date();
 
+
       const dataAgendada =
         post.agendado_para
-          ? new Date(post.agendado_para)
+          ? new Date(
+              post.agendado_para
+            )
           : null;
+
 
       let statusTexto =
         "Publicado";
 
+
       let statusClasse =
         "status-publicado";
+
 
       if (
         post.status === "agendado" &&
@@ -596,10 +797,12 @@ async function carregarPostsAdmin() {
             post.agendado_para
           )}`;
 
+
         statusClasse =
           "status-agendado";
 
       }
+
 
       listaPostsAdmin.innerHTML += `
         <div class="post-admin-card">
@@ -648,7 +851,9 @@ async function carregarPostsAdmin() {
       error
     );
 
+
     mostrarToast(
+      error.message ||
       "Erro ao carregar posts criados.",
       "error"
     );
@@ -658,7 +863,9 @@ async function carregarPostsAdmin() {
 }
 
 
-/* SALVAR OU EDITAR */
+/* =========================================
+   SALVAR OU EDITAR
+========================================= */
 
 formPost.addEventListener(
   "submit",
@@ -666,15 +873,22 @@ formPost.addEventListener(
 
     e.preventDefault();
 
+
     const resumoHtml =
       limparHtmlVazio(
-        pegarConteudoEditor("resumo")
+        pegarConteudoEditor(
+          "resumo"
+        )
       );
+
 
     const conteudoHtml =
       limparHtmlVazio(
-        pegarConteudoEditor("conteudo")
+        pegarConteudoEditor(
+          "conteudo"
+        )
       );
+
 
     const post = {
 
@@ -706,10 +920,12 @@ formPost.addEventListener(
 
     };
 
+
     const conteudoTexto =
       pegarTextoLimpo(
         post.conteudo
       );
+
 
     if (
       !post.titulo ||
@@ -725,6 +941,7 @@ formPost.addEventListener(
 
     }
 
+
     if (
       post.status === "agendado" &&
       !post.agendado_para
@@ -739,9 +956,8 @@ formPost.addEventListener(
 
     }
 
-    if (
-      !post.imagem
-    ) {
+
+    if (!post.imagem) {
 
       mostrarToast(
         "Escolha uma imagem de capa.",
@@ -752,17 +968,36 @@ formPost.addEventListener(
 
     }
 
+
     try {
+
+      const tokenAdmin =
+        obterTokenAdmin();
+
+
+      if (!tokenAdmin) {
+
+        mostrarToast(
+          "Sessão administrativa não encontrada. Faça login novamente.",
+          "error"
+        );
+
+        return;
+
+      }
+
 
       const url =
         postEditandoId
           ? `${apiPosts}/${postEditandoId}`
           : apiPosts;
 
+
       const metodo =
         postEditandoId
           ? "PUT"
           : "POST";
+
 
       const resposta =
         await fetch(
@@ -772,7 +1007,10 @@ formPost.addEventListener(
 
             headers: {
               "Content-Type":
-                "application/json"
+                "application/json",
+
+              Authorization:
+                `Bearer ${tokenAdmin}`
             },
 
             body:
@@ -781,10 +1019,14 @@ formPost.addEventListener(
           }
         );
 
+
       if (!resposta.ok) {
 
         const erro =
-          await resposta.json();
+          await resposta
+            .json()
+            .catch(() => ({}));
+
 
         mostrarToast(
           erro.erro ||
@@ -796,57 +1038,67 @@ formPost.addEventListener(
 
       }
 
+
       mostrarToast(
-
         postEditandoId
-
           ? "Artigo atualizado com sucesso!"
-
           : post.status === "agendado"
-
             ? "Artigo agendado com sucesso!"
-
             : "Artigo publicado com sucesso!",
-
         "success"
-
       );
 
-      postEditandoId = null;
+
+      postEditandoId =
+        null;
+
 
       formPost.reset();
+
 
       setarConteudoEditor(
         "resumo",
         ""
       );
 
+
       setarConteudoEditor(
         "conteudo",
         ""
       );
 
-      fontes.value = "";
 
-      imagem.value = "";
+      fontes.value =
+        "";
+
+
+      imagem.value =
+        "";
+
 
       if (imagemArquivo) {
 
-        imagemArquivo.value = "";
+        imagemArquivo.value =
+          "";
 
       }
+
 
       if (statusUploadImagem) {
 
-        statusUploadImagem.textContent = "";
+        statusUploadImagem.textContent =
+          "";
 
       }
+
 
       statusPost.value =
         "publicado";
 
+
       agendadoPara.value =
         "";
+
 
       controlarAgendamento();
 
@@ -861,6 +1113,7 @@ formPost.addEventListener(
         error
       );
 
+
       mostrarToast(
         "Erro ao conectar com o servidor.",
         "error"
@@ -872,7 +1125,9 @@ formPost.addEventListener(
 );
 
 
-/* EDITAR */
+/* =========================================
+   EDITAR
+========================================= */
 
 async function prepararEdicao(id) {
 
@@ -882,6 +1137,7 @@ async function prepararEdicao(id) {
       await fetch(
         `${apiPosts}/${id}`
       );
+
 
     if (!resposta.ok) {
 
@@ -894,26 +1150,35 @@ async function prepararEdicao(id) {
 
     }
 
+
     const post =
       await resposta.json();
+
 
     postEditandoId =
       post.id;
 
+
     titulo.value =
       post.titulo || "";
+
 
     categoria.value =
       post.categoria || "";
 
+
     imagem.value =
       post.imagem || "";
+
 
     fontes.value =
       post.fontes || "";
 
+
     statusPost.value =
-      post.status || "publicado";
+      post.status ||
+      "publicado";
+
 
     if (imagemArquivo) {
 
@@ -921,6 +1186,7 @@ async function prepararEdicao(id) {
         "";
 
     }
+
 
     if (statusUploadImagem) {
 
@@ -931,10 +1197,14 @@ async function prepararEdicao(id) {
 
     }
 
+
     if (post.agendado_para) {
 
       agendadoPara.value =
-        post.agendado_para.slice(0, 16);
+        post.agendado_para.slice(
+          0,
+          16
+        );
 
     } else {
 
@@ -943,27 +1213,29 @@ async function prepararEdicao(id) {
 
     }
 
+
     setarConteudoEditor(
       "resumo",
       post.resumo || ""
     );
+
 
     setarConteudoEditor(
       "conteudo",
       post.conteudo || ""
     );
 
+
     controlarAgendamento();
 
     atualizarPreview();
 
+
     window.scrollTo({
-
       top: 0,
-
       behavior: "smooth"
-
     });
+
 
     mostrarToast(
       "Post carregado para edição.",
@@ -973,6 +1245,7 @@ async function prepararEdicao(id) {
   } catch (error) {
 
     console.error(error);
+
 
     mostrarToast(
       "Erro ao carregar post para edição.",
@@ -984,17 +1257,16 @@ async function prepararEdicao(id) {
 }
 
 
-/* EXCLUIR */
+/* =========================================
+   EXCLUIR
+========================================= */
 
 function confirmarExclusao(id) {
 
   abrirModalConfirmacao(
-
     "Deseja realmente excluir este post? Essa ação não poderá ser desfeita.",
-
     () =>
       excluirPost(id)
-
   );
 
 }
@@ -1004,17 +1276,46 @@ async function excluirPost(id) {
 
   try {
 
+    const tokenAdmin =
+      obterTokenAdmin();
+
+
+    if (!tokenAdmin) {
+
+      mostrarToast(
+        "Sessão administrativa não encontrada. Faça login novamente.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
     const resposta =
       await fetch(
         `${apiPosts}/${id}`,
         {
-          method: "DELETE"
+          method: "DELETE",
+
+          headers: {
+            Authorization:
+              `Bearer ${tokenAdmin}`
+          }
         }
       );
 
+
     if (!resposta.ok) {
 
+      const erro =
+        await resposta
+          .json()
+          .catch(() => ({}));
+
+
       mostrarToast(
+        erro.erro ||
         "Erro ao excluir post.",
         "error"
       );
@@ -1023,10 +1324,12 @@ async function excluirPost(id) {
 
     }
 
+
     mostrarToast(
       "Post excluído com sucesso!",
       "success"
     );
+
 
     carregarPostsAdmin();
 
@@ -1036,6 +1339,7 @@ async function excluirPost(id) {
       "Erro ao excluir:",
       error
     );
+
 
     mostrarToast(
       "Erro ao excluir post.",
@@ -1047,7 +1351,9 @@ async function excluirPost(id) {
 }
 
 
-/* SAIR */
+/* =========================================
+   SAIR
+========================================= */
 
 function sairAdmin() {
 
@@ -1055,19 +1361,23 @@ function sairAdmin() {
     "tokenAdmin"
   );
 
+
   window.location.href =
     "login.html";
 
 }
 
 
-/* INICIAR */
+/* =========================================
+   INICIAR
+========================================= */
 
 controlarAgendamento();
 
 atualizarPreview();
 
 carregarPostsAdmin();
+
 
 if (window.lucide) {
 
