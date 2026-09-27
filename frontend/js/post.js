@@ -18,7 +18,269 @@ const id = params.get("id");
 
 const chaveCurtida = `curtiu_post_${id}`;
 
-/* SALVAR POST */
+
+/* =========================================================
+   SEO
+========================================================= */
+
+function limparTexto(texto) {
+  const div = document.createElement("div");
+  div.innerHTML = texto || "";
+
+  return div.textContent
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+
+function criarDescricao(post) {
+  const textoResumo = limparTexto(post.resumo || "");
+
+  const textoConteudo = limparTexto(post.conteudo || "");
+
+  const base = textoResumo || textoConteudo;
+
+  return base
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 160);
+}
+
+
+function obterUrlDoArtigo() {
+  const url = new URL(window.location.href);
+
+  /*
+    Mantém somente a URL real do artigo.
+    Isso evita que parâmetros adicionais de rastreamento
+    sejam utilizados como canonical.
+  */
+
+  return `${url.origin}${url.pathname}?id=${encodeURIComponent(id)}`;
+}
+
+
+function atualizarMetaTag(idElemento, atributo, valor) {
+  const elemento = document.getElementById(idElemento);
+
+  if (elemento && valor) {
+    elemento.setAttribute(atributo, valor);
+  }
+}
+
+
+function adicionarMetaProperty(property, content) {
+  if (!content) return;
+
+  let meta = document.querySelector(`meta[property="${property}"]`);
+
+  if (!meta) {
+    meta = document.createElement("meta");
+    meta.setAttribute("property", property);
+    document.head.appendChild(meta);
+  }
+
+  meta.setAttribute("content", content);
+}
+
+
+function adicionarMetaName(name, content) {
+  if (!content) return;
+
+  let meta = document.querySelector(`meta[name="${name}"]`);
+
+  if (!meta) {
+    meta = document.createElement("meta");
+    meta.setAttribute("name", name);
+    document.head.appendChild(meta);
+  }
+
+  meta.setAttribute("content", content);
+}
+
+
+function atualizarSEO(post) {
+  const titulo = limparTexto(post.titulo) || "Artigo | PsiFácil";
+
+  const descricao =
+    criarDescricao(post) ||
+    "Leia este artigo no PsiFácil.";
+
+  const url = obterUrlDoArtigo();
+
+  const imagem =
+    post.imagem && post.imagem.trim()
+      ? post.imagem.trim()
+      : null;
+
+
+  /* TITLE */
+
+  document.title = `${titulo} | PsiFácil`;
+
+
+  /* META DESCRIPTION */
+
+  atualizarMetaTag(
+    "metaDescription",
+    "content",
+    descricao
+  );
+
+
+  /* CANONICAL */
+
+  const canonicalUrl = document.getElementById("canonicalUrl");
+
+  if (canonicalUrl) {
+    canonicalUrl.setAttribute("href", url);
+  }
+
+
+  /* OPEN GRAPH */
+
+  atualizarMetaTag(
+    "ogTitle",
+    "content",
+    titulo
+  );
+
+  atualizarMetaTag(
+    "ogDescription",
+    "content",
+    descricao
+  );
+
+  atualizarMetaTag(
+    "ogUrl",
+    "content",
+    url
+  );
+
+
+  /* OG IMAGE */
+
+  adicionarMetaProperty(
+    "og:image",
+    imagem
+  );
+
+
+  /* OG SITE NAME */
+
+  adicionarMetaProperty(
+    "og:site_name",
+    "PsiFácil"
+  );
+
+
+  /* OG LOCALE */
+
+  adicionarMetaProperty(
+    "og:locale",
+    "pt_BR"
+  );
+
+
+  /* TWITTER CARD */
+
+  adicionarMetaName(
+    "twitter:card",
+    imagem ? "summary_large_image" : "summary"
+  );
+
+  adicionarMetaName(
+    "twitter:title",
+    titulo
+  );
+
+  adicionarMetaName(
+    "twitter:description",
+    descricao
+  );
+
+  if (imagem) {
+    adicionarMetaName(
+      "twitter:image",
+      imagem
+    );
+  }
+
+
+  /* =====================================================
+     STRUCTURED DATA — BLOGPOSTING
+  ===================================================== */
+
+  const articleSchema =
+    document.getElementById("articleSchema");
+
+  if (articleSchema) {
+
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+
+      "headline": titulo,
+
+      "description": descricao,
+
+      "url": url,
+
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": url
+      },
+
+      "datePublished": post.criado_em,
+
+      "author": {
+        "@type": "Organization",
+        "name": "PsiFácil",
+        "url": "https://psifacil-blog.onrender.com/"
+      },
+
+      "publisher": {
+        "@type": "Organization",
+        "name": "PsiFácil",
+        "url": "https://psifacil-blog.onrender.com/"
+      }
+    };
+
+
+    /*
+      Só adiciona a imagem ao Schema quando o artigo
+      realmente possui uma imagem própria.
+    */
+
+    if (imagem) {
+      schema.image = [imagem];
+    }
+
+
+    /*
+      Só adiciona dateModified se o banco realmente
+      fornecer uma data de alteração.
+    */
+
+    const dataModificacao =
+      post.atualizado_em ||
+      post.updated_at ||
+      post.data_modificacao;
+
+    if (dataModificacao) {
+      schema.dateModified = dataModificacao;
+    }
+
+
+    articleSchema.textContent =
+      JSON.stringify(schema);
+  }
+}
+
+
+/* =========================================================
+   SALVAR POST
+========================================================= */
 
 async function verificarSalvo() {
   if (!token || !id || !btnSalvar) return;
@@ -35,15 +297,18 @@ async function verificarSalvo() {
     if (dados.salvo) {
       atualizarBotaoSalvar(true);
     }
+
   } catch (error) {
     console.error("Erro ao verificar salvo:", error);
   }
 }
 
+
 function atualizarBotaoSalvar(salvo) {
   if (!btnSalvar) return;
 
   if (salvo) {
+
     btnSalvar.classList.add("salvo");
 
     btnSalvar.innerHTML = `
@@ -54,7 +319,9 @@ function atualizarBotaoSalvar(salvo) {
         <span class="sub">Nos favoritos</span>
       </div>
     `;
+
   } else {
+
     btnSalvar.classList.remove("salvo");
 
     btnSalvar.innerHTML = `
@@ -72,19 +339,27 @@ function atualizarBotaoSalvar(salvo) {
   }
 }
 
+
 if (btnSalvar) {
+
   btnSalvar.addEventListener("click", async () => {
+
     if (!token) {
       window.location.href = "login-usuario.html";
       return;
     }
 
     try {
-      const salvo = btnSalvar.classList.contains("salvo");
-      const metodo = salvo ? "DELETE" : "POST";
+
+      const salvo =
+        btnSalvar.classList.contains("salvo");
+
+      const metodo =
+        salvo ? "DELETE" : "POST";
 
       const resposta = await fetch(`/salvos/${id}`, {
         method: metodo,
+
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -93,111 +368,104 @@ if (btnSalvar) {
       if (!resposta.ok) return;
 
       atualizarBotaoSalvar(!salvo);
+
     } catch (error) {
-      console.error("Erro ao salvar/remover post:", error);
+      console.error(
+        "Erro ao salvar/remover post:",
+        error
+      );
     }
   });
 }
 
-/* TEMPO DE LEITURA */
+
+/* =========================================================
+   TEMPO DE LEITURA
+========================================================= */
 
 function calcularTempoLeitura(texto) {
-  const palavras = texto.trim().split(/\s+/).filter(Boolean).length;
+
+  const palavras = texto
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .length;
+
   const minutos = Math.ceil(palavras / 200);
 
   return minutos || 1;
 }
 
-/* CARREGAR POST */
+
+/* =========================================================
+   CARREGAR POST
+========================================================= */
 
 async function carregarPost() {
+
   if (!id) {
-    postDetalhe.innerHTML = "<p>Post não encontrado.</p>";
+
+    postDetalhe.innerHTML =
+      "<p>Post não encontrado.</p>";
+
     return;
   }
 
   try {
-    const resposta = await fetch(`${apiPosts}/${id}`);
+
+    const resposta =
+      await fetch(`${apiPosts}/${id}`);
 
     if (!resposta.ok) {
-      postDetalhe.innerHTML = "<p>Post não encontrado.</p>";
+
+      postDetalhe.innerHTML =
+        "<p>Post não encontrado.</p>";
+
       return;
     }
 
-    const post = await resposta.json();
+
+    const post =
+      await resposta.json();
+
+
+    /* SEO */
+
+    atualizarSEO(post);
+
+
+    /* POSTS RELACIONADOS */
+
     carregarRelacionados(post);
 
-    const textoLimpo = (post.conteudo || "").replace(/<[^>]+>/g, " ");
-    const tempoLeitura = calcularTempoLeitura(textoLimpo);
 
-    document.title = `${post.titulo} | PsiBlog`;
+    /* TEMPO DE LEITURA */
 
-    const descricaoBase = post.resumo || textoLimpo;
+    const textoLimpo =
+      limparTexto(post.conteudo || "");
 
-    const descricao = descricaoBase
-      .replace(/\s+/g, " ")
-      .trim()
-      .slice(0, 160);
+    const tempoLeitura =
+      calcularTempoLeitura(textoLimpo);
 
-    const metaDescription = document.getElementById("metaDescription");
 
-    if (metaDescription) {
-      metaDescription.setAttribute("content", descricao);
-    }
-
-    const canonicalUrl = document.getElementById("canonicalUrl");
-
-    if (canonicalUrl) {
-      canonicalUrl.setAttribute("href", window.location.href);
-    }
-
-    const ogTitle = document.getElementById("ogTitle");
-
-    if (ogTitle) {
-      ogTitle.setAttribute("content", `${post.titulo} | PsiBlog`);
-    }
-
-    const ogDescription = document.getElementById("ogDescription");
-
-    if (ogDescription) {
-      ogDescription.setAttribute("content", descricao);
-    }
-
-    const ogUrl = document.getElementById("ogUrl");
-
-    if (ogUrl) {
-      ogUrl.setAttribute("content", window.location.href);
-    }
-
-    const articleSchema = document.getElementById("articleSchema");
-
-    if (articleSchema) {
-      const schema = {
-        "@context": "https://schema.org",
-        "@type": "Article",
-        "headline": post.titulo,
-        "description": descricao,
-        "url": window.location.href,
-        "datePublished": post.criado_em,
-        "image": post.imagem || "https://psifacil-blog.onrender.com/img/favicon.svg",
-        "publisher": {
-          "@type": "Organization",
-          "name": "PsiFácil",
-          "url": "https://psifacil-blog.onrender.com/"
-        }
-      };
-
-      articleSchema.textContent = JSON.stringify(schema);
-    }
+    /* CONTEÚDO */
 
     postDetalhe.innerHTML = `
-      <span class="category">${post.categoria || "Blog"}</span>
 
-      <h1>${post.titulo}</h1>
+      <span class="category">
+        ${post.categoria || "Blog"}
+      </span>
+
+      <h1>
+        ${post.titulo}
+      </h1>
 
       <div class="post-meta">
+
         <span>
-          Publicado em ${new Date(post.criado_em).toLocaleDateString("pt-BR")}
+          Publicado em
+          ${new Date(post.criado_em)
+            .toLocaleDateString("pt-BR")}
         </span>
 
         <span class="dot"></span>
@@ -205,225 +473,465 @@ async function carregarPost() {
         <span>
           ${tempoLeitura} min de leitura
         </span>
+
       </div>
 
-      <img
-        src="${post.imagem || "https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=1200&q=80"}"
-        alt="${post.titulo}"
-        class="post-banner"
-      >
+
+      ${
+        post.imagem
+          ? `
+            <img
+              src="${post.imagem}"
+              alt="${post.titulo}"
+              class="post-banner"
+            >
+          `
+          : `
+            <img
+              src="https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=1200&q=80"
+              alt=""
+              class="post-banner"
+            >
+          `
+      }
+
 
       <div class="post-text">
         ${post.conteudo || ""}
       </div>
 
-      <a href="psifacil.html" class="back-link">← Voltar para o blog</a>
+
+      <a
+        href="psifacil.html"
+        class="back-link"
+      >
+        ← Voltar para o blog
+      </a>
+
     `;
+
   } catch (error) {
+
     console.error(error);
-    postDetalhe.innerHTML = "<p>Erro ao carregar o artigo.</p>";
+
+    postDetalhe.innerHTML =
+      "<p>Erro ao carregar o artigo.</p>";
   }
-
-
 }
 
-/* CURTIDAS */
+
+/* =========================================================
+   CURTIDAS
+========================================================= */
 
 async function carregarCurtidas() {
-  try {
-    const resposta = await fetch(`${apiInteracoes}/curtidas/${id}`);
-    const dados = await resposta.json();
 
-    totalCurtidas.textContent = dados.total;
+  try {
+
+    const resposta =
+      await fetch(
+        `${apiInteracoes}/curtidas/${id}`
+      );
+
+    const dados =
+      await resposta.json();
+
+    totalCurtidas.textContent =
+      dados.total;
+
   } catch (error) {
-    console.error("Erro ao carregar curtidas:", error);
+
+    console.error(
+      "Erro ao carregar curtidas:",
+      error
+    );
   }
 }
+
 
 function atualizarEstadoCurtir() {
-  if (localStorage.getItem(chaveCurtida)) {
+
+  if (
+    localStorage.getItem(chaveCurtida)
+  ) {
+
     btnCurtir.classList.add("curtido");
   }
 }
 
-btnCurtir.addEventListener("click", async () => {
-  if (localStorage.getItem(chaveCurtida)) {
-    return;
+
+btnCurtir.addEventListener(
+  "click",
+  async () => {
+
+    if (
+      localStorage.getItem(chaveCurtida)
+    ) {
+      return;
+    }
+
+    try {
+
+      await fetch(
+        `${apiInteracoes}/curtidas`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+            post_id: id
+          })
+        }
+      );
+
+      localStorage.setItem(
+        chaveCurtida,
+        "true"
+      );
+
+      btnCurtir.classList.add(
+        "curtido"
+      );
+
+      carregarCurtidas();
+
+    } catch (error) {
+
+      console.error(
+        "Erro ao curtir:",
+        error
+      );
+    }
   }
+);
 
-  try {
-    await fetch(`${apiInteracoes}/curtidas`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ post_id: id })
-    });
 
-    localStorage.setItem(chaveCurtida, "true");
-    btnCurtir.classList.add("curtido");
+/* =========================================================
+   COMPARTILHAR
+========================================================= */
 
-    carregarCurtidas();
-  } catch (error) {
-    console.error("Erro ao curtir:", error);
+btnCompartilhar.addEventListener(
+  "click",
+  async () => {
+
+    const url =
+      window.location.href;
+
+    if (navigator.share) {
+
+      await navigator.share({
+        title: document.title,
+        url
+      });
+
+    } else {
+
+      await navigator.clipboard
+        .writeText(url);
+
+      alert("Link copiado!");
+    }
   }
-});
+);
 
-/* COMPARTILHAR */
 
-btnCompartilhar.addEventListener("click", async () => {
-  const url = window.location.href;
+/* =========================================================
+   COMENTÁRIOS
+========================================================= */
 
-  if (navigator.share) {
-    await navigator.share({
-      title: document.title,
-      url
-    });
-  } else {
-    await navigator.clipboard.writeText(url);
-    alert("Link copiado!");
+formComentario.addEventListener(
+  "submit",
+  async (e) => {
+
+    e.preventDefault();
+
+    const nome =
+      document
+        .getElementById("nomeComentario")
+        .value
+        .trim();
+
+    const comentario =
+      document
+        .getElementById("textoComentario")
+        .value
+        .trim();
+
+    if (!nome || !comentario) {
+
+      alert(
+        "Preencha seu nome e comentário."
+      );
+
+      return;
+    }
+
+    try {
+
+      await fetch(
+        `${apiInteracoes}/comentarios`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+            post_id: id,
+            nome,
+            comentario
+          })
+        }
+      );
+
+      formComentario.reset();
+
+      carregarComentarios();
+
+    } catch (error) {
+
+      console.error(
+        "Erro ao comentar:",
+        error
+      );
+    }
   }
-});
+);
 
-/* COMENTÁRIOS */
-
-formComentario.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const nome = document.getElementById("nomeComentario").value.trim();
-  const comentario = document.getElementById("textoComentario").value.trim();
-
-  if (!nome || !comentario) {
-    alert("Preencha seu nome e comentário.");
-    return;
-  }
-
-  try {
-    await fetch(`${apiInteracoes}/comentarios`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        post_id: id,
-        nome,
-        comentario
-      })
-    });
-
-    formComentario.reset();
-    carregarComentarios();
-  } catch (error) {
-    console.error("Erro ao comentar:", error);
-  }
-});
 
 async function carregarComentarios() {
+
   try {
-    const resposta = await fetch(`${apiInteracoes}/comentarios/${id}`);
-    const comentarios = await resposta.json();
+
+    const resposta =
+      await fetch(
+        `${apiInteracoes}/comentarios/${id}`
+      );
+
+    const comentarios =
+      await resposta.json();
 
     listaComentarios.innerHTML = "";
 
     comentarios.forEach((item) => {
+
       listaComentarios.innerHTML += `
+
         <div class="comentario-card">
-          <strong>${item.nome}</strong>
-          <p>${item.comentario}</p>
-          <small>${new Date(item.criado_em).toLocaleDateString("pt-BR")}</small>
+
+          <strong>
+            ${item.nome}
+          </strong>
+
+          <p>
+            ${item.comentario}
+          </p>
+
+          <small>
+            ${new Date(item.criado_em)
+              .toLocaleDateString("pt-BR")}
+          </small>
+
         </div>
+
       `;
     });
+
   } catch (error) {
-    console.error("Erro ao carregar comentários:", error);
+
+    console.error(
+      "Erro ao carregar comentários:",
+      error
+    );
   }
 }
 
-/* BARRA DE LEITURA */
 
-window.addEventListener("scroll", () => {
-  if (!readingBar) return;
+/* =========================================================
+   BARRA DE LEITURA
+========================================================= */
 
-  const scrollTop = window.scrollY;
-  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+window.addEventListener(
+  "scroll",
+  () => {
 
-  if (docHeight <= 0) {
-    readingBar.style.width = "0%";
-    return;
-  }
+    if (!readingBar) return;
 
-  const progresso = (scrollTop / docHeight) * 100;
+    const scrollTop =
+      window.scrollY;
 
-  readingBar.style.width = `${Math.min(progresso, 100)}%`;
-});
+    const docHeight =
+      document.documentElement
+        .scrollHeight -
+      window.innerHeight;
 
+    if (docHeight <= 0) {
 
-async function carregarRelacionados(postAtual) {
-  if (!postsRelacionados) return;
+      readingBar.style.width =
+        "0%";
 
-  try {
-    const resposta = await fetch(apiPosts);
-    const posts = await resposta.json();
-
-    const relacionados = posts
-      .filter((post) => {
-        return (
-          post.id !== postAtual.id &&
-          post.categoria &&
-          postAtual.categoria &&
-          post.categoria.toLowerCase() === postAtual.categoria.toLowerCase()
-        );
-      })
-      .slice(0, 3);
-
-    postsRelacionados.innerHTML = "";
-
-    if (relacionados.length === 0) {
-      postsRelacionados.innerHTML = `
-        <p class="sem-relacionados">
-          Nenhum artigo relacionado encontrado.
-        </p>
-      `;
       return;
     }
 
+    const progresso =
+      (scrollTop / docHeight) * 100;
+
+    readingBar.style.width =
+      `${Math.min(progresso, 100)}%`;
+  }
+);
+
+
+/* =========================================================
+   POSTS RELACIONADOS
+========================================================= */
+
+async function carregarRelacionados(
+  postAtual
+) {
+
+  if (!postsRelacionados) return;
+
+  try {
+
+    const resposta =
+      await fetch(apiPosts);
+
+    const posts =
+      await resposta.json();
+
+    const relacionados =
+      posts
+        .filter((post) => {
+
+          return (
+            post.id !== postAtual.id &&
+            post.categoria &&
+            postAtual.categoria &&
+            post.categoria
+              .toLowerCase() ===
+            postAtual.categoria
+              .toLowerCase()
+          );
+
+        })
+        .slice(0, 3);
+
+
+    postsRelacionados.innerHTML = "";
+
+
+    if (relacionados.length === 0) {
+
+      postsRelacionados.innerHTML = `
+
+        <p class="sem-relacionados">
+          Nenhum artigo relacionado encontrado.
+        </p>
+
+      `;
+
+      return;
+    }
+
+
     relacionados.forEach((post) => {
+
       postsRelacionados.innerHTML += `
-        <a href="post.html?id=${post.id}" class="relacionado-card">
+
+        <a
+          href="post.html?id=${post.id}"
+          class="relacionado-card"
+        >
+
           <img
-            src="${post.imagem || "https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=900&q=80"}"
+            src="${
+              post.imagem ||
+              "https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=900&q=80"
+            }"
             alt="${post.titulo}"
           >
 
           <div class="relacionado-content">
-            <span>${post.categoria || "Blog"}</span>
-            <h3>${post.titulo}</h3>
-            <p>${limitarTexto(pegarTextoLimpo(post.resumo || post.conteudo || ""), 110)}</p>
+
+            <span>
+              ${post.categoria || "Blog"}
+            </span>
+
+            <h3>
+              ${post.titulo}
+            </h3>
+
+            <p>
+              ${limitarTexto(
+                pegarTextoLimpo(
+                  post.resumo ||
+                  post.conteudo ||
+                  ""
+                ),
+                110
+              )}
+            </p>
+
           </div>
+
         </a>
+
       `;
     });
 
   } catch (error) {
-    console.error("Erro ao carregar relacionados:", error);
+
+    console.error(
+      "Erro ao carregar relacionados:",
+      error
+    );
   }
 }
 
+
 function pegarTextoLimpo(html) {
-  const div = document.createElement("div");
-  div.innerHTML = html || "";
+
+  const div =
+    document.createElement("div");
+
+  div.innerHTML =
+    html || "";
+
   return div.textContent.trim();
 }
 
-function limitarTexto(texto, limite) {
-  if (!texto) return "Clique para ler este conteúdo completo.";
 
-  if (texto.length <= limite) return texto;
+function limitarTexto(
+  texto,
+  limite
+) {
 
-  return texto.substring(0, limite).trim() + "...";
+  if (!texto) {
+    return "Clique para ler este conteúdo completo.";
+  }
+
+  if (texto.length <= limite) {
+    return texto;
+  }
+
+  return (
+    texto
+      .substring(0, limite)
+      .trim() + "..."
+  );
 }
 
-/* INICIAR */
+
+/* =========================================================
+   INICIAR
+========================================================= */
 
 carregarPost();
 carregarCurtidas();
