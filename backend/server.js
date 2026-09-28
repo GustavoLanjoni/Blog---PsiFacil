@@ -169,7 +169,7 @@ app.use("/salvos", postsSalvosRoutes);
 app.get("/sitemap.xml", async (req, res) => {
   try {
     const resposta = await fetch(
-      "https://psifacil-blog.onrender.com/posts"
+      "https://psifacilblog.com.br/posts"
     );
 
     if (!resposta.ok) {
@@ -179,15 +179,15 @@ app.get("/sitemap.xml", async (req, res) => {
     const posts = await resposta.json();
 
     const urlsFixas = [
-      "https://psifacil-blog.onrender.com/",
-      "https://psifacil-blog.onrender.com/psifacil.html",
-      "https://psifacil-blog.onrender.com/conteudo.html",
-      "https://psifacil-blog.onrender.com/ebooks.html",
-      "https://psifacil-blog.onrender.com/escuta.html"
+      "https://psifacilblog.com.br/",
+      "https://psifacilblog.com.br/psifacil.html",
+      "https://psifacilblog.com.br/conteudo.html",
+      "https://psifacilblog.com.br/ebooks.html",
+      "https://psifacilblog.com.br/escuta.html"
     ];
 
     const urlsPosts = posts.map((post) => {
-      return `https://psifacil-blog.onrender.com/post.html?id=${post.id}`;
+      return `https://psifacilblog.com.br/post.html?id=${post.id}`;
     });
 
     const todasUrls = [
@@ -232,9 +232,8 @@ app.get("/robots.txt", (req, res) => {
   res.send(`User-agent: *
 Allow: /
 
-Sitemap: https://psifacil-blog.onrender.com/sitemap.xml`);
+Sitemap: https://psifacilblog.com.br/sitemap.xml`);
 });
-
 
 /*
 |--------------------------------------------------------------------------
