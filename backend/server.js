@@ -5,27 +5,63 @@ const rateLimit = require("express-rate-limit");
 
 require("dotenv").config();
 
+const db = require("./db");
+
 const app = express();
 
 /*
 |--------------------------------------------------------------------------
-| CONFIGURAÇÕES BÁSICAS DE SEGURANÇA
+| CONFIGURAÇÕES GERAIS
 |--------------------------------------------------------------------------
 */
 
-// Não informa que o servidor utiliza Express
+// Não revela que o servidor utiliza Express
 app.disable("x-powered-by");
 
-// Headers de segurança HTTP
+// Necessário quando a aplicação está atrás do proxy do Render.
+// Também permite que express-rate-limit identifique corretamente o IP.
+app.set("trust proxy", 1);
+
+
+/*
+|--------------------------------------------------------------------------
+| HEADERS DE SEGURANÇA
+|--------------------------------------------------------------------------
+*/
+
 app.use(
   helmet({
-    contentSecurityPolicy: false
+    contentSecurityPolicy: false,
+
+    crossOriginResourcePolicy: {
+      policy: "cross-origin"
+    },
+
+    referrerPolicy: {
+      policy: "strict-origin-when-cross-origin"
+    }
   })
 );
 
-// Limite de tamanho das requisições JSON
+
+/*
+|--------------------------------------------------------------------------
+| BODY / JSON
+|--------------------------------------------------------------------------
+|
+| Limita o tamanho das requisições recebidas pelo servidor.
+|--------------------------------------------------------------------------
+*/
+
 app.use(
   express.json({
+    limit: "1mb"
+  })
+);
+
+app.use(
+  express.urlencoded({
+    extended: true,
     limit: "1mb"
   })
 );
@@ -36,10 +72,8 @@ app.use(
 | RATE LIMIT GLOBAL
 |--------------------------------------------------------------------------
 |
-| Limita excesso de requisições para evitar abuso do servidor.
-|
-| 300 requisições por IP a cada 15 minutos.
-|
+| Proteção geral contra excesso de requisições.
+|--------------------------------------------------------------------------
 */
 
 const limiteGlobal = rateLimit({
@@ -61,12 +95,11 @@ app.use(limiteGlobal);
 
 /*
 |--------------------------------------------------------------------------
-| RATE LIMIT PARA LOGIN
+| RATE LIMIT DE AUTENTICAÇÃO
 |--------------------------------------------------------------------------
 |
-| Login recebe um limite mais rigoroso para dificultar tentativas
-| repetidas de senha.
-|
+| Limite mais rigoroso para login e cadastro.
+|--------------------------------------------------------------------------
 */
 
 const limiteLogin = rateLimit({
@@ -78,8 +111,10 @@ const limiteLogin = rateLimit({
 
   legacyHeaders: false,
 
+  skipSuccessfulRequests: true,
+
   message: {
-    erro: "Muitas tentativas de login. Aguarde alguns minutos e tente novamente."
+    erro: "Muitas tentativas. Aguarde alguns minutos e tente novamente."
   }
 });
 
@@ -114,18 +149,26 @@ const novidadesRoutes = require("./routes/novidades");
 // Imagens públicas dos posts
 app.use(
   "/uploads",
-  express.static(path.join(__dirname, "uploads"))
+  express.static(path.join(__dirname, "uploads"), {
+    maxAge: "7d",
+    etag: true,
+    fallthrough: true
+  })
 );
+
 
 // Frontend público
 app.use(
-  express.static(path.join(__dirname, "../frontend"))
+  express.static(path.join(__dirname, "../frontend"), {
+    etag: true,
+    lastModified: true
+  })
 );
 
 
 /*
 |--------------------------------------------------------------------------
-| API
+| RATE LIMIT ESPECÍFICO PARA AUTENTICAÇÃO
 |--------------------------------------------------------------------------
 */
 
@@ -135,19 +178,25 @@ app.use(
   limiteLogin
 );
 
-// Login/cadastro dos usuários
+// Login dos usuários
 app.use(
   "/usuarios/login",
   limiteLogin
 );
 
+// Cadastro dos usuários
 app.use(
   "/usuarios/cadastro",
   limiteLogin
 );
 
 
-// Rotas da API
+/*
+|--------------------------------------------------------------------------
+| API
+|--------------------------------------------------------------------------
+*/
+
 app.use("/posts", postsRoutes);
 
 app.use("/leads", leadsRoutes);
@@ -175,60 +224,121 @@ app.use("/notificacoes", notificacoesRoutes);
 app.use("/novidades", novidadesRoutes);
 
 
-
 /*
 |--------------------------------------------------------------------------
-| SITEMAP
+| SITEMAP.XML
+|--------------------------------------------------------------------------
+|
+| O sitemap consulta diretamente o PostgreSQL.
+|
+| Isso evita que o servidor precise fazer uma requisição HTTP
+| para o próprio domínio.
 |--------------------------------------------------------------------------
 */
 
 app.get("/sitemap.xml", async (req, res) => {
   try {
-    const resposta = await fetch(
-      "https://psifacilblog.com.br/posts"
-    );
 
-    if (!resposta.ok) {
-      throw new Error("Erro ao buscar os posts.");
-    }
+    const resultado = await db.query(`
+      SELECT id
+      FROM posts
+      WHERE status = 'publicado'
+      ORDER BY id DESC
+    `);
 
-    const posts = await resposta.json();
+    const posts = resultado.rows;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PÁGINAS FIXAS
+    |--------------------------------------------------------------------------
+    */
 
     const urlsFixas = [
       "https://psifacilblog.com.br/",
-      "https://psifacilblog.com.br/psifacil.html",
       "https://psifacilblog.com.br/conteudo.html",
       "https://psifacilblog.com.br/ebooks.html",
       "https://psifacilblog.com.br/escuta.html"
     ];
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | ARTIGOS
+    |--------------------------------------------------------------------------
+    */
+
     const urlsPosts = posts.map((post) => {
       return `https://psifacilblog.com.br/post.html?id=${post.id}`;
     });
+
 
     const todasUrls = [
       ...urlsFixas,
       ...urlsPosts
     ];
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | ESCAPE XML
+    |--------------------------------------------------------------------------
+    */
+
+    const escaparXml = (valor) => {
+      return String(valor)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&apos;");
+    };
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | GERAR XML
+    |--------------------------------------------------------------------------
+    */
+
     const urlsXml = todasUrls
       .map((url) => {
         return `  <url>
-    <loc>${url}</loc>
+    <loc>${escaparXml(url)}</loc>
   </url>`;
       })
       .join("\n");
 
-    res.type("application/xml");
 
-    res.send(`<?xml version="1.0" encoding="UTF-8"?>
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urlsXml}
-</urlset>`);
-  } catch (error) {
-    console.error("Erro ao gerar sitemap:", error);
+</urlset>`;
 
-    res
+
+    /*
+    |--------------------------------------------------------------------------
+    | RESPOSTA
+    |--------------------------------------------------------------------------
+    */
+
+    res.status(200);
+
+    res.set({
+      "Content-Type": "application/xml; charset=utf-8",
+
+      // O Google pode reutilizar o sitemap por um período curto.
+      "Cache-Control": "public, max-age=3600"
+    });
+
+    return res.send(sitemap);
+
+  } catch (error) {
+
+    console.error("ERRO AO GERAR SITEMAP:", error);
+
+    return res
       .status(500)
       .type("text/plain")
       .send("Erro ao gerar sitemap.");
@@ -243,13 +353,22 @@ ${urlsXml}
 */
 
 app.get("/robots.txt", (req, res) => {
-  res.type("text/plain");
 
-  res.send(`User-agent: *
+  res.status(200);
+
+  res.set({
+    "Content-Type": "text/plain; charset=utf-8",
+    "Cache-Control": "public, max-age=3600"
+  });
+
+  return res.send(`User-agent: *
 Allow: /
 
-Sitemap: https://psifacilblog.com.br/sitemap.xml`);
+Sitemap: https://psifacilblog.com.br/sitemap.xml
+`);
+
 });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -258,9 +377,14 @@ Sitemap: https://psifacilblog.com.br/sitemap.xml`);
 */
 
 app.get("/", (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../frontend/psifacil.html")
+
+  return res.sendFile(
+    path.join(
+      __dirname,
+      "../frontend/psifacil.html"
+    )
   );
+
 });
 
 
@@ -268,12 +392,17 @@ app.get("/", (req, res) => {
 |--------------------------------------------------------------------------
 | ROTA NÃO ENCONTRADA
 |--------------------------------------------------------------------------
+|
+| Sempre deve permanecer DEPOIS das outras rotas.
+|--------------------------------------------------------------------------
 */
 
 app.use((req, res) => {
-  res.status(404).json({
+
+  return res.status(404).json({
     erro: "Rota não encontrada."
   });
+
 });
 
 
@@ -281,18 +410,23 @@ app.use((req, res) => {
 |--------------------------------------------------------------------------
 | TRATAMENTO GLOBAL DE ERROS
 |--------------------------------------------------------------------------
+|
+| Evita retornar detalhes internos do servidor para o navegador.
+|--------------------------------------------------------------------------
 */
 
 app.use((error, req, res, next) => {
+
   console.error("ERRO GLOBAL DO SERVIDOR:", error);
 
   if (res.headersSent) {
     return next(error);
   }
 
-  res.status(500).json({
+  return res.status(500).json({
     erro: "Erro interno do servidor."
   });
+
 });
 
 
@@ -305,5 +439,9 @@ app.use((error, req, res, next) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+
+  console.log(
+    `Servidor rodando na porta ${PORT}`
+  );
+
 });
