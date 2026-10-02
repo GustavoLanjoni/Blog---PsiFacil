@@ -4375,3 +4375,51 @@ button {
     }
 
 }
+
+/* =========================================================
+   CORREÇÃO REDES SOCIAIS - MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .final-social-buttons {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+
+        gap: 12px;
+
+        width: auto;
+    }
+
+
+    .final-social-buttons .final-instagram,
+    .final-social-buttons .final-youtube {
+        width: 50px;
+        height: 50px;
+
+        min-width: 50px;
+        max-width: 50px;
+
+        flex: 0 0 50px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 0;
+
+        border-radius: 14px;
+    }
+
+
+    .final-social-buttons .final-instagram svg,
+    .final-social-buttons .final-youtube svg {
+        width: 24px;
+        height: 24px;
+
+        flex-shrink: 0;
+    }
+
+}
