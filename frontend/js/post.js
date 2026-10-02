@@ -229,13 +229,12 @@ function atualizarSEO(post) {
       "author": {
         "@type": "Organization",
         "name": "PsiFácil",
-        "url": "https://psifacil-blog.onrender.com/"
+        "url": "https://psifacilblog.com.br/"
       },
-
       "publisher": {
         "@type": "Organization",
         "name": "PsiFácil",
-        "url": "https://psifacil-blog.onrender.com/"
+        "url": "https://psifacilblog.com.br/"
       }
     };
 
@@ -528,7 +527,7 @@ async function carregarPost() {
         <span>
           Publicado em
           ${new Date(post.criado_em)
-            .toLocaleDateString("pt-BR")}
+        .toLocaleDateString("pt-BR")}
         </span>
 
         <span class="dot"></span>
@@ -540,16 +539,15 @@ async function carregarPost() {
       </div>
 
 
-      ${
-        post.imagem
-          ? `
+      ${post.imagem
+        ? `
             <img
               src="${post.imagem}"
               alt="${post.titulo}"
               class="post-banner"
             >
           `
-          : `
+        : `
             <img
               src="https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=1200&q=80"
               alt=""
@@ -801,7 +799,7 @@ async function carregarComentarios() {
 
           <small>
             ${new Date(item.criado_em)
-              .toLocaleDateString("pt-BR")}
+          .toLocaleDateString("pt-BR")}
           </small>
 
         </div>
@@ -917,10 +915,9 @@ async function carregarRelacionados(
         >
 
           <img
-            src="${
-              post.imagem ||
-              "https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=900&q=80"
-            }"
+            src="${post.imagem ||
+        "https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=900&q=80"
+        }"
             alt="${post.titulo}"
           >
 
@@ -936,13 +933,13 @@ async function carregarRelacionados(
 
             <p>
               ${limitarTexto(
-                pegarTextoLimpo(
-                  post.resumo ||
-                  post.conteudo ||
-                  ""
-                ),
-                110
-              )}
+          pegarTextoLimpo(
+            post.resumo ||
+            post.conteudo ||
+            ""
+          ),
+          110
+        )}
             </p>
 
           </div>

@@ -3,92 +3,1285 @@
 
 <head>
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXHLZFTYTN"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
+    <!-- =====================================================
+         GOOGLE ANALYTICS
+    ====================================================== -->
 
-    gtag('config', 'G-QXHLZFTYTN');
-  </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXHLZFTYTN"></script>
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meu Perfil | PsiFácil</title>
+    <script>
+        window.dataLayer = window.dataLayer || [];
 
-  <link rel="stylesheet" href="css/perfil.css">
+        function gtag() {
+            dataLayer.push(arguments);
+        }
 
-  <!-- Google adsense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8328619879268221"
-    crossorigin="anonymous"></script>
+        gtag("js", new Date());
+        gtag("config", "G-QXHLZFTYTN");
+    </script>
 
+
+    <!-- =====================================================
+         CONFIGURAÇÕES
+    ====================================================== -->
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Meu Perfil | PsiFácil</title>
+
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+
+    <link rel="stylesheet" href="css/perfil.css">
+
+
+    <!-- =====================================================
+         GOOGLE ADSENSE
+    ====================================================== -->
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8328619879268221"
+        crossorigin="anonymous">
+        </script>
 
 </head>
 
+
 <body>
 
-  <div class="perfil-grid">
 
-    <aside class="perfil-sidebar">
-      <span class="tag">Meu perfil</span>
+    <!-- =====================================================
+         HEADER MOBILE / TABLET
+    ====================================================== -->
 
-      <div class="foto-wrapper">
-        <img id="fotoPreview" src="https://ui-avatars.com/api/?name=Usuario" class="perfil-foto" alt="Foto do usuário">
+    <header class="perfil-mobile-header">
 
-        <div class="foto-menu" id="fotoMenu">
-          <button type="button" id="btnVerFoto">Visualizar foto</button>
-          <button type="button" id="btnTrocarFoto">Trocar foto</button>
-        </div>
+        <button type="button" class="menu-mobile-btn" id="abrirMenuPerfil" aria-label="Abrir menu"
+            aria-controls="perfilSidebar" aria-expanded="false">
+            <i data-lucide="menu"></i>
+        </button>
 
-        <input type="file" id="foto" accept="image/*" hidden>
-      </div>
 
-      <h1 id="nomeTitulo">Meu perfil</h1>
-      <p id="emailUsuario" class="perfil-email"></p>
+        <a href="psifacil.html" class="mobile-logo">
 
-      <div class="perfil-actions">
-        <a href="psifacil.html" class="btn-voltar">← Voltar</a>
-        <button type="button" onclick="sairUsuario()" class="btn-sair">Sair</button>
-      </div>
-    </aside>
+            <img src="img/favicon.svg" alt="">
 
-    <div class="perfil-content">
-      <form id="formPerfil">
-        <div class="form-group">
-          <label for="nome">Nome</label>
-          <input type="text" id="nome" placeholder="Seu nome">
-        </div>
+            <div>
 
-        <div class="form-group">
-          <label for="bio">Bio</label>
-          <textarea id="bio" placeholder="Fale um pouco sobre você"></textarea>
-        </div>
+                <strong>
+                    PsiFácil
+                </strong>
 
-        <p id="mensagemErro" class="mensagem-erro"></p>
+                <span>
+                    Meu espaço
+                </span>
 
-        <button type="submit" class="btn-salvar">Salvar alterações</button>
-      </form>
+            </div>
 
-      <div class="salvos-section">
-        <div class="salvos-header">
-          <h2>Conteúdos salvos</h2>
-          <p>Posts que você salvou para ler depois.</p>
-        </div>
+        </a>
 
-        <div id="listaSalvos" class="lista-salvos">
-          <p class="salvos-vazio">Nenhum conteúdo salvo ainda.</p>
-        </div>
-      </div>
+
+        <a href="psifacil.html" class="mobile-home" aria-label="Voltar ao início">
+            <i data-lucide="house"></i>
+        </a>
+
+    </header>
+
+
+    <!-- =====================================================
+         OVERLAY DO MENU
+    ====================================================== -->
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+    <!-- =====================================================
+         LAYOUT
+    ====================================================== -->
+
+    <div class="perfil-layout">
+
+
+        <!-- =================================================
+             SIDEBAR
+        ================================================== -->
+
+        <aside class="perfil-sidebar" id="perfilSidebar">
+
+
+            <!-- TOPO -->
+
+            <div class="sidebar-top">
+
+                <a href="psifacil.html" class="sidebar-logo">
+
+                    <img src="img/favicon.svg" alt="">
+
+                    <div>
+
+                        <strong>
+                            PsiFácil
+                        </strong>
+
+                        <span>
+                            Meu espaço
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+                <button type="button" class="sidebar-close" id="fecharMenuPerfil" aria-label="Fechar menu">
+                    <i data-lucide="x"></i>
+                </button>
+
+            </div>
+
+
+            <!-- USUÁRIO -->
+
+            <div class="sidebar-user">
+
+                <div class="foto-wrapper">
+
+                    <img id="fotoPreview" src="https://ui-avatars.com/api/?name=Usuario" class="perfil-foto"
+                        alt="Foto do usuário">
+
+
+                    <button type="button" class="foto-edit-btn" id="fotoEditBtn" aria-label="Editar foto">
+                        <i data-lucide="camera"></i>
+                    </button>
+
+
+                    <div class="foto-menu" id="fotoMenu">
+
+                        <button type="button" id="btnVerFoto">
+                            <i data-lucide="eye"></i>
+
+                            Visualizar foto
+                        </button>
+
+
+                        <button type="button" id="btnTrocarFoto">
+                            <i data-lucide="image-plus"></i>
+
+                            Trocar foto
+                        </button>
+
+                    </div>
+
+
+                    <input type="file" id="foto" accept="image/*" hidden>
+
+                </div>
+
+
+                <div class="sidebar-user-info">
+
+                    <h1 id="nomeTitulo">
+                        Meu perfil
+                    </h1>
+
+                    <p id="emailUsuario" class="perfil-email"></p>
+
+                </div>
+
+            </div>
+
+
+            <!-- NAVEGAÇÃO -->
+
+            <nav class="perfil-nav">
+
+                <span class="nav-label">
+                    Minha área
+                </span>
+
+
+                <button type="button" class="perfil-nav-item active" data-section="conta">
+
+                    <span class="nav-item-left">
+
+                        <span class="nav-icon">
+                            <i data-lucide="user-round"></i>
+                        </span>
+
+                        <span>
+                            Minha conta
+                        </span>
+
+                    </span>
+
+                    <i class="nav-arrow" data-lucide="chevron-right"></i>
+
+                </button>
+
+
+                <button type="button" class="perfil-nav-item" data-section="salvos">
+
+                    <span class="nav-item-left">
+
+                        <span class="nav-icon">
+                            <i data-lucide="bookmark"></i>
+                        </span>
+
+                        <span>
+                            Salvos
+                        </span>
+
+                    </span>
+
+                    <i class="nav-arrow" data-lucide="chevron-right"></i>
+
+                </button>
+
+
+                <button type="button" class="perfil-nav-item" data-section="frases">
+
+                    <span class="nav-item-left">
+
+                        <span class="nav-icon">
+                            <i data-lucide="heart"></i>
+                        </span>
+
+                        <span>
+                            Frases salvas
+                        </span>
+
+                    </span>
+
+                    <i class="nav-arrow" data-lucide="chevron-right"></i>
+
+                </button>
+
+
+                <!-- CONFIGURAÇÕES -->
+
+                <div class="nav-submenu">
+
+                    <button type="button" class="perfil-nav-item" id="configToggle" aria-expanded="false">
+
+                        <span class="nav-item-left">
+
+                            <span class="nav-icon">
+                                <i data-lucide="settings"></i>
+                            </span>
+
+                            <span>
+                                Configurações
+                            </span>
+
+                        </span>
+
+                        <i class="nav-arrow config-arrow" data-lucide="chevron-down"></i>
+
+                    </button>
+
+
+                    <div class="submenu-content" id="configSubmenu">
+
+                        <button type="button" class="submenu-item" data-section="seguranca">
+                            <i data-lucide="lock-keyhole"></i>
+
+                            Segurança
+                        </button>
+
+
+
+
+
+                        <button type="button" class="submenu-item" data-section="preferencias">
+                            <i data-lucide="sliders-horizontal"></i>
+
+                            Preferências
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </nav>
+
+
+            <!-- RODAPÉ SIDEBAR -->
+
+            <div class="sidebar-footer">
+
+                <a href="psifacil.html" class="sidebar-back">
+                    <i data-lucide="arrow-left"></i>
+
+                    <span>
+                        Voltar ao PsiFácil
+                    </span>
+                </a>
+
+
+                <button type="button" onclick="sairUsuario()" class="sidebar-logout">
+                    <i data-lucide="log-out"></i>
+
+                    <span>
+                        Sair da conta
+                    </span>
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =================================================
+             CONTEÚDO
+        ================================================== -->
+
+        <main class="perfil-main">
+
+
+            <!-- =================================================
+                 MINHA CONTA
+            ================================================== -->
+
+            <section class="perfil-section active" id="section-conta">
+
+                <div class="page-heading">
+
+                    <span class="page-eyebrow">
+                        Meu perfil
+                    </span>
+
+                    <h2>
+                        Minha conta
+                    </h2>
+
+                    <p>
+                        Gerencie suas informações pessoais
+                        e mantenha seu perfil atualizado.
+                    </p>
+
+                </div>
+
+
+                <!-- RESUMO MOBILE -->
+
+                <div class="mobile-user-card">
+
+                    <img id="fotoPreviewMobile" src="https://ui-avatars.com/api/?name=Usuario" alt="Foto do usuário">
+
+                    <div>
+
+                        <strong id="nomeTituloMobile">
+                            Meu perfil
+                        </strong>
+
+                        <span id="emailUsuarioMobile">
+                            Sua conta PsiFácil
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FORMULÁRIO -->
+
+                <div class="content-card">
+
+                    <div class="content-card-header">
+
+                        <div class="card-icon">
+                            <i data-lucide="user-round"></i>
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Informações pessoais
+                            </h3>
+
+                            <p>
+                                Essas informações fazem parte do seu perfil.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <form id="formPerfil">
+
+                        <div class="form-group">
+
+                            <label for="nome">
+                                Nome
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i data-lucide="user"></i>
+
+                                <input type="text" id="nome" placeholder="Seu nome">
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="bio">
+                                Bio
+                            </label>
+
+                            <textarea id="bio" placeholder="Fale um pouco sobre você" maxlength="300"></textarea>
+
+                            <span class="input-help">
+                                Conte um pouco sobre você.
+                            </span>
+
+                        </div>
+
+
+                        <p id="mensagemErro" class="mensagem-erro"></p>
+
+
+                        <div class="form-actions">
+
+                            <button type="submit" class="btn-salvar">
+                                <i data-lucide="check"></i>
+
+                                Salvar alterações
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 SALVOS
+            ================================================== -->
+
+            <section class="perfil-section" id="section-salvos">
+
+                <div class="page-heading">
+
+                    <span class="page-eyebrow">
+                        Sua biblioteca
+                    </span>
+
+                    <h2>
+                        Conteúdos salvos
+                    </h2>
+
+                    <p>
+                        Encontre os artigos que você
+                        guardou para ler novamente.
+                    </p>
+
+                </div>
+
+
+                <div class="content-card salvos-card">
+
+                    <div class="salvos-header">
+
+                        <div>
+
+                            <h3>
+                                Seus artigos
+                            </h3>
+
+                            <p>
+                                Posts que você salvou para ler depois.
+                            </p>
+
+                        </div>
+
+
+                        <span class="salvos-badge">
+                            <i data-lucide="bookmark"></i>
+
+                            Salvos
+                        </span>
+
+                    </div>
+
+
+                    <div id="listaSalvos" class="lista-salvos">
+
+                        <p class="salvos-vazio">
+
+                            <i data-lucide="bookmark"></i>
+
+                            <strong>
+                                Nenhum conteúdo salvo ainda.
+                            </strong>
+
+                            <span>
+                                Quando você salvar um artigo,
+                                ele aparecerá aqui.
+                            </span>
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 FRASES SALVAS
+            ================================================== -->
+
+            <section class="perfil-section" id="section-frases">
+
+                <div class="page-heading">
+
+                    <span class="page-eyebrow">
+                        Reflexões
+                    </span>
+
+                    <h2>
+                        Frases salvas
+                    </h2>
+
+                    <p>
+                        Um espaço para guardar frases
+                        e reflexões que fizeram sentido para você.
+                    </p>
+
+                </div>
+
+
+                <div class="content-card frases-card">
+
+                    <div class="salvos-header">
+
+                        <div>
+
+                            <h3>
+                                Suas reflexões
+                            </h3>
+
+                            <p>
+                                Frases que você escolheu guardar para reler quando quiser.
+                            </p>
+
+                        </div>
+
+
+                        <span class="salvos-badge" id="frasesSalvasBadge">
+
+                            <i data-lucide="heart"></i>
+
+                            <span id="totalFrasesSalvas">
+                                0 salvas
+                            </span>
+
+                        </span>
+
+                    </div>
+
+
+                    <div id="listaFrasesSalvas" class="lista-frases-salvas">
+
+                        <div class="frases-carregando">
+
+                            <i data-lucide="loader-circle"></i>
+
+                            <span>
+                                Carregando suas frases...
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 SEGURANÇA
+            ================================================== -->
+
+            <section class="perfil-section" id="section-seguranca">
+
+                <div class="page-heading">
+
+                    <span class="page-eyebrow">
+                        Configurações
+                    </span>
+
+                    <h2>
+                        Segurança
+                    </h2>
+
+                    <p>
+                        Gerencie sua senha e mantenha
+                        sua conta protegida.
+                    </p>
+
+                </div>
+
+
+                <!-- =================================================
+                     ALTERAR SENHA
+                ================================================== -->
+
+                <div class="content-card seguranca-card">
+
+                    <div class="content-card-header">
+
+                        <div class="card-icon">
+                            <i data-lucide="key-round"></i>
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Alterar senha
+                            </h3>
+
+                            <p>
+                                Atualize sua senha de acesso ao PsiFácil.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <form id="formAlterarSenha" class="form-seguranca">
+
+
+                        <!-- SENHA ATUAL -->
+
+                        <div class="form-group">
+
+                            <label for="senhaAtual">
+                                Senha atual
+                            </label>
+
+                            <div class="input-wrapper password-wrapper">
+
+                                <i data-lucide="lock-keyhole"></i>
+
+                                <input type="password" id="senhaAtual" name="senhaAtual"
+                                    placeholder="Digite sua senha atual" autocomplete="current-password">
+
+                                <button type="button" class="password-toggle" data-password-target="senhaAtual"
+                                    aria-label="Mostrar senha" title="Mostrar senha">
+                                    <i data-lucide="eye"></i>
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- NOVA SENHA -->
+
+                        <div class="form-group">
+
+                            <label for="novaSenha">
+                                Nova senha
+                            </label>
+
+                            <div class="input-wrapper password-wrapper">
+
+                                <i data-lucide="key-round"></i>
+
+                                <input type="password" id="novaSenha" name="novaSenha"
+                                    placeholder="Digite sua nova senha" autocomplete="new-password">
+
+                                <button type="button" class="password-toggle" data-password-target="novaSenha"
+                                    aria-label="Mostrar senha" title="Mostrar senha">
+                                    <i data-lucide="eye"></i>
+                                </button>
+
+                            </div>
+
+
+                            <div class="senha-requisitos">
+
+                                <span class="senha-requisito" id="requisitoTamanho">
+
+                                    <i data-lucide="circle"></i>
+
+                                    Pelo menos 8 caracteres
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- CONFIRMAR SENHA -->
+
+                        <div class="form-group">
+
+                            <label for="confirmarSenha">
+                                Confirmar nova senha
+                            </label>
+
+                            <div class="input-wrapper password-wrapper">
+
+                                <i data-lucide="shield-check"></i>
+
+                                <input type="password" id="confirmarSenha" name="confirmarSenha"
+                                    placeholder="Digite novamente sua nova senha" autocomplete="new-password">
+
+                                <button type="button" class="password-toggle" data-password-target="confirmarSenha"
+                                    aria-label="Mostrar senha" title="Mostrar senha">
+                                    <i data-lucide="eye"></i>
+                                </button>
+
+                            </div>
+
+
+                            <span class="senha-confirmacao" id="senhaConfirmacao"></span>
+
+                        </div>
+
+
+                        <!-- MENSAGEM -->
+
+                        <div class="seguranca-mensagem" id="mensagemSenha" role="status" aria-live="polite"></div>
+
+
+                        <!-- BOTÃO -->
+
+                        <div class="form-actions">
+
+                            <button type="submit" class="btn-salvar" id="btnAlterarSenha">
+
+                                <i data-lucide="shield-check"></i>
+
+                                <span>
+                                    Atualizar senha
+                                </span>
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+                <!-- =================================================
+                     DICA DE SEGURANÇA
+                ================================================== -->
+
+                <div class="seguranca-info">
+
+                    <div class="seguranca-info-icon">
+                        <i data-lucide="shield-check"></i>
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Proteja sua conta
+                        </strong>
+
+                        <p>
+                            Evite reutilizar senhas de outros serviços.
+                            Prefira uma senha única e difícil de adivinhar.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     ZONA DE RISCO
+                ================================================== -->
+
+                <div class="danger-zone">
+
+                    <div class="danger-zone-header">
+
+                        <div class="danger-zone-icon">
+                            <i data-lucide="triangle-alert"></i>
+                        </div>
+
+
+                        <div>
+
+                            <span class="danger-zone-label">
+                                Zona de risco
+                            </span>
+
+                            <h3>
+                                Excluir conta
+                            </h3>
+
+                            <p>
+                                Exclua permanentemente sua conta
+                                e os dados associados a ela.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="danger-zone-action">
+
+                        <div>
+
+                            <strong>
+                                Exclusão permanente
+                            </strong>
+
+                            <span>
+                                Esta ação não poderá ser desfeita.
+                            </span>
+
+                        </div>
+
+
+                        <button type="button" class="btn-excluir-conta" id="btnAbrirExcluirConta">
+
+                            <i data-lucide="trash-2"></i>
+
+                            <span>
+                                Excluir conta
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 NOTIFICAÇÕES
+            ================================================== -->
+
+            <section class="perfil-section" id="section-notificacoes">
+
+                <div class="page-heading">
+
+                    <span class="page-eyebrow">
+                        Configurações
+                    </span>
+
+                    <h2>
+                        Notificações
+                    </h2>
+
+                    <p>
+                        Escolha como deseja receber
+                        novidades do PsiFácil.
+                    </p>
+
+                </div>
+
+
+                <div class="content-card">
+
+                    <div class="settings-placeholder">
+
+                        <div class="settings-icon">
+                            <i data-lucide="bell"></i>
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Preferências de notificações
+                            </h3>
+
+                            <p>
+                                Podemos implementar essas opções
+                                quando o sistema de notificações
+                                estiver disponível.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- =================================================
+     PREFERÊNCIAS
+================================================== -->
+
+            <section class="perfil-section" id="section-preferencias">
+
+                <!-- CABEÇALHO -->
+
+                <div class="page-heading">
+
+                    <span class="page-eyebrow">
+                        Configurações
+                    </span>
+
+                    <h2>
+                        Preferências
+                    </h2>
+
+                    <p>
+                        Personalize sua experiência e escolha
+                        quais novidades deseja receber do PsiFácil.
+                    </p>
+
+                </div>
+
+
+                <!-- =================================================
+         NOTIFICAÇÕES
+    ================================================== -->
+
+                <div class="content-card preferencias-card">
+
+                    <div class="content-card-header">
+
+                        <div class="card-icon">
+                            <i data-lucide="bell"></i>
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Notificações
+                            </h3>
+
+                            <p>
+                                Escolha quais notificações você deseja receber.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="preferencias-lista">
+
+                        <!-- NOVOS ARTIGOS -->
+
+                        <div class="preferencia-item">
+
+                            <div class="preferencia-info">
+
+                                <div class="preferencia-icon">
+                                    <i data-lucide="file-text"></i>
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Novos artigos
+                                    </strong>
+
+                                    <span>
+                                        Receba uma notificação quando
+                                        um novo artigo for publicado.
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <label class="preferencia-switch">
+
+                                <input type="checkbox" id="preferenciaNovosArtigos">
+
+                                <span class="preferencia-slider"></span>
+
+                            </label>
+
+                        </div>
+
+
+                        <!-- NOVIDADES DO PSIFÁCIL -->
+
+                        <div class="preferencia-item">
+
+                            <div class="preferencia-info">
+
+                                <div class="preferencia-icon">
+                                    <i data-lucide="sparkles"></i>
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        Novidades do PsiFácil
+                                    </strong>
+
+                                    <span>
+                                        Receba avisos sobre novos recursos
+                                        e novidades da plataforma.
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <label class="preferencia-switch">
+
+                                <input type="checkbox" id="preferenciaNovidades">
+
+                                <span class="preferencia-slider"></span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+         SOBRE AS NOTIFICAÇÕES
+    ================================================== -->
+
+                <div class="preferencias-info">
+
+                    <div class="preferencias-info-icon">
+                        <i data-lucide="info"></i>
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Sobre as notificações
+                        </strong>
+
+                        <p>
+                            Você poderá alterar essas preferências
+                            a qualquer momento. As notificações recebidas
+                            ficarão disponíveis nesta área.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+         NOTIFICAÇÕES RECEBIDAS
+    ================================================== -->
+
+                <div class="notificacoes-recebidas-card">
+
+                    <div class="notificacoes-recebidas-header">
+
+                        <div class="notificacoes-recebidas-titulo">
+
+                            <div class="notificacoes-recebidas-icone">
+                                <i data-lucide="bell"></i>
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Notificações recebidas
+                                </h3>
+
+                                <p id="contadorNotificacoes">
+                                    Carregando...
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <button type="button" id="btnMarcarTodasLidas" class="btn-marcar-todas-lidas" hidden>
+                            Marcar todas como lidas
+                        </button>
+
+                    </div>
+
+
+                    <!-- LISTA DE NOTIFICAÇÕES -->
+
+                    <div id="listaNotificacoes" class="lista-notificacoes">
+
+                        <div class="notificacoes-carregando">
+                            Carregando notificações...
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
     </div>
 
-  </div>
 
-  <div id="toast" class="toast"></div>
+   
 
-  <script src="js/perfil.js"></script>
+
+    <!-- =====================================================
+         MODAL - EXCLUIR CONTA
+    ====================================================== -->
+
+    <div class="modal-excluir-overlay" id="modalExcluirConta" aria-hidden="true">
+
+        <div class="modal-excluir" role="dialog" aria-modal="true" aria-labelledby="tituloExcluirConta">
+
+
+            <!-- TOPO -->
+
+            <div class="modal-excluir-top">
+
+                <div class="modal-excluir-icon">
+                    <i data-lucide="triangle-alert"></i>
+                </div>
+
+
+                <button type="button" class="modal-excluir-fechar" id="btnFecharExcluirConta" aria-label="Fechar">
+                    <i data-lucide="x"></i>
+                </button>
+
+            </div>
+
+
+            <!-- CONTEÚDO -->
+
+            <div class="modal-excluir-content">
+
+                <span class="modal-excluir-label">
+                    Exclusão permanente
+                </span>
+
+
+                <h2 id="tituloExcluirConta">
+                    Excluir sua conta?
+                </h2>
+
+
+                <p>
+                    Sua conta será excluída permanentemente.
+                    Esta ação não poderá ser desfeita.
+                </p>
+
+
+                <!-- AVISO -->
+
+                <div class="modal-excluir-aviso">
+
+                    <i data-lucide="info"></i>
+
+                    <span>
+                        Para sua segurança, confirme sua senha
+                        antes de excluir a conta.
+                    </span>
+
+                </div>
+
+
+                <!-- SENHA -->
+
+                <div class="form-group modal-senha-group">
+
+                    <label for="senhaExcluirConta">
+                        Senha atual
+                    </label>
+
+
+                    <div class="input-wrapper password-wrapper">
+
+                        <i data-lucide="lock-keyhole"></i>
+
+
+                        <input type="password" id="senhaExcluirConta" placeholder="Digite sua senha atual"
+                            autocomplete="current-password">
+
+
+                        <button type="button" class="password-toggle" data-password-target="senhaExcluirConta"
+                            aria-label="Mostrar senha" title="Mostrar senha">
+                            <i data-lucide="eye"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MENSAGEM -->
+
+                <div class="excluir-conta-mensagem" id="mensagemExcluirConta" role="status" aria-live="polite"></div>
+
+            </div>
+
+
+            <!-- AÇÕES -->
+
+            <div class="modal-excluir-actions">
+
+                <button type="button" class="btn-cancelar-exclusao" id="btnCancelarExcluirConta">
+                    Cancelar
+                </button>
+
+
+                <button type="button" class="btn-confirmar-exclusao" id="btnConfirmarExcluirConta">
+
+                    <i data-lucide="trash-2"></i>
+
+                    <span>
+                        Excluir minha conta
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         TOAST
+    ====================================================== -->
+
+    <div id="toast" class="toast"></div>
+
+
+    <!-- =====================================================
+         SCRIPTS
+    ====================================================== -->
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script src="js/perfil.js"></script>
+
+    <script src="js/perfil-menu.js"></script>
+
+    <script>
+        lucide.createIcons();
+    </script>
+
+
 </body>
 
 </html>

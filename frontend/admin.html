@@ -2,412 +2,1440 @@
 <html lang="pt-BR">
 
 <head>
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- =====================================================
+         CONFIGURAÇÕES
+    ====================================================== -->
 
-  <script
-    src="https://cdn.tiny.cloud/1/77lbhgugvudkk00pnl39cluaswmuxthi13c33we5jdyvzlv8/tinymce/8/tinymce.min.js"
-    referrerpolicy="origin"
-    crossorigin="anonymous">
-  </script>
+    <meta charset="UTF-8">
 
-  <title>Admin | PsiBlog</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-  <link rel="stylesheet" href="css/admin.css">
+    <meta
+        name="theme-color"
+        content="#f5f0eb"
+    >
 
-  <script
-    src="https://cdn.tiny.cloud/1/77lbhgugvudkk00pnl39cluaswmuxthi13c33we5jdyvzlv8/tinymce/8/tinymce.min.js"
-    referrerpolicy="origin"
-    crossorigin="anonymous">
-  </script>
+    <title>Painel Admin | PsiFácil</title>
+
+    <!-- FAVICON -->
+
+    <link
+        rel="icon"
+        type="image/svg+xml"
+        href="img/favicon.svg"
+    >
+
+
+    <!-- =====================================================
+         CSS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/admin.css"
+    >
+
+
+    <!-- =====================================================
+         TINYMCE
+    ====================================================== -->
+
+    <script
+        src="https://cdn.tiny.cloud/1/77lbhgugvudkk00pnl39cluaswmuxthi13c33we5jdyvzlv8/tinymce/8/tinymce.min.js"
+        referrerpolicy="origin"
+        crossorigin="anonymous">
+    </script>
+
 </head>
+
 
 <body>
 
-  <div class="admin-container">
 
-    <aside class="sidebar">
+<!-- =========================================================
+     PROTEÇÃO VISUAL
+========================================================= -->
 
-      <div class="sidebar-logo">
-        <h2>PsiBlog</h2>
-        <span>Painel Admin</span>
-      </div>
+<script>
 
-      <nav class="sidebar-menu">
+    if (!localStorage.getItem("tokenAdmin")) {
+        window.location.href = "login.html";
+    }
 
-        <a href="#" class="active">
-          <i data-lucide="layout-dashboard"></i>
-          Dashboard
-        </a>
+</script>
 
-        <a href="leads.html">
-          <i data-lucide="mail"></i>
-          Leads Capturados
-        </a>
 
-        <a href="#novo-post">
-          <i data-lucide="file-plus"></i>
-          Criar Post
-        </a>
+<!-- =========================================================
+     LAYOUT PRINCIPAL
+========================================================= -->
 
-        <a href="#posts-criados">
-          <i data-lucide="newspaper"></i>
-          Posts Criados
-        </a>
+<div class="admin-shell">
 
-        <a href="psifacil.html">
-          <i data-lucide="external-link"></i>
-          Ver Blog
-        </a>
 
-        <a href="login.html" onclick="sairAdmin()">
-          <i data-lucide="log-out"></i>
-          Sair
-        </a>
+    <!-- =====================================================
+         OVERLAY MOBILE
+    ====================================================== -->
 
-      </nav>
+    <div
+        class="admin-sidebar-overlay"
+        id="adminSidebarOverlay">
+    </div>
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside
+        class="admin-sidebar"
+        id="adminSidebar"
+    >
+
+
+        <!-- LOGO -->
+
+        <div class="admin-sidebar-brand">
+
+            <a
+                href="#"
+                class="admin-brand"
+                data-admin-page="dashboard"
+            >
+
+                <div class="admin-brand-icon">
+                    <i data-lucide="brain"></i>
+                </div>
+
+                <div class="admin-brand-text">
+
+                    <strong>
+                        PsiFácil
+                    </strong>
+
+                    <span>
+                        Painel administrativo
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <button
+                type="button"
+                class="admin-sidebar-close"
+                id="adminSidebarClose"
+                aria-label="Fechar menu"
+            >
+                <i data-lucide="x"></i>
+            </button>
+
+        </div>
+
+
+        <!-- NAVEGAÇÃO -->
+
+        <nav class="admin-navigation">
+
+
+            <!-- VISÃO GERAL -->
+
+            <div class="admin-nav-group">
+
+                <span class="admin-nav-label">
+                    Visão geral
+                </span>
+
+
+                <button
+                    type="button"
+                    class="admin-nav-link active"
+                    data-admin-page="dashboard"
+                >
+
+                    <i data-lucide="layout-dashboard"></i>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </button>
+
+            </div>
+
+
+            <!-- CONTEÚDO -->
+
+            <div class="admin-nav-group">
+
+                <span class="admin-nav-label">
+                    Conteúdo
+                </span>
+
+
+                <button
+                    type="button"
+                    class="admin-nav-link"
+                    data-admin-page="criar-post"
+                >
+
+                    <i data-lucide="file-plus-2"></i>
+
+                    <span>
+                        Criar artigo
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="admin-nav-link"
+                    data-admin-page="posts"
+                >
+
+                    <i data-lucide="newspaper"></i>
+
+                    <span>
+                        Posts criados
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="admin-nav-link"
+                    data-admin-page="novidade"
+                >
+
+                    <i data-lucide="sparkles"></i>
+
+                    <span>
+                        Enviar novidade
+                    </span>
+
+                </button>
+
+            </div>
+
+
+            <!-- CONTATOS -->
+
+            <div class="admin-nav-group">
+
+                <span class="admin-nav-label">
+                    Contatos
+                </span>
+
+
+                <a
+                    href="leads.html"
+                    class="admin-nav-link"
+                >
+
+                    <i data-lucide="mail"></i>
+
+                    <span>
+                        Leads capturados
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- SISTEMA -->
+
+            <div class="admin-nav-group">
+
+                <span class="admin-nav-label">
+                    Sistema
+                </span>
+
+
+                <a
+                    href="psifacil.html"
+                    class="admin-nav-link"
+                    target="_blank"
+                >
+
+                    <i data-lucide="external-link"></i>
+
+                    <span>
+                        Ver blog
+                    </span>
+
+                </a>
+
+
+                <button
+                    type="button"
+                    class="admin-nav-link admin-nav-logout"
+                    onclick="sairAdmin()"
+                >
+
+                    <i data-lucide="log-out"></i>
+
+                    <span>
+                        Sair
+                    </span>
+
+                </button>
+
+            </div>
+
+        </nav>
+
+
+        <!-- RODAPÉ DA SIDEBAR -->
+
+        <div class="admin-sidebar-footer">
+
+            <div class="admin-sidebar-user">
+
+                <div class="admin-sidebar-user-icon">
+                    <i data-lucide="shield-check"></i>
+                </div>
+
+                <div>
+
+                    <strong>
+                        Administrador
+                    </strong>
+
+                    <span>
+                        Acesso administrativo
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
 
     </aside>
 
-    <main class="admin-main">
 
-      <header class="admin-topbar">
+    <!-- =====================================================
+         ÁREA PRINCIPAL
+    ====================================================== -->
 
-        <div>
-          <h1>Painel de Conteúdo</h1>
-          <p>Crie, visualize e gerencie os artigos do blog.</p>
-        </div>
+    <div class="admin-content-wrapper">
 
-        <div class="admin-user">
-          <i data-lucide="shield-check"></i>
-          <span>Administrador</span>
-        </div>
 
-      </header>
+        <!-- =================================================
+             HEADER MOBILE / DESKTOP
+        ================================================== -->
 
-      <section class="admin-stats">
+        <header class="admin-header">
 
-        <div class="stat-card">
 
-          <i data-lucide="newspaper"></i>
+            <div class="admin-header-left">
 
-          <div>
-            <strong id="totalPosts">0</strong>
-            <span>Posts criados</span>
-          </div>
+                <button
+                    type="button"
+                    class="admin-menu-button"
+                    id="adminMenuButton"
+                    aria-label="Abrir menu"
+                >
+                    <i data-lucide="menu"></i>
+                </button>
 
-        </div>
 
-        <div class="stat-card">
+                <div class="admin-header-mobile-brand">
 
-          <i data-lucide="mail"></i>
+                    <i data-lucide="brain"></i>
 
-          <div>
-            <strong id="totalLeads">0</strong>
-            <span>Leads capturados</span>
-          </div>
+                    <div>
 
-        </div>
+                        <strong>
+                            PsiFácil
+                        </strong>
 
-      </section>
+                        <span>
+                            Administração
+                        </span>
 
-      <section class="admin-layout" id="novo-post">
+                    </div>
 
-        <form id="formPost" class="admin-form-card">
-
-          <div class="form-header">
-
-            <span class="tag">Novo artigo</span>
-
-            <h2>Cadastrar Novo Post</h2>
-
-            <p>
-              Preencha as informações abaixo para publicar ou agendar um artigo.
-            </p>
-
-          </div>
-
-          <div class="form-group">
-
-            <label for="titulo">
-              Título do artigo
-            </label>
-
-            <input
-              type="text"
-              id="titulo"
-              placeholder="Ex: Como controlar a ansiedade no dia a dia">
-
-          </div>
-
-          <div class="form-row">
-
-            <div class="form-group">
-
-              <label for="categoria">
-                Categoria
-              </label>
-
-              <input
-                type="text"
-                id="categoria"
-                placeholder="Ex: Ansiedade">
+                </div>
 
             </div>
 
-            <div class="form-group">
 
-              <label for="imagemArquivo">
-                Imagem de capa
-              </label>
+            <div class="admin-header-user">
 
-              <input
-                type="file"
-                id="imagemArquivo"
-                accept="image/jpeg,image/png,image/webp,image/gif">
+                <div class="admin-header-user-icon">
+                    <i data-lucide="shield-check"></i>
+                </div>
 
-              <!--
-                Mantém a URL da imagem no formulário.
-                O admin.js preencherá este campo depois
-                que o upload para o Supabase terminar.
-              -->
-              <input
-                type="hidden"
-                id="imagem">
+                <div class="admin-header-user-text">
 
-              <small id="statusUploadImagem"></small>
+                    <strong>
+                        Administrador
+                    </strong>
+
+                    <span>
+                        Painel PsiFácil
+                    </span>
+
+                </div>
 
             </div>
 
-          </div>
+        </header>
 
-          <div class="form-group">
 
-            <label for="fontes">
-              Fontes e créditos
-            </label>
+        <!-- =================================================
+             MAIN
+        ================================================== -->
 
-            <textarea
-              id="fontes"
-              rows="4"
-              placeholder="Ex: Ministério da Saúde — https://www.gov.br/saude/&#10;CVV — https://cvv.org.br/"></textarea>
+        <main class="admin-main">
 
-          </div>
 
-          <div class="form-row">
+            <!-- =================================================
+                 DASHBOARD
+            ================================================== -->
 
-            <div class="form-group">
+            <section
+                class="admin-page active"
+                id="admin-page-dashboard"
+                data-page="dashboard"
+            >
 
-              <label for="status">
-                Tipo de publicação
-              </label>
 
-              <select id="status">
+                <!-- CABEÇALHO -->
 
-                <option value="publicado">
-                  Publicar agora
-                </option>
+                <div class="admin-page-heading">
 
-                <option value="agendado">
-                  Agendar publicação
-                </option>
+                    <div>
 
-              </select>
+                        <span class="admin-eyebrow">
+                            Visão geral
+                        </span>
 
-            </div>
+                        <h1>
+                            Dashboard
+                        </h1>
 
-            <div
-              class="form-group"
-              id="grupoAgendamento"
-              style="display: none;">
+                        <p>
+                            Acompanhe e gerencie o conteúdo do PsiFácil em um só lugar.
+                        </p>
 
-              <label for="agendadoPara">
-                Data e hora da publicação
-              </label>
+                    </div>
 
-              <input
-                type="datetime-local"
-                id="agendadoPara">
 
-            </div>
+                    <button
+                        type="button"
+                        class="admin-primary-button"
+                        data-admin-go="criar-post"
+                    >
 
-          </div>
+                        <i data-lucide="plus"></i>
 
-          <div class="form-group">
+                        Novo artigo
 
-            <label for="resumo">
-              Resumo curto
-            </label>
+                    </button>
 
-            <textarea
-              id="resumo"
-              placeholder="Resumo que aparecerá no card do artigo"></textarea>
+                </div>
 
-          </div>
 
-          <div class="form-group">
+                <!-- =================================================
+                     ESTATÍSTICAS
+                ================================================== -->
 
-            <label for="conteudo">
-              Conteúdo completo
-            </label>
+                <div class="admin-stats">
 
-            <textarea
-              id="conteudo"
-              placeholder="Escreva o artigo completo aqui"></textarea>
 
-          </div>
+                    <!-- POSTS -->
 
-          <div class="form-actions">
+                    <article class="admin-stat-card">
 
-            <button
-              type="reset"
-              class="btn-limpar">
-              Limpar
-            </button>
+                        <div class="admin-stat-icon">
+                            <i data-lucide="newspaper"></i>
+                        </div>
 
-            <button
-              type="submit"
-              class="btn-publicar">
+                        <div class="admin-stat-content">
 
-              <i data-lucide="send"></i>
+                            <span>
+                                Posts criados
+                            </span>
 
-              Publicar Artigo
+                            <strong id="totalPosts">
+                                0
+                            </strong>
 
-            </button>
+                            <small>
+                                Artigos cadastrados
+                            </small>
 
-          </div>
+                        </div>
 
-        </form>
+                    </article>
 
-        <aside class="preview-card">
 
-          <span class="preview-label">
-            Prévia do post
-          </span>
+                    <!-- LEADS -->
 
-          <div
-            class="preview-image"
-            id="previewImagem">
+                    <article class="admin-stat-card">
 
-            <i data-lucide="image"></i>
+                        <div class="admin-stat-icon">
+                            <i data-lucide="mail"></i>
+                        </div>
 
-          </div>
+                        <div class="admin-stat-content">
 
-          <div class="preview-content">
+                            <span>
+                                Leads capturados
+                            </span>
 
-            <span id="previewCategoria">
-              Categoria
-            </span>
+                            <strong id="totalLeads">
+                                0
+                            </strong>
 
-            <h3 id="previewTitulo">
-              Título do artigo
-            </h3>
+                            <small>
+                                Contatos cadastrados
+                            </small>
 
-            <p id="previewResumo">
-              O resumo do artigo aparecerá aqui para visualizar como ficará no blog.
-            </p>
+                        </div>
 
-          </div>
+                    </article>
 
-        </aside>
 
-      </section>
+                    <!-- NOTIFICAÇÕES -->
 
-      <section
-        class="posts-admin-section"
-        id="posts-criados">
+                    <article class="admin-stat-card">
 
-        <div class="section-admin-title">
+                        <div class="admin-stat-icon">
+                            <i data-lucide="bell-ring"></i>
+                        </div>
 
-          <div>
+                        <div class="admin-stat-content">
 
-            <span class="tag">
-              Gerenciamento
-            </span>
+                            <span>
+                                Notificações
+                            </span>
 
-            <h2>
-              Posts Criados
-            </h2>
+                            <strong id="totalNotificacoesAtivas">
+                                —
+                            </strong>
 
-          </div>
+                            <small>
+                                Usuários com avisos ativos
+                            </small>
 
-        </div>
+                        </div>
 
-        <div
-          class="posts-admin-list"
-          id="listaPostsAdmin">
+                    </article>
 
-          <div class="empty-posts">
+                </div>
 
-            <i data-lucide="inbox"></i>
 
-            <p>
-              Nenhum post criado ainda.
-            </p>
+                <!-- =================================================
+                     AÇÕES RÁPIDAS
+                ================================================== -->
 
-          </div>
+                <section class="admin-dashboard-block">
 
-        </div>
+                    <div class="admin-section-heading">
 
-      </section>
+                        <div>
 
-    </main>
+                            <span class="admin-eyebrow">
+                                Atalhos
+                            </span>
 
-  </div>
+                            <h2>
+                                Ações rápidas
+                            </h2>
 
-  <div
-    id="toast"
-    class="toast">
-  </div>
+                        </div>
 
-  <div
-    id="modalConfirmacao"
-    class="modal-overlay">
+                    </div>
 
-    <div class="modal-box">
 
-      <h3>
-        Confirmar ação
-      </h3>
+                    <div class="admin-quick-actions">
 
-      <p id="modalTexto">
-        Deseja realmente continuar?
-      </p>
 
-      <div class="modal-actions">
+                        <button
+                            type="button"
+                            class="admin-action-card"
+                            data-admin-go="criar-post"
+                        >
 
-        <button
-          id="btnCancelarModal"
-          class="btn-modal-cancelar">
-          Cancelar
-        </button>
+                            <div class="admin-action-icon">
+                                <i data-lucide="file-plus-2"></i>
+                            </div>
 
-        <button
-          id="btnConfirmarModal"
-          class="btn-modal-confirmar">
-          Confirmar
-        </button>
+                            <div>
 
-      </div>
+                                <strong>
+                                    Criar artigo
+                                </strong>
+
+                                <span>
+                                    Escreva, publique ou agende um novo conteúdo.
+                                </span>
+
+                            </div>
+
+                            <i
+                                data-lucide="arrow-right"
+                                class="admin-action-arrow">
+                            </i>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-action-card"
+                            data-admin-go="novidade"
+                        >
+
+                            <div class="admin-action-icon">
+                                <i data-lucide="sparkles"></i>
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Enviar novidade
+                                </strong>
+
+                                <span>
+                                    Avise os usuários sobre novidades do PsiFácil.
+                                </span>
+
+                            </div>
+
+                            <i
+                                data-lucide="arrow-right"
+                                class="admin-action-arrow">
+                            </i>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="admin-action-card"
+                            data-admin-go="posts"
+                        >
+
+                            <div class="admin-action-icon">
+                                <i data-lucide="files"></i>
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Gerenciar posts
+                                </strong>
+
+                                <span>
+                                    Edite ou remova artigos já cadastrados.
+                                </span>
+
+                            </div>
+
+                            <i
+                                data-lucide="arrow-right"
+                                class="admin-action-arrow">
+                            </i>
+
+                        </button>
+
+
+                        <a
+                            href="psifacil.html"
+                            target="_blank"
+                            class="admin-action-card"
+                        >
+
+                            <div class="admin-action-icon">
+                                <i data-lucide="eye"></i>
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Ver blog
+                                </strong>
+
+                                <span>
+                                    Abra a página pública do PsiFácil.
+                                </span>
+
+                            </div>
+
+                            <i
+                                data-lucide="external-link"
+                                class="admin-action-arrow">
+                            </i>
+
+                        </a>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     POSTS RECENTES
+                ================================================== -->
+
+                <section class="admin-dashboard-block">
+
+                    <div class="admin-section-heading">
+
+                        <div>
+
+                            <span class="admin-eyebrow">
+                                Conteúdo
+                            </span>
+
+                            <h2>
+                                Posts recentes
+                            </h2>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            class="admin-text-button"
+                            data-admin-go="posts"
+                        >
+                            Ver todos
+
+                            <i data-lucide="arrow-right"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="admin-recent-posts"
+                        id="listaPostsRecentes"
+                    >
+
+                        <div class="admin-empty-state">
+
+                            <i data-lucide="inbox"></i>
+
+                            <strong>
+                                Carregando artigos...
+                            </strong>
+
+                            <span>
+                                Os posts mais recentes aparecerão aqui.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </section>
+
+
+            <!-- =================================================
+                 CRIAR / EDITAR ARTIGO
+            ================================================== -->
+
+            <section
+                class="admin-page"
+                id="admin-page-criar-post"
+                data-page="criar-post"
+            >
+
+
+                <div class="admin-page-heading">
+
+                    <div>
+
+                        <span class="admin-eyebrow">
+                            Conteúdo
+                        </span>
+
+                        <h1>
+                            Criar artigo
+                        </h1>
+
+                        <p>
+                            Escreva, visualize e publique um novo conteúdo no PsiFácil.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FORM + PREVIEW -->
+
+                <div
+                    class="admin-editor-layout"
+                    id="novo-post"
+                >
+
+
+                    <!-- =================================================
+                         FORMULÁRIO
+                    ================================================== -->
+
+                    <form
+                        id="formPost"
+                        class="admin-form-card"
+                    >
+
+
+                        <div class="admin-card-heading">
+
+                            <div class="admin-card-heading-icon">
+                                <i data-lucide="pen-line"></i>
+                            </div>
+
+                            <div>
+
+                                <span class="admin-eyebrow">
+                                    Novo artigo
+                                </span>
+
+                                <h2>
+                                    Informações do artigo
+                                </h2>
+
+                                <p>
+                                    Preencha os campos abaixo para publicar ou agendar.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- TÍTULO -->
+
+                        <div class="form-group">
+
+                            <label for="titulo">
+                                Título do artigo
+                            </label>
+
+                            <input
+                                type="text"
+                                id="titulo"
+                                placeholder="Ex: Como controlar a ansiedade no dia a dia"
+                            >
+
+                        </div>
+
+
+                        <!-- CATEGORIA + IMAGEM -->
+
+                        <div class="form-row">
+
+                            <div class="form-group">
+
+                                <label for="categoria">
+                                    Categoria
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="categoria"
+                                    placeholder="Ex: Ansiedade"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="imagemArquivo">
+                                    Imagem de capa
+                                </label>
+
+                                <input
+                                    type="file"
+                                    id="imagemArquivo"
+                                    accept="image/jpeg,image/png,image/webp,image/gif"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    id="imagem"
+                                >
+
+                                <small
+                                    id="statusUploadImagem"
+                                    class="form-helper">
+                                </small>
+
+                                <small class="form-helper">
+                                    Recomendado: 1200 × 630 px.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- FONTES -->
+
+                        <div class="form-group">
+
+                            <label for="fontes">
+                                Fontes e créditos
+                            </label>
+
+                            <textarea
+                                id="fontes"
+                                rows="4"
+                                placeholder="Ex: Ministério da Saúde — https://www.gov.br/saude/&#10;CVV — https://cvv.org.br/"></textarea>
+
+                        </div>
+
+
+                        <!-- PUBLICAÇÃO -->
+
+                        <div class="form-row">
+
+                            <div class="form-group">
+
+                                <label for="status">
+                                    Tipo de publicação
+                                </label>
+
+                                <select id="status">
+
+                                    <option value="publicado">
+                                        Publicar agora
+                                    </option>
+
+                                    <option value="agendado">
+                                        Agendar publicação
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div
+                                class="form-group"
+                                id="grupoAgendamento"
+                                style="display: none;"
+                            >
+
+                                <label for="agendadoPara">
+                                    Data e hora da publicação
+                                </label>
+
+                                <input
+                                    type="datetime-local"
+                                    id="agendadoPara"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- RESUMO -->
+
+                        <div class="form-group">
+
+                            <label for="resumo">
+                                Resumo curto
+                            </label>
+
+                            <textarea
+                                id="resumo"
+                                placeholder="Resumo que aparecerá no card do artigo"></textarea>
+
+                        </div>
+
+
+                        <!-- CONTEÚDO -->
+
+                        <div class="form-group">
+
+                            <label for="conteudo">
+                                Conteúdo completo
+                            </label>
+
+                            <textarea
+                                id="conteudo"
+                                placeholder="Escreva o artigo completo aqui"></textarea>
+
+                        </div>
+
+
+                        <!-- AÇÕES -->
+
+                        <div class="form-actions">
+
+                            <button
+                                type="reset"
+                                class="btn-limpar"
+                            >
+
+                                <i data-lucide="rotate-ccw"></i>
+
+                                Limpar
+
+                            </button>
+
+
+                            <button
+                                type="submit"
+                                class="btn-publicar"
+                            >
+
+                                <i data-lucide="send"></i>
+
+                                Publicar artigo
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+
+                    <!-- =================================================
+                         PREVIEW
+                    ================================================== -->
+
+                    <aside class="preview-card">
+
+                        <div class="preview-card-header">
+
+                            <div>
+
+                                <span class="preview-label">
+                                    Prévia
+                                </span>
+
+                                <h3>
+                                    Visualização do artigo
+                                </h3>
+
+                            </div>
+
+                            <i data-lucide="eye"></i>
+
+                        </div>
+
+
+                        <div
+                            class="preview-image"
+                            id="previewImagem"
+                        >
+
+                            <i data-lucide="image"></i>
+
+                        </div>
+
+
+                        <div class="preview-content">
+
+                            <span id="previewCategoria">
+                                Categoria
+                            </span>
+
+                            <h3 id="previewTitulo">
+                                Título do artigo
+                            </h3>
+
+                            <p id="previewResumo">
+                                O resumo do artigo aparecerá aqui para visualizar como ficará no blog.
+                            </p>
+
+                        </div>
+
+                    </aside>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 POSTS CRIADOS
+            ================================================== -->
+
+            <section
+                class="admin-page"
+                id="admin-page-posts"
+                data-page="posts"
+            >
+
+
+                <div class="admin-page-heading">
+
+                    <div>
+
+                        <span class="admin-eyebrow">
+                            Conteúdo
+                        </span>
+
+                        <h1>
+                            Posts criados
+                        </h1>
+
+                        <p>
+                            Visualize e gerencie os artigos publicados ou agendados.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="admin-primary-button"
+                        data-admin-go="criar-post"
+                    >
+
+                        <i data-lucide="plus"></i>
+
+                        Novo artigo
+
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="posts-admin-section"
+                    id="posts-criados"
+                >
+
+                    <div
+                        class="posts-admin-list"
+                        id="listaPostsAdmin"
+                    >
+
+                        <div class="empty-posts">
+
+                            <i data-lucide="inbox"></i>
+
+                            <p>
+                                Nenhum post criado ainda.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 ENVIAR NOVIDADE
+            ================================================== -->
+
+            <section
+                class="admin-page"
+                id="admin-page-novidade"
+                data-page="novidade"
+            >
+
+
+                <div class="admin-page-heading">
+
+                    <div>
+
+                        <span class="admin-eyebrow">
+                            Comunicação
+                        </span>
+
+                        <h1>
+                            Enviar novidade
+                        </h1>
+
+                        <p>
+                            Envie uma atualização aos usuários que ativaram
+                            “Novidades do PsiFácil”.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-notification-layout">
+
+
+                    <!-- FORMULÁRIO -->
+
+                    <form
+                        id="formNovidade"
+                        class="admin-form-card admin-novidade-form"
+                    >
+
+
+                        <div class="admin-card-heading">
+
+                            <div class="admin-card-heading-icon">
+                                <i data-lucide="sparkles"></i>
+                            </div>
+
+                            <div>
+
+                                <span class="admin-eyebrow">
+                                    Nova comunicação
+                                </span>
+
+                                <h2>
+                                    Criar novidade
+                                </h2>
+
+                                <p>
+                                    A mensagem será registrada na conta do usuário
+                                    e enviada por Web Push quando disponível.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="novidadeTitulo">
+                                Título
+                            </label>
+
+                            <input
+                                type="text"
+                                id="novidadeTitulo"
+                                maxlength="150"
+                                placeholder="Ex: Novidade no PsiFácil ✨"
+                            >
+
+                            <small class="form-helper">
+                                Use um título curto e objetivo.
+                            </small>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="novidadeMensagem">
+                                Mensagem
+                            </label>
+
+                            <textarea
+                                id="novidadeMensagem"
+                                rows="6"
+                                placeholder="Conte aos usuários o que há de novo no PsiFácil."></textarea>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="novidadeUrl">
+                                Link de destino
+                                <span class="label-optional">
+                                    opcional
+                                </span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="novidadeUrl"
+                                placeholder="/perfil.html"
+                            >
+
+                            <small class="form-helper">
+                                Página que será aberta quando o usuário clicar na notificação.
+                            </small>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                type="reset"
+                                class="btn-limpar"
+                            >
+
+                                <i data-lucide="rotate-ccw"></i>
+
+                                Limpar
+
+                            </button>
+
+
+                            <button
+                                type="submit"
+                                class="btn-publicar"
+                                id="btnEnviarNovidade"
+                            >
+
+                                <i data-lucide="send"></i>
+
+                                Enviar novidade
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+
+                    <!-- PREVIEW DA NOTIFICAÇÃO -->
+
+                    <aside class="admin-notification-preview">
+
+                        <span class="preview-label">
+                            Prévia
+                        </span>
+
+
+                        <div class="notification-preview-window">
+
+                            <div class="notification-preview-top">
+
+                                <div class="notification-preview-icon">
+                                    <i data-lucide="brain"></i>
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        PsiFácil
+                                    </strong>
+
+                                    <span>
+                                        agora
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <h3 id="previewNovidadeTitulo">
+                                Novidade no PsiFácil ✨
+                            </h3>
+
+
+                            <p id="previewNovidadeMensagem">
+                                Sua mensagem aparecerá aqui antes do envio.
+                            </p>
+
+                        </div>
+
+
+                        <div class="admin-info-box">
+
+                            <i data-lucide="info"></i>
+
+                            <p>
+                                Somente usuários que ativaram
+                                <strong>Novidades do PsiFácil</strong>
+                                receberão esta comunicação.
+                            </p>
+
+                        </div>
+
+                    </aside>
+
+                </div>
+
+            </section>
+
+        </main>
 
     </div>
 
-  </div>
+</div>
 
-  <script>
 
-    if (!localStorage.getItem("tokenAdmin")) {
-      window.location.href = "login.html";
-    }
+<!-- =========================================================
+     TOAST
+========================================================= -->
 
-  </script>
+<div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite">
+</div>
 
-  <script src="https://unpkg.com/lucide@latest"></script>
 
-  <script src="js/admin.js"></script>
+<!-- =========================================================
+     MODAL DE CONFIRMAÇÃO
+========================================================= -->
+
+<div
+    id="modalConfirmacao"
+    class="modal-overlay"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-icon">
+            <i data-lucide="triangle-alert"></i>
+        </div>
+
+        <h3>
+            Confirmar ação
+        </h3>
+
+        <p id="modalTexto">
+            Deseja realmente continuar?
+        </p>
+
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                id="btnCancelarModal"
+                class="btn-modal-cancelar"
+            >
+                Cancelar
+            </button>
+
+
+            <button
+                type="button"
+                id="btnConfirmarModal"
+                class="btn-modal-confirmar"
+            >
+                Confirmar
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     SCRIPTS
+========================================================= -->
+
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<script src="js/admin.js"></script>
+
 
 </body>
 

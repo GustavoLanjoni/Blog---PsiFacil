@@ -2,95 +2,688 @@
 <html lang="pt-BR">
 
 <head>
-  <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leads Capturados | PsiBlog</title>
-  <link rel="stylesheet" href="css/admin.css">
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Leads Capturados | PsiFácil</title>
+
+    <link
+        rel="icon"
+        type="image/svg+xml"
+        href="img/favicon.svg"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/admin.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/leads.css"
+    >
+
 </head>
 
-<body>
 
-  <div class="admin-container">
+<body class="leads-page">
 
-    <aside class="sidebar">
-      <div class="sidebar-logo">
-        <h2>PsiBlog</h2>
-        <span>Painel Admin</span>
-      </div>
 
-      <nav class="sidebar-menu">
-        <a href="admin.html">
-          <i data-lucide="layout-dashboard"></i>
-          Dashboard
-        </a>
+    <!-- =========================================
+         PROTEÇÃO
+    ========================================== -->
 
-        <a href="leads.html" class="active">
-          <i data-lucide="mail"></i>
-          Leads Capturados
-        </a>
+    <script>
 
-        <a href="admin.html#novo-post">
-          <i data-lucide="file-plus"></i>
-          Criar Post
-        </a>
+        if (!localStorage.getItem("tokenAdmin")) {
 
-        <a href="admin.html#posts-criados">
-          <i data-lucide="newspaper"></i>
-          Posts Criados
-        </a>
+            window.location.href = "login.html";
 
-        <a href="psifacil.html">
-          <i data-lucide="external-link"></i>
-          Ver Blog
-        </a>
+        }
 
-        <a href="#" onclick="sairAdmin()">
-          <i data-lucide="log-out"></i>
-          Sair
-        </a>
-      </nav>
+    </script>
+
+
+
+    <!-- =========================================
+         OVERLAY MOBILE
+    ========================================== -->
+
+    <div
+        class="leads-sidebar-overlay"
+        id="adminSidebarOverlay"
+    ></div>
+
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside
+        class="leads-sidebar"
+        id="adminSidebar"
+    >
+
+
+        <!-- LOGO -->
+
+        <div class="leads-sidebar-brand">
+
+
+            <div class="leads-brand-icon">
+
+                <i data-lucide="brain"></i>
+
+            </div>
+
+
+            <div class="leads-brand-text">
+
+                <strong>
+                    PsiFácil
+                </strong>
+
+                <span>
+                    Painel administrativo
+                </span>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="leads-sidebar-close"
+                id="adminSidebarClose"
+                aria-label="Fechar menu"
+            >
+
+                <i data-lucide="x"></i>
+
+            </button>
+
+
+        </div>
+
+
+
+        <!-- MENU -->
+
+        <nav class="leads-sidebar-nav">
+
+
+            <!-- PAINEL -->
+
+            <div class="leads-nav-group">
+
+                <span class="leads-nav-label">
+                    Painel
+                </span>
+
+
+                <a
+                    href="admin.html#dashboard"
+                    class="leads-nav-item"
+                >
+
+                    <i data-lucide="layout-dashboard"></i>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="leads.html"
+                    class="leads-nav-item active"
+                >
+
+                    <i data-lucide="users"></i>
+
+                    <span>
+                        Leads capturados
+                    </span>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- CONTEÚDO -->
+
+            <div class="leads-nav-group">
+
+                <span class="leads-nav-label">
+                    Conteúdo
+                </span>
+
+
+                <a
+                    href="admin.html#criar-post"
+                    class="leads-nav-item"
+                >
+
+                    <i data-lucide="file-plus-2"></i>
+
+                    <span>
+                        Criar artigo
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="admin.html#posts"
+                    class="leads-nav-item"
+                >
+
+                    <i data-lucide="newspaper"></i>
+
+                    <span>
+                        Posts criados
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="admin.html#novidade"
+                    class="leads-nav-item"
+                >
+
+                    <i data-lucide="send"></i>
+
+                    <span>
+                        Enviar novidade
+                    </span>
+
+                </a>
+
+            </div>
+
+
+
+            <!-- SISTEMA -->
+
+            <div class="leads-nav-group leads-nav-system">
+
+                <span class="leads-nav-label">
+                    Sistema
+                </span>
+
+
+                <a
+                    href="psifacil.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="leads-nav-item"
+                >
+
+                    <i data-lucide="external-link"></i>
+
+                    <span>
+                        Ver blog
+                    </span>
+
+                </a>
+
+
+                <button
+                    type="button"
+                    class="leads-nav-item leads-nav-button"
+                    onclick="sairAdmin()"
+                >
+
+                    <i data-lucide="log-out"></i>
+
+                    <span>
+                        Sair
+                    </span>
+
+                </button>
+
+            </div>
+
+
+        </nav>
+
+
     </aside>
 
-    <main class="admin-main">
 
-      <header class="admin-topbar">
-        <div>
-          <h1>Leads Capturados</h1>
-          <p>Controle quem solicitou o ebook e quem já recebeu por e-mail.</p>
-        </div>
 
-        <div class="admin-user">
-          <i data-lucide="mail"></i>
-          <span id="totalLeads">0 leads</span>
-        </div>
-      </header>
+    <!-- =========================================
+         ÁREA PRINCIPAL
+    ========================================== -->
 
-      <section class="leads-admin-section">
-        <div class="leads-list" id="listaLeadsAdmin">
-          <div class="empty-posts">
-            <i data-lucide="inbox"></i>
-            <p>Nenhum lead capturado ainda.</p>
-          </div>
-        </div>
-      </section>
+    <div class="leads-content">
 
-    </main>
 
-  </div>
+        <!-- =====================================
+             HEADER
+        ====================================== -->
 
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>
-    lucide.createIcons();
-  </script>
-  <script src="js/leads.js"></script>
+        <header class="leads-header">
 
-  <script>
-    if (!localStorage.getItem("tokenAdmin")) {
-      window.location.href = "login.html";
-    }
-  </script>
+
+            <div class="leads-header-left">
+
+
+                <button
+                    type="button"
+                    class="leads-menu-button"
+                    id="adminMenuButton"
+                    aria-label="Abrir menu"
+                >
+
+                    <i data-lucide="menu"></i>
+
+                </button>
+
+
+                <div class="leads-header-copy">
+
+                    <span class="leads-eyebrow">
+                        Contatos
+                    </span>
+
+                    <h1>
+                        Leads capturados
+                    </h1>
+
+                    <p>
+                        Gerencie as pessoas que solicitaram
+                        o ebook do PsiFácil.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+            <a
+                href="admin.html#dashboard"
+                class="leads-back-button"
+            >
+
+                <i data-lucide="arrow-left"></i>
+
+                <span>
+                    Voltar ao painel
+                </span>
+
+            </a>
+
+
+        </header>
+
+
+
+        <!-- =====================================
+             MAIN
+        ====================================== -->
+
+        <main class="leads-main">
+
+
+            <!-- =================================
+                 RESUMO
+            ================================== -->
+
+            <section class="leads-summary-grid">
+
+
+                <!-- TOTAL -->
+
+                <article class="leads-summary-card">
+
+
+                    <div class="leads-summary-icon">
+
+                        <i data-lucide="users"></i>
+
+                    </div>
+
+
+                    <div class="leads-summary-content">
+
+                        <span>
+                            Total de leads
+                        </span>
+
+                        <strong id="totalLeads">
+                            0
+                        </strong>
+
+                        <small>
+                            Pessoas cadastradas
+                        </small>
+
+                    </div>
+
+
+                </article>
+
+
+
+                <!-- EBOOK -->
+
+                <article class="leads-summary-card">
+
+
+                    <div class="leads-summary-icon">
+
+                        <i data-lucide="book-open"></i>
+
+                    </div>
+
+
+                    <div class="leads-summary-content">
+
+                        <span>
+                            Ebook
+                        </span>
+
+                        <strong>
+                            Envios
+                        </strong>
+
+                        <small>
+                            Controle manual de entrega
+                        </small>
+
+                    </div>
+
+
+                </article>
+
+
+
+                <!-- SEGURANÇA -->
+
+                <article class="leads-summary-card">
+
+
+                    <div class="leads-summary-icon">
+
+                        <i data-lucide="shield-check"></i>
+
+                    </div>
+
+
+                    <div class="leads-summary-content">
+
+                        <span>
+                            Dados
+                        </span>
+
+                        <strong>
+                            Protegidos
+                        </strong>
+
+                        <small>
+                            Acesso administrativo
+                        </small>
+
+                    </div>
+
+
+                </article>
+
+
+            </section>
+
+
+
+            <!-- =================================
+                 LISTA
+            ================================== -->
+
+            <section class="leads-panel">
+
+
+                <div class="leads-panel-header">
+
+
+                    <div class="leads-panel-heading">
+
+                        <span class="leads-eyebrow">
+                            Solicitações
+                        </span>
+
+                        <h2>
+                            Pessoas cadastradas
+                        </h2>
+
+                        <p>
+                            Consulte quem solicitou o ebook e
+                            acompanhe quem já recebeu o material.
+                        </p>
+
+                    </div>
+
+
+                    <div class="leads-panel-icon">
+
+                        <i data-lucide="mail"></i>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!--
+                    IMPORTANTE:
+                    Mantemos exatamente este ID porque
+                    o leads.js já utiliza este elemento.
+                -->
+
+                <div
+                    class="leads-list"
+                    id="listaLeadsAdmin"
+                >
+
+
+                    <div class="leads-loading-state">
+
+                        <i data-lucide="loader-circle"></i>
+
+
+                        <div>
+
+                            <strong>
+                                Carregando leads...
+                            </strong>
+
+                            <span>
+                                Aguarde um momento.
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+        </main>
+
+
+    </div>
+
+
+
+    <!-- =========================================
+         SCRIPTS
+    ========================================== -->
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script src="js/leads.js"></script>
+
+
+    <script>
+
+        /* =========================================
+           ÍCONES
+        ========================================== */
+
+        function renderizarIconesLeads() {
+
+            if (window.lucide) {
+
+                lucide.createIcons();
+
+            }
+
+        }
+
+
+        /* =========================================
+           MENU
+        ========================================== */
+
+        const leadsMenuButton =
+            document.getElementById(
+                "adminMenuButton"
+            );
+
+
+        const leadsSidebarClose =
+            document.getElementById(
+                "adminSidebarClose"
+            );
+
+
+        const leadsSidebarOverlay =
+            document.getElementById(
+                "adminSidebarOverlay"
+            );
+
+
+        function abrirMenuLeads() {
+
+            document.body.classList.add(
+                "leads-menu-open"
+            );
+
+        }
+
+
+        function fecharMenuLeads() {
+
+            document.body.classList.remove(
+                "leads-menu-open"
+            );
+
+        }
+
+
+        if (leadsMenuButton) {
+
+            leadsMenuButton.addEventListener(
+                "click",
+                abrirMenuLeads
+            );
+
+        }
+
+
+        if (leadsSidebarClose) {
+
+            leadsSidebarClose.addEventListener(
+                "click",
+                fecharMenuLeads
+            );
+
+        }
+
+
+        if (leadsSidebarOverlay) {
+
+            leadsSidebarOverlay.addEventListener(
+                "click",
+                fecharMenuLeads
+            );
+
+        }
+
+
+        document.addEventListener(
+            "keydown",
+            (event) => {
+
+                if (event.key === "Escape") {
+
+                    fecharMenuLeads();
+
+                }
+
+            }
+        );
+
+
+        window.addEventListener(
+            "resize",
+            () => {
+
+                if (window.innerWidth > 1100) {
+
+                    fecharMenuLeads();
+
+                }
+
+            }
+        );
+
+
+        /* =========================================
+           LOGOUT
+        ========================================== */
+
+        function sairAdmin() {
+
+            localStorage.removeItem(
+                "tokenAdmin"
+            );
+
+            window.location.href =
+                "login.html";
+
+        }
+
+
+        /* =========================================
+           INICIAR
+        ========================================== */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            () => {
+
+                renderizarIconesLeads();
+
+            }
+        );
+
+    </script>
+
 
 </body>
 

@@ -98,6 +98,11 @@ const interacoesRoutes = require("./routes/interacoes");
 const usuariosRoutes = require("./routes/usuarios");
 const perfilUserRoutes = require("./routes/perfilUser");
 const postsSalvosRoutes = require("./routes/postsSalvos");
+const frasesRoutes = require("./routes/frases");
+const preferenciasRoutes = require("./routes/preferencias");
+const pushRoutes = require("./routes/push");
+const notificacoesRoutes = require("./routes/notificacoes");
+const novidadesRoutes = require("./routes/novidades");
 
 
 /*
@@ -158,6 +163,17 @@ app.use("/usuarios", usuariosRoutes);
 app.use("/perfil", perfilUserRoutes);
 
 app.use("/salvos", postsSalvosRoutes);
+
+app.use("/frases", frasesRoutes);
+
+app.use("/preferencias", preferenciasRoutes);
+
+app.use("/push", pushRoutes);
+
+app.use("/notificacoes", notificacoesRoutes);
+
+app.use("/novidades", novidadesRoutes);
+
 
 
 /*

@@ -1,13 +1,23 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
 
-    <!-- Google Search Console -->
+    <!-- =====================================================
+         GOOGLE SEARCH CONSOLE
+    ====================================================== -->
+
     <meta name="google-site-verification" content="qr0byZQ8Llm3WE1HmnUcEMH0NTqWaiITeskhPDMwJok">
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXHLZFTYTN"></script>
+
+    <!-- =====================================================
+         GOOGLE ANALYTICS
+    ====================================================== -->
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXHLZFTYTN">
+    </script>
+
     <script>
         window.dataLayer = window.dataLayer || [];
 
@@ -15,17 +25,27 @@
             dataLayer.push(arguments);
         }
 
-        gtag('js', new Date());
-
-        gtag('config', 'G-QXHLZFTYTN');
+        gtag("js", new Date());
+        gtag("config", "G-QXHLZFTYTN");
     </script>
 
-    <!-- Configurações básicas -->
+
+    <!-- =====================================================
+         CONFIGURAÇÕES BÁSICAS
+    ====================================================== -->
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- SEO principal -->
-    <title>PsiFácil | Psicologia, Bem-estar e Saúde Emocional</title>
+
+    <!-- =====================================================
+         SEO
+    ====================================================== -->
+
+    <title>
+        PsiFácil | Psicologia, Bem-estar e Saúde Emocional
+    </title>
 
     <meta name="description"
         content="Artigos, vídeos e materiais sobre ansiedade, autoestima, relacionamentos, autoconhecimento e bem-estar emocional, com linguagem simples e acolhedora.">
@@ -34,13 +54,21 @@
 
     <meta name="robots" content="index, follow, max-image-preview:large">
 
-    <!-- URL principal -->
-    <link rel="canonical" href="https://psifacil-blog.onrender.com/">
 
-    <!-- Favicon -->
+    <!-- URL PRINCIPAL -->
+
+    <link rel="canonical" href="https://psifacilblog.com.br/">
+
+
+    <!-- FAVICON -->
+
     <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
 
-    <!-- Open Graph -->
+
+    <!-- =====================================================
+         OPEN GRAPH
+    ====================================================== -->
+
     <meta property="og:type" content="website">
 
     <meta property="og:title" content="PsiFácil | Psicologia, Bem-estar e Saúde Emocional">
@@ -48,13 +76,17 @@
     <meta property="og:description"
         content="Artigos, vídeos e materiais sobre ansiedade, autoestima, relacionamentos, autoconhecimento e bem-estar emocional.">
 
-    <meta property="og:url" content="https://psifacil-blog.onrender.com/">
+    <meta property="og:url" content="https://psifacilblog.com.br/">
 
     <meta property="og:site_name" content="PsiFácil">
 
     <meta property="og:locale" content="pt_BR">
 
-    <!-- Twitter / X -->
+
+    <!-- =====================================================
+         TWITTER / X
+    ====================================================== -->
+
     <meta name="twitter:card" content="summary">
 
     <meta name="twitter:title" content="PsiFácil | Psicologia, Bem-estar e Saúde Emocional">
@@ -62,147 +94,270 @@
     <meta name="twitter:description"
         content="Artigos, vídeos e materiais sobre ansiedade, autoestima, relacionamentos, autoconhecimento e bem-estar emocional.">
 
-    <!-- Dados estruturados -->
+
+    <!-- =====================================================
+         DADOS ESTRUTURADOS
+    ====================================================== -->
+
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "PsiFácil",
-        "url": "https://psifacil-blog.onrender.com/",
-        "description": "Artigos, vídeos e materiais sobre ansiedade, autoestima, relacionamentos, autoconhecimento e bem-estar emocional."
-    }
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "PsiFácil",
+            "url": "https://psifacilblog.com.br/",
+            "description": "Artigos, vídeos e materiais sobre ansiedade, autoestima, relacionamentos, autoconhecimento e bem-estar emocional."
+        }
     </script>
 
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8328619879268221"
-        crossorigin="anonymous"></script>
 
-    <!-- CSS -->
+    <!-- =====================================================
+         GOOGLE ADSENSE
+    ====================================================== -->
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8328619879268221"
+        crossorigin="anonymous">
+        </script>
+
+
+    <!-- =====================================================
+         CSS
+    ====================================================== -->
+
     <link rel="stylesheet" href="css/style.css">
 
 </head>
 
+
 <body>
 
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
     <header class="header">
+
         <nav class="navbar">
-            <div class="logo">PsiFacil - Blog</div>
+
+            <!-- LOGO -->
+
+            <a href="psifacil.html" class="logo">
+
+                <span class="logo-main">
+                    PsiFácil
+                </span>
+
+                <span class="logo-sub">
+                    saúde mental
+                </span>
+
+            </a>
+
+
+            <!-- MENU DESKTOP -->
 
             <ul class="menu">
+
                 <li>
-                    <a href="psifacil.html">Início</a>
+                    <a href="psifacil.html" class="active">
+                        Início
+                    </a>
                 </li>
 
                 <li>
-                    <a href="#sobre">Sobre</a>
+                    <a href="#posts">
+                        Artigos
+                    </a>
                 </li>
 
                 <li>
-                    <a href="#posts">Artigos</a>
+                    <a href="#categorias">
+                        Categorias
+                    </a>
                 </li>
 
                 <li>
-                    <a href="#contato">Contato</a>
+                    <a href="#sobre">
+                        Sobre
+                    </a>
                 </li>
+
+                <li>
+                    <a href="#contato">
+                        Contato
+                    </a>
+                </li>
+
             </ul>
 
-            <a href="perfil.html" class="btn-perfil">
-                <i data-lucide="circle-user-round"></i>
-                <span>Perfil</span>
-            </a>
+
+            <!-- AÇÕES -->
+
+            <div class="header-actions">
+
+                <a href="perfil.html" class="btn-perfil">
+
+                    <i data-lucide="circle-user-round"></i>
+
+                    <span>
+                        Perfil
+                    </span>
+
+                </a>
+
+
+                <!-- BOTÃO MENU MOBILE -->
+
+                <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false"
+                    aria-controls="mobileMenu">
+
+                    <i data-lucide="menu"></i>
+
+                </button>
+
+            </div>
+
+
+            <!-- MENU MOBILE -->
+
+            <div class="mobile-menu" id="mobileMenu">
+
+                <a href="psifacil.html">
+                    Início
+                </a>
+
+                <a href="#posts">
+                    Artigos
+                </a>
+
+                <a href="#categorias">
+                    Categorias
+                </a>
+
+                <a href="#sobre">
+                    Sobre
+                </a>
+
+                <a href="#contato">
+                    Contato
+                </a>
+
+            </div>
+
         </nav>
+
     </header>
+
+
+    <!-- =====================================================
+         CONTEÚDO PRINCIPAL
+    ====================================================== -->
 
     <main>
 
+
+        <!-- =================================================
+             HERO
+        ================================================== -->
+
         <section class="hero">
 
-            <div class="hero-text">
-
-                <span class="tag">
-                    Psicologia & Bem-estar
-                </span>
-
-                <h1>
-                    Conteúdos para cuidar da mente e da vida emocional
-                </h1>
-
-                <p>
-                    Artigos, vídeos e materiais digitais sobre ansiedade,
-                    autoestima, relacionamentos, autoconhecimento e saúde mental.
-                </p>
-
-                <div class="hero-buttons">
-
-                    <a href="#posts" class="btn-primary">
-                        Ver artigos
-                    </a>
-
-                    <a href="https://www.youtube.com/@PSIFACIL.OFICIAL" target="_blank" rel="noopener noreferrer"
-                        class="btn-youtube">
-
-                        <i data-lucide="youtube"></i>
-
-                        Canal no YouTube
-
-                    </a>
-
-                </div>
-
-            </div>
-
-            <div class="hero-card">
-
-                <h3>
-                    Mensagem da semana
-                </h3>
-
-                <p>
-                    Cuidar da mente também é uma forma de amor-próprio.
-                </p>
-
-            </div>
-
-        </section>
+            <div class="hero-content">
 
 
-        <section class="ebook-section">
+                <!-- TEXTO -->
 
-            <div class="ebook-card">
+                <div class="hero-text">
 
-                <div>
-
-                    <span class="tag">
-                        Material gratuito
+                    <span class="hero-eyebrow">
+                        Psicologia &amp; Bem-estar
                     </span>
 
-                    <h2>
-                        Receba nosso ebook gratuito
-                    </h2>
+                    <h1>
+                        Entenda melhor
+                        <span>
+                            o que você sente.
+                        </span>
+                    </h1>
 
                     <p>
-                        Preencha seu nome e e-mail. Nossa equipe enviará o material
-                        diretamente para você.
+                        Conteúdos sobre saúde mental,
+                        ansiedade, autoestima, relacionamentos
+                        e autoconhecimento para ajudar você
+                        a compreender melhor sua vida emocional.
                     </p>
+
+
+                    <div class="hero-buttons">
+
+                        <a href="#posts" class="btn-primary">
+
+                            <span>
+                                Explorar artigos
+                            </span>
+
+                            <i data-lucide="arrow-right"></i>
+
+                        </a>
+
+
+                        <a href="https://www.youtube.com/@PSIFACIL.OFICIAL" target="_blank" rel="noopener noreferrer"
+                            class="btn-youtube">
+
+                            <i data-lucide="youtube"></i>
+
+                            <span>
+                                Canal no YouTube
+                            </span>
+
+                        </a>
+
+                    </div>
 
                 </div>
 
-                <form class="ebook-form" id="ebookForm">
 
-                    <input type="text" id="leadNome" placeholder="Seu nome" required>
+                <!-- CARD LATERAL -->
 
-                    <input type="email" id="leadEmail" placeholder="Seu e-mail" required>
+                <!-- CARD LATERAL -->
 
-                    <button type="submit">
-                        Quero receber
-                    </button>
+                <div class="hero-card">
 
-                </form>
+                    <div class="hero-card-top">
 
-                <div id="ebookMensagem" class="ebook-mensagem">
+                        <div class="hero-card-icon">
+                            <i data-lucide="sparkles"></i>
+                        </div>
 
-                    Cadastro realizado com sucesso!
-                    Em breve enviaremos o ebook no seu e-mail.
+                        <span id="fraseTipo">
+                            Reflexão
+                        </span>
+
+                    </div>
+
+
+                    <div class="hero-card-content">
+
+                        <p id="fraseDoDia">
+                            “Cuidar da mente também é
+                            uma forma de cuidar de si.”
+                        </p>
+
+                    </div>
+
+
+                    <div class="hero-card-bottom">
+
+                        <span id="fraseAutor">
+                            PsiFácil
+                        </span>
+
+                        <button type="button" class="frase-favorito" id="btnSalvarFrase" aria-label="Salvar frase"
+                            title="Salvar frase">
+                            <i data-lucide="heart"></i>
+                        </button>
+
+                    </div>
 
                 </div>
 
@@ -211,27 +366,136 @@
         </section>
 
 
-        <section class="posts-section" id="posts">
+        <!-- =================================================
+             CATEGORIAS
+        ================================================== -->
 
-            <div class="section-title">
+        <section class="categorias-section" id="categorias">
+
+            <div class="section-heading">
 
                 <span>
-                    Blog
+                    Explore
                 </span>
 
                 <h2>
-                    Artigos recentes
+                    Encontre conteúdos para você
                 </h2>
 
+                <p>
+                    Navegue pelos principais temas
+                    do PsiFácil.
+                </p>
+
             </div>
 
-            <div class="posts-grid">
-            </div>
 
-            <div class="ver-mais-posts">
+            <div class="categorias-grid">
 
-                <a href="conteudo.html" class="btn-primary">
-                    Ver mais posts
+
+                <!-- ANSIEDADE -->
+
+                <a href="conteudo.html" class="categoria-card">
+
+                    <div class="categoria-icon">
+
+                        <img src="img/favicon.svg" alt="PsiFácil" class="final-info-logo">
+
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Ansiedade
+                        </h3>
+
+                        <p>
+                            Entenda seus pensamentos,
+                            emoções e sinais do corpo.
+                        </p>
+
+                    </div>
+
+                    <i data-lucide="arrow-up-right"></i>
+
+                </a>
+
+
+                <!-- AUTOESTIMA -->
+
+                <a href="conteudo.html" class="categoria-card">
+
+                    <div class="categoria-icon">
+                        <i data-lucide="heart"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Autoestima
+                        </h3>
+
+                        <p>
+                            Reflexões sobre autoestima,
+                            autoconfiança e autocuidado.
+                        </p>
+
+                    </div>
+
+                    <i data-lucide="arrow-up-right"></i>
+
+                </a>
+
+
+                <!-- RELACIONAMENTOS -->
+
+                <a href="conteudo.html" class="categoria-card">
+
+                    <div class="categoria-icon">
+                        <i data-lucide="users"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Relacionamentos
+                        </h3>
+
+                        <p>
+                            Comunicação, vínculos,
+                            limites e vida emocional.
+                        </p>
+
+                    </div>
+
+                    <i data-lucide="arrow-up-right"></i>
+
+                </a>
+
+
+                <!-- AUTOCONHECIMENTO -->
+
+                <a href="conteudo.html" class="categoria-card">
+
+                    <div class="categoria-icon">
+                        <i data-lucide="compass"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Autoconhecimento
+                        </h3>
+
+                        <p>
+                            Conheça melhor seus pensamentos,
+                            emoções e comportamentos.
+                        </p>
+
+                    </div>
+
+                    <i data-lucide="arrow-up-right"></i>
+
                 </a>
 
             </div>
@@ -239,130 +503,438 @@
         </section>
 
 
-        <section class="sobre-section" id="sobre">
+        <!-- =================================================
+             EBOOK
+        ================================================== -->
 
-            <div class="section-title">
+        <section class="ebook-section">
 
-                <span>
-                    Sobre o projeto
-                </span>
+            <div class="ebook-card">
 
-                <h2>
-                    Conteúdo para ajudar pessoas
-                </h2>
+
+                <div class="ebook-content">
+
+                    <span class="ebook-label">
+                        Material gratuito
+                    </span>
+
+                    <h2>
+                        Um conteúdo especial
+                        para você
+                    </h2>
+
+                    <p>
+                        Cadastre seu nome e e-mail para
+                        receber nosso material gratuito.
+                        O envio será feito posteriormente
+                        pela equipe do PsiFácil.
+                    </p>
+
+                </div>
+
+
+                <form class="ebook-form" id="ebookForm">
+
+                    <div class="ebook-input">
+
+                        <i data-lucide="user"></i>
+
+                        <input type="text" id="leadNome" placeholder="Seu nome" required>
+
+                    </div>
+
+
+                    <div class="ebook-input">
+
+                        <i data-lucide="mail"></i>
+
+                        <input type="email" id="leadEmail" placeholder="Seu melhor e-mail" required>
+
+                    </div>
+
+
+                    <button type="submit">
+
+                        Quero receber
+
+                        <i data-lucide="arrow-right"></i>
+
+                    </button>
+
+                </form>
+
+
+                <div id="ebookMensagem" class="ebook-mensagem">
+
+                    Cadastro realizado com sucesso!
+                    Em breve enviaremos o ebook
+                    para você.
+
+                </div>
 
             </div>
-
-            <p>
-                O PsiBlog nasceu para compartilhar conteúdos explicativos
-                sobre saúde emocional, autoconhecimento e bem-estar,
-                conectando textos, vídeos e materiais digitais em um só lugar.
-            </p>
 
         </section>
 
 
-        <section class="contato-section" id="contato">
+        <!-- =================================================
+             ARTIGOS
+        ================================================== -->
 
-            <h2>
-                Receba conteúdos sobre saúde mental
-            </h2>
+        <section class="posts-section" id="posts">
 
-            <p>
-                Entre na comunidade do PsiFácil e receba conteúdos sobre saúde mental,
-                ansiedade, autoestima, bem-estar, novos artigos, ebooks e novidades
-                diretamente no WhatsApp.
-            </p>
+            <div class="section-heading posts-heading">
 
-            <a href="https://chat.whatsapp.com/CTeVKfb30MyBWyF7iWhhLA?s=cl&p=a&ilr=4&iam=0" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+                <div>
 
-                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <h2>
+                        Artigos em destaque
+                    </h2>
 
-                    <path
-                        d="M20.52 3.48A11.82 11.82 0 0012.06 0C5.4 0 .03 5.37.03 12c0 2.12.55 4.18 1.6 6L0 24l6.2-1.6A11.9 11.9 0 0012.06 24c6.63 0 12-5.37 12-12 0-3.2-1.25-6.2-3.54-8.52zM12.06 21.8c-1.82 0-3.6-.48-5.16-1.4l-.37-.22-3.68.95.98-3.58-.24-.37A9.74 9.74 0 012.3 12c0-5.38 4.38-9.76 9.76-9.76 2.6 0 5.05 1.01 6.89 2.87a9.7 9.7 0 012.87 6.89c0 5.38-4.38 9.8-9.76 9.8zm5.36-7.32c-.3-.15-1.78-.88-2.05-.98-.27-.1-.47-.15-.67.15-.2.3-.77.98-.94 1.18-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.46-.88-.78-1.47-1.74-1.64-2.04-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.05 1.03-1.05 2.52s1.08 2.92 1.23 3.12c.15.2 2.13 3.25 5.17 4.55.72.31 1.28.5 1.72.64.72.23 1.37.2 1.88.12.57-.08 1.78-.73 2.03-1.44.25-.71.25-1.32.17-1.44-.08-.12-.27-.2-.57-.35z" />
+                    <p>
+                        Conteúdos para ajudar você
+                        a compreender melhor sua vida emocional.
+                    </p>
 
-                </svg>
+                </div>
 
-                Quero entrar na comunidade
 
-            </a>
+                <a href="conteudo.html" class="section-link">
+
+                    Ver todos
+
+                    <i data-lucide="arrow-up-right"></i>
+
+                </a>
+
+            </div>
+
+
+            <!-- main.js preenche os artigos dinamicamente -->
+
+            <div class="posts-grid"></div>
+
+        </section>
+
+
+        <!-- =================================================
+             SEÇÃO FINAL — VÍDEO, REDES E AVISO
+        ================================================== -->
+
+        <section class="final-section">
+
+            <div class="final-grid">
+
+
+                <!-- VÍDEO -->
+
+                <div class="final-video-card">
+
+                    <div class="final-video">
+
+                        <!--
+                            Substituir SEU_VIDEO_ID pelo ID
+                            do vídeo escolhido no YouTube.
+                        -->
+
+                        <iframe src="https://www.youtube.com/embed/SEU_VIDEO_ID" title="Conteúdo PsiFácil no YouTube"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                        </iframe>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACOMPANHE -->
+
+                <div class="final-card accompany-card">
+
+                    <div class="final-card-title">
+
+                        <h3>
+                            Acompanhe o PsiFácil
+                        </h3>
+
+                    </div>
+
+
+                    <p>
+                        Mais conteúdos, dicas e novidades
+                        sobre saúde emocional,
+                        autoconhecimento e bem-estar.
+                    </p>
+
+
+                    <div class="final-social-buttons">
+
+
+                        <!-- INSTAGRAM -->
+
+                        <a href="https://www.instagram.com/psifacil.oficial/" target="_blank" rel="noopener noreferrer"
+                            aria-label="Instagram" class="final-instagram">
+
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+
+                                <defs>
+
+                                    <linearGradient id="instagramGradientFinal" x1="0%" y1="100%" x2="100%" y2="0%">
+
+                                        <stop offset="0%" stop-color="#F58529">
+                                        </stop>
+
+                                        <stop offset="35%" stop-color="#DD2A7B">
+                                        </stop>
+
+                                        <stop offset="65%" stop-color="#8134AF">
+                                        </stop>
+
+                                        <stop offset="100%" stop-color="#515BD4">
+                                        </stop>
+
+                                    </linearGradient>
+
+                                </defs>
+
+                                <rect x="3" y="3" width="18" height="18" rx="5" ry="5" fill="none"
+                                    stroke="url(#instagramGradientFinal)" stroke-width="1.8">
+                                </rect>
+
+                                <circle cx="12" cy="12" r="4.2" fill="none" stroke="url(#instagramGradientFinal)"
+                                    stroke-width="1.8">
+                                </circle>
+
+                                <circle cx="17.4" cy="6.6" r="1.15" fill="url(#instagramGradientFinal)">
+                                </circle>
+
+                            </svg>
+
+                        </a>
+
+
+                        <!-- YOUTUBE -->
+
+                        <a href="https://www.youtube.com/@PSIFACIL.OFICIAL" target="_blank" rel="noopener noreferrer"
+                            aria-label="YouTube" class="final-youtube">
+
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+
+                                <path fill="#FF0000"
+                                    d="M23.5 6.2c-.3-1.2-1.2-2.1-2.4-2.4C19 3.4 12 3.4 12 3.4s-7 0-9.1.4C1.7 4.1.8 5 .5 6.2.2 8 .2 12 .2 12s0 4 .3 5.8c.3 1.2 1.2 2.1 2.4 2.4 2.1.4 9.1.4 9.1.4s7 0 9.1-.4c1.2-.3 2.1-1.2 2.4-2.4.3-1.8.3-5.8.3-5.8s0-4-.3-5.8z">
+                                </path>
+
+                                <path fill="#FFFFFF" d="M9.8 15.8V8.2l6.4 3.8-6.4 3.8z">
+                                </path>
+
+                            </svg>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- IMPORTANTE -->
+
+                <div class="important-section">
+
+                    <div class="important-icon">
+
+                        <i data-lucide="shield-check"></i>
+
+                    </div>
+
+
+                    <div class="important-content">
+
+                        <h2>
+                            Importante
+                        </h2>
+
+                        <p>
+                            O PsiFácil é uma plataforma de conteúdo educativo
+                            sobre saúde emocional, autoconhecimento e bem-estar.
+                        </p>
+
+                        <p>
+                            Nossos conteúdos têm finalidade exclusivamente
+                            informativa e educativa.
+
+                            <strong>
+                                Não realizamos diagnósticos
+                            </strong>
+
+                            e não utilizamos os conteúdos publicados para
+                            determinar se uma pessoa possui algum transtorno
+                            ou condição de saúde mental.
+                        </p>
+
+                        <p>
+                            As informações disponibilizadas pelo PsiFácil
+
+                            <strong>
+                                não substituem avaliação, diagnóstico,
+                                orientação ou acompanhamento de um profissional
+                                qualificado da área da saúde.
+                            </strong>
+                        </p>
+
+                        <p class="important-highlight">
+                            Caso você esteja passando por dificuldades emocionais
+                            ou precise de uma avaliação individual, procure um
+                            profissional de saúde devidamente qualificado.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </section>
 
     </main>
 
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
 
     <footer class="footer">
 
         <div class="footer-container">
 
+
+            <!-- =================================================
+                 MARCA
+            ================================================== -->
+
             <div class="footer-brand">
 
-                <h3>
-                    PsiBlog
-                </h3>
+                <a href="psifacil.html" class="footer-logo">
+
+                    <img src="img/favicon.svg" alt="PsiFácil" class="footer-logo-icon">
+
+                    <span>
+                        PsiFácil
+                    </span>
+
+                </a>
+
 
                 <p>
-                    Conteúdos sobre saúde emocional, autoconhecimento,
-                    bem-estar e desenvolvimento pessoal para ajudar
-                    pessoas através de informação e transformação.
+                    Conteúdos sobre saúde emocional,
+                    autoconhecimento e bem-estar
+                    em uma linguagem simples,
+                    acessível e acolhedora.
                 </p>
 
-            </div>
 
+                <a href="sobre.html" class="footer-about-btn">
 
-            <div class="footer-links">
+                    Sobre o PsiFácil
 
-                <h4>
-                    Links rápidos
-                </h4>
+                    <i data-lucide="arrow-right"></i>
 
-                <ul>
-
-                    <li>
-                        <a href="psifacil.html">
-                            Início
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#sobre">
-                            Sobre
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#posts">
-                            Artigos
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#contato">
-                            Contato
-                        </a>
-                    </li>
-
-                </ul>
+                </a>
 
             </div>
 
 
-            <div class="footer-social">
+            <!-- =================================================
+                 NAVEGAÇÃO
+            ================================================== -->
 
-                <h4>
-                    Redes sociais
-                </h4>
+            <div class="footer-column">
+
+                <h3>
+                    Navegação
+                </h3>
+
+                <a href="psifacil.html">
+                    Início
+                </a>
+
+                <a href="#posts">
+                    Artigos
+                </a>
+
+                <a href="#categorias">
+                    Categorias
+                </a>
+
+                <a href="#sobre">
+                    Sobre
+                </a>
+
+                <a href="#contato">
+                    Contato
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 CONTEÚDOS
+            ================================================== -->
+
+            <div class="footer-column">
+
+                <h3>
+                    Conteúdos
+                </h3>
+
+                <a href="conteudo.html">
+                    Todos os artigos
+                </a>
+
+                <a href="ebooks.html">
+                    Ebooks
+                </a>
+
+                <a href="escuta.html">
+                    Espaço de Escuta
+                </a>
+
+                <a href="perfil.html">
+                    Meu perfil
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 REDES SOCIAIS
+            ================================================== -->
+
+            <div class="footer-column">
+
+                <h3>
+                    Acompanhe nas redes
+                </h3>
+
 
                 <div class="social-icons">
 
+
                     <!-- INSTAGRAM -->
-                    <a href="https://www.instagram.com/psifacil.oficial/" target="_blank" rel="noopener noreferrer">
 
-                        <svg viewBox="0 0 24 24" fill="currentColor">
+                    <a href="https://www.instagram.com/psifacil.oficial/" target="_blank" rel="noopener noreferrer"
+                        aria-label="Instagram" class="footer-instagram">
 
-                            <path
-                                d="M7.5 2C4.46 2 2 4.46 2 7.5v9C2 19.54 4.46 22 7.5 22h9c3.04 0 5.5-2.46 5.5-5.5v-9C22 4.46 19.54 2 16.5 2h-9zm0 2h9c1.93 0 3.5 1.57 3.5 3.5v9c0 1.93-1.57 3.5-3.5 3.5h-9C5.57 20 4 18.43 4 16.5v-9C4 5.57 5.57 4 7.5 4zm9.75 1a.75.75 0 100 1.5.75.75 0 000-1.5zM12 7a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6z" />
+                        <svg viewBox="0 0 24 24" aria-hidden="true" class="brand-icon instagram-brand-icon">
+
+                            <rect x="3" y="3" width="18" height="18" rx="5" ry="5" fill="none" stroke="currentColor"
+                                stroke-width="1.8">
+                            </rect>
+
+                            <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8">
+                            </circle>
+
+                            <circle cx="17.4" cy="6.6" r="1.15" fill="currentColor">
+                            </circle>
 
                         </svg>
 
@@ -370,25 +942,15 @@
 
 
                     <!-- YOUTUBE -->
-                    <a href="https://www.youtube.com/@PSIFACIL.OFICIAL" target="_blank" rel="noopener noreferrer">
 
-                        <svg viewBox="0 0 24 24" fill="currentColor">
+                    <a href="https://www.youtube.com/@PSIFACIL.OFICIAL" target="_blank" rel="noopener noreferrer"
+                        aria-label="YouTube" class="footer-youtube">
 
-                            <path
-                                d="M23.5 6.2s-.2-1.6-.8-2.3c-.8-.9-1.7-.9-2.1-1C17.5 2.6 12 2.6 12 2.6h0s-5.5 0-8.6.3c-.5.1-1.3.1-2.1 1C.7 4.6.5 6.2.5 6.2S.2 8 .2 9.8v1.4c0 1.8.3 3.6.3 3.6s.2 1.6.8 2.3c.8.9 1.9.9 2.4 1 1.7.2 7.3.3 7.3.3s5.5 0 8.6-.3c.5-.1 1.3-.1 2.1-1 .6-.7.8-2.3.8-2.3s.3-1.8.3-3.6V9.8c0-1.8-.3-3.6-.3-3.6zM9.8 14.7V7.8l6 3.5-6 3.4z" />
-
-                        </svg>
-
-                    </a>
-
-
-                    <!-- WHATSAPP -->
-                    <a href="https://wa.me/5517992663005" target="_blank" rel="noopener noreferrer">
-
-                        <svg viewBox="0 0 24 24" fill="currentColor">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" class="brand-icon youtube-brand-icon">
 
                             <path
-                                d="M20.52 3.48A11.82 11.82 0 0012.06 0C5.4 0 .03 5.37.03 12c0 2.12.55 4.18 1.6 6L0 24l6.2-1.6A11.9 11.9 0 0012.06 24c6.63 0 12-5.37 12-12 0-3.2-1.25-6.2-3.54-8.52zM12.06 21.8c-1.82 0-3.6-.48-5.16-1.4l-.37-.22-3.68.95.98-3.58-.24-.37A9.74 9.74 0 012.3 12c0-5.38 4.38-9.76 9.76-9.76 2.6 0 5.05 1.01 6.89 2.87a9.7 9.7 0 012.87 6.89c0 5.38-5.37 9.8-9.76 9.8zm5.36-7.32c-.3-.15-1.78-.88-2.05-.98-.27-.1-.47-.15-.67.15-.2.3-.77.98-.94 1.18-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.46-.88-.78-1.47-1.74-1.64-2.04-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.05 1.03-1.05 2.52s1.08 2.92 1.23 3.12c.15.2 2.13 3.25 5.17 4.55.72.31 1.28.5 1.72.64.72.23 1.37.2 1.88.12.57-.08 1.78-.73 2.03-1.44.25-.71.25-1.32.17-1.44-.08-.12-.27-.2-.57-.35z" />
+                                d="M23.5 6.2c-.3-1.2-1.2-2.1-2.4-2.4C19 3.4 12 3.4 12 3.4s-7 0-9.1.4C1.7 4.1.8 5 .5 6.2.2 8 .2 12 .2 12s0 4 .3 5.8c.3 1.2 1.2 2.1 2.4 2.4 2.1.4 9.1.4 9.1.4s7 0 9.1-.4c1.2-.3 2.1-1.2 2.4-2.4.3-1.8.3-5.8.3-5.8s0-4-.3-5.8zM9.8 15.8V8.2l6.4 3.8-6.4 3.8z">
+                            </path>
 
                         </svg>
 
@@ -401,16 +963,61 @@
         </div>
 
 
+        <!-- =================================================
+             FOOTER INFERIOR
+        ================================================== -->
+
         <div class="footer-bottom">
 
-            <p>
-                © 2026 PsiBlog — Todos os direitos reservados.
-            </p>
+
+            <!-- COPYRIGHT -->
+
+            <div class="footer-bottom-content">
+
+                <p>
+                    © 2026 PsiFácil — Todos os direitos reservados.
+                </p>
+
+                <span>
+                    Conteúdo educativo sobre saúde emocional.
+                </span>
+
+            </div>
+
+
+            <!-- ASSINATURA -->
+
+            <div class="footer-love">
+
+                <span>
+                    Desenvolvido com muito
+                </span>
+
+                <span class="footer-heart" aria-label="amor">
+                    ♥
+                </span>
+
+                <span>
+                    por
+                </span>
+
+                <strong>
+                    Gustavo Lanjoni &amp; Milene Angelo
+                </strong>
+
+            </div>
 
         </div>
 
     </footer>
 
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+
+    <!-- LUCIDE -->
 
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -418,7 +1025,13 @@
         lucide.createIcons();
     </script>
 
+
+    <!-- JAVASCRIPT PRINCIPAL -->
+
     <script src="js/main.js"></script>
+
+    <script src="js/scripts.js"></script>
+
 
 </body>
 
