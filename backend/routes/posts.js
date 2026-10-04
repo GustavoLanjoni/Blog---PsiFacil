@@ -6,13 +6,93 @@ const webpush = require("web-push");
 
 
 /* =========================================================
+   GERAR SLUG PARA URL DOS ARTIGOS
+========================================================= */
+
+function gerarSlug(texto = "") {
+
+  return String(texto)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+
+}
+
+
+/* =========================================================
+   GARANTIR SLUG ÚNICO
+========================================================= */
+
+async function gerarSlugUnico(titulo) {
+
+  const slugBase =
+    gerarSlug(titulo);
+
+
+  if (!slugBase) {
+
+    throw new Error(
+      "Não foi possível gerar o slug do artigo."
+    );
+
+  }
+
+
+  let slug =
+    slugBase;
+
+  let contador =
+    2;
+
+
+  while (true) {
+
+    const existente =
+      await db.query(
+        `
+          SELECT id
+          FROM posts
+          WHERE slug = $1
+          LIMIT 1
+        `,
+        [
+          slug
+        ]
+      );
+
+
+    if (
+      existente.rows.length === 0
+    ) {
+
+      return slug;
+
+    }
+
+
+    slug =
+      `${slugBase}-${contador}`;
+
+    contador++;
+
+  }
+
+}
+
+
+/* =========================================================
    CONFIGURAR WEB PUSH
 ========================================================= */
 
 webpush.setVapidDetails(
-    "mailto:contato@psifacilblog.com.br",
-    process.env.VAPID_PUBLIC_KEY,
-    process.env.VAPID_PRIVATE_KEY
+  "mailto:contato@psifacilblog.com.br",
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY
 );
 
 
@@ -31,10 +111,10 @@ async function notificarNovoArtigo(post) {
     const verificacao =
       await db.query(
         `
-        SELECT notificacao_enviada
-        FROM posts
-        WHERE id = $1
-        LIMIT 1
+          SELECT notificacao_enviada
+          FROM posts
+          WHERE id = $1
+          LIMIT 1
         `,
         [
           post.id
@@ -68,21 +148,31 @@ async function notificarNovoArtigo(post) {
     const dispositivos =
       await db.query(
         `
-        SELECT
-          ps.id,
-          ps.usuario_id,
-          ps.endpoint,
-          ps.p256dh,
-          ps.auth
+          SELECT
+            ps.id,
+            ps.usuario_id,
+            ps.endpoint,
+            ps.p256dh,
+            ps.auth
 
-        FROM push_subscriptions ps
+          FROM push_subscriptions ps
 
-        INNER JOIN preferencias_notificacoes pn
-          ON pn.usuario_id = ps.usuario_id
+          INNER JOIN preferencias_notificacoes pn
+            ON pn.usuario_id = ps.usuario_id
 
-        WHERE pn.novos_artigos = TRUE
+          WHERE pn.novos_artigos = TRUE
         `
       );
+
+
+    /* =====================================================
+       CRIAR URL DO NOVO ARTIGO
+    ===================================================== */
+
+    const urlArtigo =
+      post.slug
+        ? `/artigos/${encodeURIComponent(post.slug)}`
+        : `/post.html?id=${encodeURIComponent(post.id)}`;
 
 
     /* =====================================================
@@ -91,29 +181,29 @@ async function notificarNovoArtigo(post) {
 
     await db.query(
       `
-      INSERT INTO notificacoes (
-        usuario_id,
-        tipo,
-        titulo,
-        mensagem,
-        url
-      )
+        INSERT INTO notificacoes (
+          usuario_id,
+          tipo,
+          titulo,
+          mensagem,
+          url
+        )
 
-      SELECT
-        usuario_id,
-        'novo_artigo',
-        $1,
-        $2,
-        $3
+        SELECT
+          usuario_id,
+          'novo_artigo',
+          $1,
+          $2,
+          $3
 
-      FROM preferencias_notificacoes
+        FROM preferencias_notificacoes
 
-      WHERE novos_artigos = TRUE
+        WHERE novos_artigos = TRUE
       `,
       [
         "Novo artigo no PsiFácil",
         post.titulo,
-        `/post.html?id=${post.id}`
+        urlArtigo
       ]
     );
 
@@ -132,7 +222,7 @@ async function notificarNovoArtigo(post) {
           post.titulo,
 
         url:
-          `/post.html?id=${post.id}`,
+          urlArtigo,
 
         tag:
           `novo-artigo-${post.id}`
@@ -195,8 +285,8 @@ async function notificarNovoArtigo(post) {
 
           await db.query(
             `
-            DELETE FROM push_subscriptions
-            WHERE id = $1
+              DELETE FROM push_subscriptions
+              WHERE id = $1
             `,
             [
               dispositivo.id
@@ -216,9 +306,9 @@ async function notificarNovoArtigo(post) {
 
     await db.query(
       `
-      UPDATE posts
-      SET notificacao_enviada = TRUE
-      WHERE id = $1
+        UPDATE posts
+        SET notificacao_enviada = TRUE
+        WHERE id = $1
       `,
       [
         post.id
@@ -276,14 +366,14 @@ async function processarPostsAgendados() {
     const resultado =
       await db.query(
         `
-        UPDATE posts
+          UPDATE posts
 
-        SET status = 'publicado'
+          SET status = 'publicado'
 
-        WHERE status = 'agendado'
-          AND agendado_para <= NOW()
+          WHERE status = 'agendado'
+            AND agendado_para <= NOW()
 
-        RETURNING *
+          RETURNING *
         `
       );
 
@@ -358,10 +448,10 @@ router.get(
       const resultado =
         await db.query(
           `
-          SELECT *
-          FROM posts
-          WHERE status = 'publicado'
-          ORDER BY id DESC
+            SELECT *
+            FROM posts
+            WHERE status = 'publicado'
+            ORDER BY id DESC
           `
         );
 
@@ -404,9 +494,9 @@ router.get(
       const resultado =
         await db.query(
           `
-          SELECT *
-          FROM posts
-          ORDER BY id DESC
+            SELECT *
+            FROM posts
+            ORDER BY id DESC
           `
         );
 
@@ -434,6 +524,7 @@ router.get(
   }
 );
 
+
 /* =========================================================
    PROCESSAR AGENDAMENTOS AUTOMATICAMENTE
 ========================================================= */
@@ -447,23 +538,31 @@ router.post(
       const segredoRecebido =
         req.headers["x-cron-secret"];
 
+
       if (
         !process.env.CRON_SECRET ||
         segredoRecebido !== process.env.CRON_SECRET
       ) {
 
         return res.status(401).json({
-          erro: "Não autorizado"
+          erro:
+            "Não autorizado"
         });
 
       }
 
+
       await processarPostsAgendados();
 
+
       return res.json({
-        sucesso: true,
-        mensagem: "Posts agendados processados."
+        sucesso:
+          true,
+
+        mensagem:
+          "Posts agendados processados."
       });
+
 
     } catch (error) {
 
@@ -472,15 +571,16 @@ router.post(
         error
       );
 
+
       return res.status(500).json({
-        erro: "Erro ao processar posts agendados."
+        erro:
+          "Erro ao processar posts agendados."
       });
 
     }
 
   }
 );
-
 
 
 /* =========================================================
@@ -500,9 +600,9 @@ router.get(
       const resultado =
         await db.query(
           `
-          SELECT *
-          FROM posts
-          WHERE id = $1
+            SELECT *
+            FROM posts
+            WHERE id = $1
           `,
           [
             id
@@ -616,40 +716,53 @@ router.post(
     try {
 
       /* ===================================================
+         GERAR SLUG AUTOMATICAMENTE
+      =================================================== */
+
+      const slug =
+        await gerarSlugUnico(
+          titulo
+        );
+
+
+      /* ===================================================
          SALVAR POST
       =================================================== */
 
       const resultado =
         await db.query(
           `
-          INSERT INTO posts (
-            titulo,
-            categoria,
-            resumo,
-            conteudo,
-            imagem,
-            fontes,
-            status,
-            agendado_para,
-            notificacao_enviada
-          )
+            INSERT INTO posts (
+              titulo,
+              slug,
+              categoria,
+              resumo,
+              conteudo,
+              imagem,
+              fontes,
+              status,
+              agendado_para,
+              notificacao_enviada
+            )
 
-          VALUES (
-            $1,
-            $2,
-            $3,
-            $4,
-            $5,
-            $6,
-            $7,
-            $8,
-            FALSE
-          )
+            VALUES (
+              $1,
+              $2,
+              $3,
+              $4,
+              $5,
+              $6,
+              $7,
+              $8,
+              $9,
+              FALSE
+            )
 
-          RETURNING *
+            RETURNING *
           `,
           [
             titulo,
+            slug,
             categoria,
             resumo,
             conteudo,
@@ -729,6 +842,23 @@ router.put(
     } = req.body;
 
 
+    /* =====================================================
+       VALIDAÇÃO
+    ===================================================== */
+
+    if (
+      !titulo ||
+      !conteudo
+    ) {
+
+      return res.status(400).json({
+        erro:
+          "Título e conteúdo são obrigatórios"
+      });
+
+    }
+
+
     const statusFinal =
       status === "agendado"
         ? "agendado"
@@ -763,13 +893,14 @@ router.put(
       const anterior =
         await db.query(
           `
-          SELECT
-            status,
-            notificacao_enviada
+            SELECT
+              status,
+              notificacao_enviada,
+              slug
 
-          FROM posts
+            FROM posts
 
-          WHERE id = $1
+            WHERE id = $1
           `,
           [
             id
@@ -794,27 +925,58 @@ router.put(
 
 
       /* ===================================================
+         PROTEÇÃO PARA POSTS ANTIGOS SEM SLUG
+
+         Normalmente o slug NÃO muda durante uma edição.
+
+         Porém, se existir algum post antigo sem slug,
+         geramos um automaticamente uma única vez.
+      =================================================== */
+
+      let slugAtual =
+        postAnterior.slug;
+
+
+      if (
+        !slugAtual ||
+        !String(slugAtual).trim()
+      ) {
+
+        slugAtual =
+          await gerarSlugUnico(
+            titulo
+          );
+
+      }
+
+
+      /* ===================================================
          ATUALIZAR POST
+
+         IMPORTANTE:
+         Alterar o título NÃO altera o slug existente.
+         Isso preserva a URL para SEO.
       =================================================== */
 
       const resultado =
         await db.query(
           `
-          UPDATE posts
+            UPDATE posts
 
-          SET
-            titulo = $1,
-            categoria = $2,
-            resumo = $3,
-            conteudo = $4,
-            imagem = $5,
-            fontes = $6,
-            status = $7,
-            agendado_para = $8
+            SET
+              titulo = $1,
+              categoria = $2,
+              resumo = $3,
+              conteudo = $4,
+              imagem = $5,
+              fontes = $6,
+              status = $7,
+              agendado_para = $8,
+              slug = $9
 
-          WHERE id = $9
+            WHERE id = $10
 
-          RETURNING *
+            RETURNING *
           `,
           [
             titulo,
@@ -825,6 +987,7 @@ router.put(
             fontes,
             statusFinal,
             agendamentoFinal,
+            slugAtual,
             id
           ]
         );
@@ -894,9 +1057,9 @@ router.delete(
       const resultado =
         await db.query(
           `
-          DELETE FROM posts
-          WHERE id = $1
-          RETURNING *
+            DELETE FROM posts
+            WHERE id = $1
+            RETURNING *
           `,
           [
             id
