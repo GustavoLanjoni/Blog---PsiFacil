@@ -52,3 +52,34 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
+
+function ajustarTamanhoFrase() {
+
+    const frase = document.querySelector(".frase-card blockquote");
+
+    if (!frase) return;
+
+    const tamanho = frase.textContent.trim().length;
+
+    frase.classList.remove(
+        "frase-curta",
+        "frase-media",
+        "frase-longa"
+    );
+
+    if (tamanho <= 90) {
+
+        frase.classList.add("frase-curta");
+
+    } else if (tamanho <= 150) {
+
+        frase.classList.add("frase-media");
+
+    } else {
+
+        frase.classList.add("frase-longa");
+
+    }
+
+}
