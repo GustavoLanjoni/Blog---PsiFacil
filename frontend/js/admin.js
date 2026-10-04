@@ -639,13 +639,13 @@ function atualizarPreview() {
 
     previewTitulo.textContent =
         titulo &&
-        titulo.value.trim()
+            titulo.value.trim()
             ? titulo.value.trim()
             : "Título do artigo";
 
     previewCategoria.textContent =
         categoria &&
-        categoria.value.trim()
+            categoria.value.trim()
             ? categoria.value.trim()
             : "Categoria";
 
@@ -1072,8 +1072,10 @@ function montarDadosPost() {
 
     const agendadoValor =
         agendadoPara &&
-        agendadoPara.value
-            ? agendadoPara.value
+            agendadoPara.value
+            ? new Date(
+                agendadoPara.value
+            ).toISOString()
             : null;
 
 
@@ -1272,10 +1274,9 @@ function definirEstadoBotaoPost(
 
             <i data-lucide="loader-circle"></i>
 
-            ${
-                postEditandoId
-                    ? "Salvando..."
-                    : "Publicando..."
+            ${postEditandoId
+                ? "Salvando..."
+                : "Publicando..."
             }
 
         `;
@@ -1289,16 +1290,14 @@ function definirEstadoBotaoPost(
 
         botao.innerHTML = `
 
-            <i data-lucide="${
-                postEditandoId
-                    ? "save"
-                    : "send"
+            <i data-lucide="${postEditandoId
+                ? "save"
+                : "send"
             }"></i>
 
-            ${
-                postEditandoId
-                    ? "Salvar alterações"
-                    : "Publicar artigo"
+            ${postEditandoId
+                ? "Salvar alterações"
+                : "Publicar artigo"
             }
 
         `;
@@ -1691,8 +1690,8 @@ function renderizarPostsAdmin(posts) {
                                 class="post-status ${statusInfo.classe}"
                             >
                                 ${escaparHtmlAdmin(
-                                    statusInfo.texto
-                                )}
+                    statusInfo.texto
+                )}
                             </span>
 
                         </div>
@@ -1701,9 +1700,9 @@ function renderizarPostsAdmin(posts) {
                         <h3>
 
                             ${escaparHtmlAdmin(
-                                post.titulo ||
-                                "Artigo sem título"
-                            )}
+                    post.titulo ||
+                    "Artigo sem título"
+                )}
 
                         </h3>
 
@@ -1711,9 +1710,9 @@ function renderizarPostsAdmin(posts) {
                         <p>
 
                             ${escaparHtmlAdmin(
-                                resumoTexto ||
-                                "Sem resumo cadastrado."
-                            )}
+                    resumoTexto ||
+                    "Sem resumo cadastrado."
+                )}
 
                         </p>
 
@@ -1724,8 +1723,8 @@ function renderizarPostsAdmin(posts) {
                                 type="button"
                                 class="btn-editar"
                                 onclick="prepararEdicao(${Number(
-                                    post.id
-                                )})"
+                    post.id
+                )})"
                             >
 
                                 Editar
@@ -1737,8 +1736,8 @@ function renderizarPostsAdmin(posts) {
                                 type="button"
                                 class="btn-excluir"
                                 onclick="confirmarExclusaoPost(${Number(
-                                    post.id
-                                )})"
+                    post.id
+                )})"
                             >
 
                                 Excluir
@@ -1840,8 +1839,8 @@ function renderizarPostsRecentes(posts) {
                             >
 
                                 ${escaparHtmlAdmin(
-                                    statusInfo.texto
-                                )}
+                    statusInfo.texto
+                )}
 
                             </span>
 
@@ -1849,9 +1848,9 @@ function renderizarPostsRecentes(posts) {
                             <h3>
 
                                 ${escaparHtmlAdmin(
-                                    post.titulo ||
-                                    "Artigo sem título"
-                                )}
+                    post.titulo ||
+                    "Artigo sem título"
+                )}
 
                             </h3>
 
@@ -1859,9 +1858,9 @@ function renderizarPostsRecentes(posts) {
                             <p>
 
                                 ${escaparHtmlAdmin(
-                                    resumoTexto ||
-                                    "Sem resumo cadastrado."
-                                )}
+                    resumoTexto ||
+                    "Sem resumo cadastrado."
+                )}
 
                             </p>
 
@@ -1874,8 +1873,8 @@ function renderizarPostsRecentes(posts) {
                                 type="button"
                                 class="admin-recent-edit"
                                 onclick="prepararEdicao(${Number(
-                                    post.id
-                                )})"
+                    post.id
+                )})"
                             >
 
                                 <i data-lucide="pencil"></i>
@@ -4070,8 +4069,8 @@ function renderizarParceriasAdmin(
                                         "
                                     >
                                         ${obterNomeStatusParceria(
-                                            status
-                                        )}
+                        status
+                    )}
                                     </span>
 
 
@@ -4094,9 +4093,9 @@ function renderizarParceriasAdmin(
 
                                     <span>
                                         ${escaparHtmlAdmin(
-                                            data ||
-                                            "Data não informada"
-                                        )}
+                        data ||
+                        "Data não informada"
+                    )}
                                     </span>
 
                                 </div>
@@ -4160,19 +4159,17 @@ function renderizarParceriasAdmin(
                                     <strong
                                         class="
                                             parceria-email-status
-                                            ${
-                                                emailEnviado
-                                                    ? "enviado"
-                                                    : "pendente"
-                                            }
+                                            ${emailEnviado
+                            ? "enviado"
+                            : "pendente"
+                        }
                                         "
                                     >
 
-                                        ${
-                                            emailEnviado
-                                                ? "Enviado"
-                                                : "Não enviado"
-                                        }
+                                        ${emailEnviado
+                            ? "Enviado"
+                            : "Não enviado"
+                        }
 
                                     </strong>
 
@@ -4231,12 +4228,11 @@ function renderizarParceriasAdmin(
 
                                         <option
                                             value="nova"
-                                            ${
-                                                status ===
-                                                "nova"
-                                                    ? "selected"
-                                                    : ""
-                                            }
+                                            ${status ===
+                            "nova"
+                            ? "selected"
+                            : ""
+                        }
                                         >
                                             Nova
                                         </option>
@@ -4244,12 +4240,11 @@ function renderizarParceriasAdmin(
 
                                         <option
                                             value="em_analise"
-                                            ${
-                                                status ===
-                                                "em_analise"
-                                                    ? "selected"
-                                                    : ""
-                                            }
+                                            ${status ===
+                            "em_analise"
+                            ? "selected"
+                            : ""
+                        }
                                         >
                                             Em análise
                                         </option>
@@ -4257,12 +4252,11 @@ function renderizarParceriasAdmin(
 
                                         <option
                                             value="respondida"
-                                            ${
-                                                status ===
-                                                "respondida"
-                                                    ? "selected"
-                                                    : ""
-                                            }
+                                            ${status ===
+                            "respondida"
+                            ? "selected"
+                            : ""
+                        }
                                         >
                                             Respondida
                                         </option>
@@ -4270,12 +4264,11 @@ function renderizarParceriasAdmin(
 
                                         <option
                                             value="fechada"
-                                            ${
-                                                status ===
-                                                "fechada"
-                                                    ? "selected"
-                                                    : ""
-                                            }
+                                            ${status ===
+                            "fechada"
+                            ? "selected"
+                            : ""
+                        }
                                         >
                                             Fechada
                                         </option>
@@ -4283,12 +4276,11 @@ function renderizarParceriasAdmin(
 
                                         <option
                                             value="recusada"
-                                            ${
-                                                status ===
-                                                "recusada"
-                                                    ? "selected"
-                                                    : ""
-                                            }
+                                            ${status ===
+                            "recusada"
+                            ? "selected"
+                            : ""
+                        }
                                         >
                                             Recusada
                                         </option>
@@ -4321,9 +4313,8 @@ function renderizarParceriasAdmin(
 
                                     <!-- WHATSAPP -->
 
-                                    ${
-                                        linkWhatsApp
-                                            ? `
+                                    ${linkWhatsApp
+                            ? `
 
                                                 <a
                                                     href="${linkWhatsApp}"
@@ -4339,8 +4330,8 @@ function renderizarParceriasAdmin(
                                                 </a>
 
                                             `
-                                            : ""
-                                    }
+                            : ""
+                        }
 
 
                                     <!-- EXCLUIR -->
@@ -4567,9 +4558,9 @@ async function carregarParceriasAdmin() {
 
                 <span>
                     ${escaparHtmlAdmin(
-                        erro.message ||
-                        "Tente novamente em instantes."
-                    )}
+            erro.message ||
+            "Tente novamente em instantes."
+        )}
                 </span>
 
             </div>
