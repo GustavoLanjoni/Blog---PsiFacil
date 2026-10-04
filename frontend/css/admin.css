@@ -2288,3 +2288,738 @@ img {
     }
 
 }
+
+
+
+/* =========================================================
+   PARCERIAS - PAINEL ADMINISTRATIVO
+========================================================= */
+
+
+/* =========================================================
+   CARDS DE ESTATÍSTICAS
+========================================================= */
+
+.parcerias-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+
+    margin-bottom: 26px;
+}
+
+
+.parceria-stat-card {
+    min-width: 0;
+
+    padding: 18px;
+
+    background: var(--admin-surface);
+
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+
+    box-shadow: var(--admin-shadow);
+
+    transition:
+        transform var(--admin-transition),
+        box-shadow var(--admin-transition);
+}
+
+
+.parceria-stat-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 34px rgba(62, 48, 41, 0.075);
+}
+
+
+.parceria-stat-card span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--admin-muted);
+
+    font-size: 10px;
+    font-weight: 650;
+
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+
+.parceria-stat-card strong {
+    color: var(--admin-text);
+
+    font-size: 25px;
+    line-height: 1.1;
+}
+
+
+/* =========================================================
+   CONTAINER PRINCIPAL DAS PARCERIAS
+========================================================= */
+
+.parcerias-admin-section {
+    overflow: hidden;
+
+    background: var(--admin-surface);
+
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-lg);
+
+    box-shadow: var(--admin-shadow);
+}
+
+
+.parcerias-admin-section > .admin-section-heading {
+    margin: 0;
+
+    padding: 20px 21px;
+
+    border-bottom: 1px solid var(--admin-border-soft);
+}
+
+
+/* =========================================================
+   LISTA DE PROPOSTAS
+========================================================= */
+
+.parcerias-admin-list {
+    display: grid;
+    gap: 12px;
+
+    padding: 14px;
+}
+
+
+/* =========================================================
+   CARD DA PROPOSTA
+========================================================= */
+
+.parceria-admin-card {
+    min-width: 0;
+
+    padding: 18px;
+
+    background: var(--admin-surface-soft);
+
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius);
+
+    transition:
+        border-color var(--admin-transition),
+        box-shadow var(--admin-transition),
+        transform var(--admin-transition);
+}
+
+
+.parceria-admin-card:hover {
+    border-color: #d7e4de;
+
+    box-shadow:
+        0 8px 24px rgba(62, 48, 41, 0.055);
+}
+
+
+/* =========================================================
+   TOPO DO CARD
+========================================================= */
+
+.parceria-admin-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+
+    padding-bottom: 15px;
+
+    border-bottom: 1px solid var(--admin-border-soft);
+}
+
+
+.parceria-admin-identidade {
+    min-width: 0;
+}
+
+
+.parceria-admin-identidade h3 {
+    margin-top: 8px;
+
+    color: var(--admin-text);
+
+    font-size: 16px;
+    line-height: 1.3;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+
+.parceria-admin-identidade p {
+    margin-top: 4px;
+
+    color: var(--admin-muted);
+
+    font-size: 10px;
+
+    line-height: 1.5;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   STATUS DA PROPOSTA
+========================================================= */
+
+.parceria-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    width: fit-content;
+
+    padding: 5px 8px;
+
+    border-radius: 999px;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    line-height: 1.2;
+}
+
+
+/* NOVA */
+
+.parceria-status.nova {
+    color: #7b612f;
+
+    background: #fbf1dc;
+}
+
+
+/* EM ANÁLISE */
+
+.parceria-status.em_analise {
+    color: #486a7d;
+
+    background: #eaf3f7;
+}
+
+
+/* RESPONDIDA */
+
+.parceria-status.respondida {
+    color: #625a8a;
+
+    background: #f0eef9;
+}
+
+
+/* FECHADA */
+
+.parceria-status.fechada {
+    color: var(--admin-primary-dark);
+
+    background: var(--admin-primary-soft);
+}
+
+
+/* RECUSADA */
+
+.parceria-status.recusada {
+    color: var(--admin-danger);
+
+    background: var(--admin-danger-soft);
+}
+
+
+/* =========================================================
+   STATUS DO E-MAIL
+========================================================= */
+
+.parceria-email-status {
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    width: fit-content;
+
+    padding: 5px 8px;
+
+    border-radius: 999px;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    line-height: 1.2;
+}
+
+
+.parceria-email-status svg {
+    width: 13px;
+    height: 13px;
+}
+
+
+.parceria-email-status.enviado {
+    color: var(--admin-primary-dark);
+
+    background: var(--admin-primary-soft);
+}
+
+
+.parceria-email-status.falhou {
+    color: var(--admin-danger);
+
+    background: var(--admin-danger-soft);
+}
+
+
+/* =========================================================
+   INFORMAÇÕES DA PROPOSTA
+========================================================= */
+
+.parceria-admin-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 12px;
+
+    margin: 15px 0;
+}
+
+
+.parceria-admin-grid > div {
+    min-width: 0;
+
+    padding: 11px 12px;
+
+    background: #ffffff;
+
+    border: 1px solid var(--admin-border-soft);
+    border-radius: 10px;
+}
+
+
+.parceria-admin-grid span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: var(--admin-muted);
+
+    font-size: 9px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+
+.parceria-admin-grid strong {
+    display: block;
+
+    color: var(--admin-text-soft);
+
+    font-size: 11px;
+    font-weight: 600;
+
+    line-height: 1.5;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   MENSAGEM / PROPOSTA
+========================================================= */
+
+.parceria-admin-mensagem {
+    min-width: 0;
+
+    padding: 14px;
+
+    background: #ffffff;
+
+    border: 1px solid var(--admin-border-soft);
+    border-radius: 11px;
+}
+
+
+.parceria-admin-mensagem > span {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: var(--admin-muted);
+
+    font-size: 9px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+
+.parceria-admin-mensagem p {
+    max-width: 100%;
+
+    margin: 0;
+
+    color: var(--admin-text-soft);
+
+    font-size: 11px;
+
+    line-height: 1.65;
+
+    white-space: pre-wrap;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   RODAPÉ DO CARD
+========================================================= */
+
+.parceria-admin-footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+
+    margin-top: 15px;
+}
+
+
+/* =========================================================
+   SELETOR DE STATUS
+========================================================= */
+
+.parceria-status-control {
+    width: min(100%, 210px);
+}
+
+
+.parceria-status-control label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--admin-muted);
+
+    font-size: 9px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+
+.parceria-status-control select {
+    width: 100%;
+    min-height: 38px;
+
+    padding: 7px 10px;
+
+    color: var(--admin-text);
+
+    background: #ffffff;
+
+    border: 1px solid var(--admin-border);
+    border-radius: 9px;
+
+    outline: none;
+
+    font-size: 11px;
+
+    cursor: pointer;
+
+    transition:
+        border-color var(--admin-transition),
+        box-shadow var(--admin-transition);
+}
+
+
+.parceria-status-control select:hover {
+    border-color: #d5cbc5;
+}
+
+
+.parceria-status-control select:focus {
+    border-color: var(--admin-primary);
+
+    box-shadow:
+        0 0 0 3px rgba(77, 128, 109, 0.08);
+}
+
+
+/* =========================================================
+   BOTÕES DE AÇÃO
+========================================================= */
+
+.parceria-admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 7px;
+}
+
+
+.parceria-action-button {
+    min-height: 36px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    padding: 7px 10px;
+
+    color: var(--admin-primary-dark);
+
+    background: var(--admin-primary-soft);
+
+    border: 0;
+    border-radius: 9px;
+
+    font-size: 10px;
+    font-weight: 650;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background var(--admin-transition),
+        transform var(--admin-transition);
+}
+
+
+.parceria-action-button:hover {
+    background: #e2efe9;
+
+    transform: translateY(-1px);
+}
+
+
+.parceria-action-button svg {
+    width: 14px;
+    height: 14px;
+
+    flex-shrink: 0;
+}
+
+
+/* EXCLUIR */
+
+.parceria-action-button.danger {
+    color: var(--admin-danger);
+
+    background: var(--admin-danger-soft);
+}
+
+
+.parceria-action-button.danger:hover {
+    background: #f6dfdf;
+}
+
+
+/* =========================================================
+   DASHBOARD COM 4 CARDS
+========================================================= */
+
+/*
+    O Dashboard agora possui:
+
+    Posts
+    Leads
+    Novas parcerias
+    Notificações
+*/
+
+.admin-stats {
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+}
+
+
+/* =========================================================
+   RESPONSIVO - TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .admin-stats {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .parcerias-stats {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .parceria-admin-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .parceria-admin-grid > div:last-child {
+        grid-column: 1 / -1;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVO - CELULAR / TABLET PEQUENO
+========================================================= */
+
+@media (max-width: 760px) {
+
+    .parceria-admin-top {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 10px;
+    }
+
+
+    .parceria-email-status {
+        align-self: flex-start;
+    }
+
+
+    .parceria-admin-footer {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 13px;
+    }
+
+
+    .parceria-status-control {
+        width: 100%;
+    }
+
+
+    .parceria-admin-actions {
+        justify-content: flex-start;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVO - CELULAR
+========================================================= */
+
+@media (max-width: 520px) {
+
+    .parcerias-stats {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 9px;
+    }
+
+
+    .parceria-stat-card {
+        padding: 14px;
+    }
+
+
+    .parceria-stat-card strong {
+        font-size: 21px;
+    }
+
+
+    .parcerias-admin-section >
+    .admin-section-heading {
+        padding: 16px;
+    }
+
+
+    .parcerias-admin-list {
+        padding: 10px;
+    }
+
+
+    .parceria-admin-card {
+        padding: 14px;
+    }
+
+
+    .parceria-admin-grid {
+        grid-template-columns: 1fr;
+
+        gap: 8px;
+    }
+
+
+    .parceria-admin-grid > div:last-child {
+        grid-column: auto;
+    }
+
+
+    .parceria-admin-actions {
+        width: 100%;
+
+        display: grid;
+
+        grid-template-columns: 1fr;
+
+        gap: 7px;
+    }
+
+
+    .parceria-action-button {
+        width: 100%;
+
+        min-height: 40px;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVO - CELULAR PEQUENO
+========================================================= */
+
+@media (max-width: 390px) {
+
+    .parcerias-stats {
+        grid-template-columns: 1fr;
+    }
+
+
+    .parceria-stat-card {
+        padding: 13px;
+    }
+
+
+    .parceria-admin-card {
+        padding: 12px;
+    }
+
+}

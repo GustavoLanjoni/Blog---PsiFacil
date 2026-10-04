@@ -138,6 +138,7 @@ const preferenciasRoutes = require("./routes/preferencias");
 const pushRoutes = require("./routes/push");
 const notificacoesRoutes = require("./routes/notificacoes");
 const novidadesRoutes = require("./routes/novidades");
+const parceriasRouter = require("./routes/parcerias");
 
 
 /*
@@ -223,6 +224,9 @@ app.use("/notificacoes", notificacoesRoutes);
 
 app.use("/novidades", novidadesRoutes);
 
+app.use(express.json({limit: "1mb"}));
+
+app.use("/parcerias", parceriasRouter);
 
 /*
 |--------------------------------------------------------------------------

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
@@ -20,6 +21,7 @@
     >
 
     <title>Painel Admin | PsiFácil</title>
+
 
     <!-- FAVICON -->
 
@@ -137,7 +139,9 @@
         </div>
 
 
-        <!-- NAVEGAÇÃO -->
+        <!-- =================================================
+             NAVEGAÇÃO
+        ================================================== -->
 
         <nav class="admin-navigation">
 
@@ -149,7 +153,6 @@
                 <span class="admin-nav-label">
                     Visão geral
                 </span>
-
 
                 <button
                     type="button"
@@ -175,7 +178,6 @@
                 <span class="admin-nav-label">
                     Conteúdo
                 </span>
-
 
                 <button
                     type="button"
@@ -224,7 +226,9 @@
             </div>
 
 
-            <!-- CONTATOS -->
+            <!-- =================================================
+                 CONTATOS
+            ================================================== -->
 
             <div class="admin-nav-group">
 
@@ -245,6 +249,23 @@
                     </span>
 
                 </a>
+
+
+                <!-- PARCERIAS -->
+
+                <button
+                    type="button"
+                    class="admin-nav-link"
+                    data-admin-page="parcerias"
+                >
+
+                    <i data-lucide="handshake"></i>
+
+                    <span>
+                        Parcerias
+                    </span>
+
+                </button>
 
             </div>
 
@@ -506,6 +527,33 @@
                     </article>
 
 
+                    <!-- PARCERIAS -->
+
+                    <article class="admin-stat-card">
+
+                        <div class="admin-stat-icon">
+                            <i data-lucide="handshake"></i>
+                        </div>
+
+                        <div class="admin-stat-content">
+
+                            <span>
+                                Novas parcerias
+                            </span>
+
+                            <strong id="totalParceriasNovas">
+                                0
+                            </strong>
+
+                            <small>
+                                Propostas aguardando análise
+                            </small>
+
+                        </div>
+
+                    </article>
+
+
                     <!-- NOTIFICAÇÕES -->
 
                     <article class="admin-stat-card">
@@ -561,6 +609,8 @@
                     <div class="admin-quick-actions">
 
 
+                        <!-- CRIAR ARTIGO -->
+
                         <button
                             type="button"
                             class="admin-action-card"
@@ -590,6 +640,8 @@
 
                         </button>
 
+
+                        <!-- ENVIAR NOVIDADE -->
 
                         <button
                             type="button"
@@ -621,6 +673,8 @@
                         </button>
 
 
+                        <!-- GERENCIAR POSTS -->
+
                         <button
                             type="button"
                             class="admin-action-card"
@@ -650,6 +704,8 @@
 
                         </button>
 
+
+                        <!-- VER BLOG -->
 
                         <a
                             href="psifacil.html"
@@ -711,9 +767,11 @@
                             class="admin-text-button"
                             data-admin-go="posts"
                         >
+
                             Ver todos
 
                             <i data-lucide="arrow-right"></i>
+
                         </button>
 
                     </div>
@@ -1141,6 +1199,184 @@
 
 
             <!-- =================================================
+                 PARCERIAS
+            ================================================== -->
+
+            <section
+                class="admin-page"
+                id="admin-page-parcerias"
+                data-page="parcerias"
+            >
+
+
+                <!-- CABEÇALHO -->
+
+                <div class="admin-page-heading">
+
+                    <div>
+
+                        <span class="admin-eyebrow">
+                            Contatos
+                        </span>
+
+                        <h1>
+                            Parcerias
+                        </h1>
+
+                        <p>
+                            Acompanhe as propostas recebidas pelo site e organize o andamento de cada contato.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="admin-primary-button"
+                        id="btnAtualizarParcerias"
+                    >
+
+                        <i data-lucide="refresh-cw"></i>
+
+                        Atualizar
+
+                    </button>
+
+                </div>
+
+
+                <!-- =================================================
+                     ESTATÍSTICAS DAS PARCERIAS
+                ================================================== -->
+
+                <div class="parcerias-stats">
+
+
+                    <!-- TOTAL -->
+
+                    <article class="parceria-stat-card">
+
+                        <span>
+                            Total
+                        </span>
+
+                        <strong id="parceriasTotal">
+                            0
+                        </strong>
+
+                    </article>
+
+
+                    <!-- NOVAS -->
+
+                    <article class="parceria-stat-card">
+
+                        <span>
+                            Novas
+                        </span>
+
+                        <strong id="parceriasNovas">
+                            0
+                        </strong>
+
+                    </article>
+
+
+                    <!-- EM ANÁLISE -->
+
+                    <article class="parceria-stat-card">
+
+                        <span>
+                            Em análise
+                        </span>
+
+                        <strong id="parceriasAnalise">
+                            0
+                        </strong>
+
+                    </article>
+
+
+                    <!-- FECHADAS -->
+
+                    <article class="parceria-stat-card">
+
+                        <span>
+                            Fechadas
+                        </span>
+
+                        <strong id="parceriasFechadas">
+                            0
+                        </strong>
+
+                    </article>
+
+                </div>
+
+
+                <!-- =================================================
+                     LISTA DE PARCERIAS
+                ================================================== -->
+
+                <section class="parcerias-admin-section">
+
+
+                    <div class="admin-section-heading">
+
+                        <div>
+
+                            <span class="admin-eyebrow">
+                                Propostas recebidas
+                            </span>
+
+                            <h2>
+                                Gerenciar parcerias
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    <!--
+                        O JavaScript colocará aqui:
+
+                        - empresa
+                        - responsável
+                        - e-mail
+                        - WhatsApp
+                        - tipo
+                        - proposta
+                        - status
+                        - ações
+                    -->
+
+                    <div
+                        class="parcerias-admin-list"
+                        id="listaParceriasAdmin"
+                    >
+
+                        <div class="admin-empty-state">
+
+                            <i data-lucide="inbox"></i>
+
+                            <strong>
+                                Carregando propostas...
+                            </strong>
+
+                            <span>
+                                As propostas enviadas pelo site aparecerão aqui.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </section>
+
+                        <!-- =================================================
                  ENVIAR NOVIDADE
             ================================================== -->
 
@@ -1149,7 +1385,6 @@
                 id="admin-page-novidade"
                 data-page="novidade"
             >
-
 
                 <div class="admin-page-heading">
 
@@ -1176,13 +1411,14 @@
                 <div class="admin-notification-layout">
 
 
-                    <!-- FORMULÁRIO -->
+                    <!-- =================================================
+                         FORMULÁRIO
+                    ================================================== -->
 
                     <form
                         id="formNovidade"
                         class="admin-form-card admin-novidade-form"
                     >
-
 
                         <div class="admin-card-heading">
 
@@ -1210,6 +1446,8 @@
                         </div>
 
 
+                        <!-- TÍTULO -->
+
                         <div class="form-group">
 
                             <label for="novidadeTitulo">
@@ -1230,6 +1468,8 @@
                         </div>
 
 
+                        <!-- MENSAGEM -->
+
                         <div class="form-group">
 
                             <label for="novidadeMensagem">
@@ -1239,18 +1479,24 @@
                             <textarea
                                 id="novidadeMensagem"
                                 rows="6"
-                                placeholder="Conte aos usuários o que há de novo no PsiFácil."></textarea>
+                                placeholder="Conte aos usuários o que há de novo no PsiFácil."
+                            ></textarea>
 
                         </div>
 
 
+                        <!-- LINK -->
+
                         <div class="form-group">
 
                             <label for="novidadeUrl">
+
                                 Link de destino
+
                                 <span class="label-optional">
                                     opcional
                                 </span>
+
                             </label>
 
                             <input
@@ -1265,6 +1511,8 @@
 
                         </div>
 
+
+                        <!-- AÇÕES -->
 
                         <div class="form-actions">
 
@@ -1297,7 +1545,9 @@
                     </form>
 
 
-                    <!-- PREVIEW DA NOTIFICAÇÃO -->
+                    <!-- =================================================
+                         PREVIEW DA NOTIFICAÇÃO
+                    ================================================== -->
 
                     <aside class="admin-notification-preview">
 
@@ -1359,9 +1609,12 @@
 
             </section>
 
+
         </main>
 
+
     </div>
+
 
 </div>
 
@@ -1374,7 +1627,8 @@
     id="toast"
     class="toast"
     role="status"
-    aria-live="polite">
+    aria-live="polite"
+>
 </div>
 
 

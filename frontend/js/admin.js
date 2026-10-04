@@ -27,6 +27,7 @@ const listaPostsRecentes = document.getElementById("listaPostsRecentes");
 
 const totalPosts = document.getElementById("totalPosts");
 const totalLeads = document.getElementById("totalLeads");
+
 const totalNotificacoesAtivas =
     document.getElementById("totalNotificacoesAtivas");
 
@@ -103,6 +104,32 @@ const btnConfirmarModal =
 let postEditandoId = null;
 
 let acaoConfirmada = null;
+
+
+/* =========================================================
+   ELEMENTOS - PARCERIAS
+========================================================= */
+
+const totalParceriasNovas =
+    document.getElementById("totalParceriasNovas");
+
+const listaParceriasAdmin =
+    document.getElementById("listaParceriasAdmin");
+
+const parceriasTotal =
+    document.getElementById("parceriasTotal");
+
+const parceriasNovas =
+    document.getElementById("parceriasNovas");
+
+const parceriasAnalise =
+    document.getElementById("parceriasAnalise");
+
+const parceriasFechadas =
+    document.getElementById("parceriasFechadas");
+
+const btnAtualizarParcerias =
+    document.getElementById("btnAtualizarParcerias");
 
 
 /* =========================================================
@@ -880,6 +907,7 @@ if (statusPost) {
 
 }
 
+
 /* =========================================================
    LIMPAR FORMULÁRIO DO POST
 ========================================================= */
@@ -1543,7 +1571,6 @@ if (formPost) {
 
 }
 
-
 /* =========================================================
    STATUS DO POST
 ========================================================= */
@@ -2093,8 +2120,6 @@ async function prepararEdicao(id) {
 
     /*
        Primeiro abrimos a página do editor.
-       Essa é justamente a parte que faltava
-       na versão que causou o erro anterior.
     */
 
     abrirPaginaAdmin(
@@ -2119,7 +2144,7 @@ async function prepararEdicao(id) {
 
 
         /*
-           Caso sua API não possua
+           Caso a API não possua
            /posts/admin/:id, tentamos
            encontrar o post pela lista
            administrativa completa.
@@ -2339,7 +2364,7 @@ async function prepararEdicao(id) {
 
 
 /* =========================================================
-   CONFIRMAR EXCLUSÃO
+   CONFIRMAR EXCLUSÃO DO POST
 ========================================================= */
 
 function confirmarExclusaoPost(id) {
@@ -3438,11 +3463,24 @@ function definirPaginaInicialAdmin() {
             .trim();
 
 
+    /*
+       IMPORTANTE:
+       "parcerias" foi incluída aqui para permitir:
+       admin.html#parcerias
+    */
+
     const paginasPermitidas = [
+
         "dashboard",
+
         "criar-post",
+
         "posts",
+
+        "parcerias",
+
         "novidade"
+
     ];
 
 
@@ -3467,7 +3505,6 @@ function definirPaginaInicialAdmin() {
     );
 
 }
-
 
 /* =========================================================
    CSS COMPLEMENTAR
@@ -3662,14 +3699,1260 @@ function adicionarEstilosComplementaresAdmin() {
 
 
 /* =========================================================
+   PARCERIAS - PAINEL ADMINISTRATIVO
+========================================================= */
+
+
+/* =========================================================
+   NOMES DOS STATUS
+========================================================= */
+
+function obterNomeStatusParceria(status) {
+
+    const nomes = {
+
+        nova:
+            "Nova",
+
+        em_analise:
+            "Em análise",
+
+        respondida:
+            "Respondida",
+
+        fechada:
+            "Fechada",
+
+        recusada:
+            "Recusada"
+
+    };
+
+
+    return nomes[status] || "Nova";
+
+}
+
+
+/* =========================================================
+   VALIDAR CLASSE DO STATUS
+========================================================= */
+
+function obterClasseStatusParceria(status) {
+
+    const permitidos = [
+
+        "nova",
+
+        "em_analise",
+
+        "respondida",
+
+        "fechada",
+
+        "recusada"
+
+    ];
+
+
+    return permitidos.includes(status)
+        ? status
+        : "nova";
+
+}
+
+
+/* =========================================================
+   WHATSAPP
+========================================================= */
+
+function montarLinkWhatsAppParceria(numero) {
+
+    const somenteNumeros =
+        String(numero || "")
+            .replace(
+                /\D/g,
+                ""
+            );
+
+
+    if (!somenteNumeros) {
+
+        return "";
+
+    }
+
+
+    /*
+        Se o número possuir até 11 dígitos,
+        consideramos um número brasileiro
+        sem o código do país.
+
+        Exemplo:
+
+        17999999999
+
+        vira:
+
+        5517999999999
+    */
+
+    const numeroCompleto =
+        somenteNumeros.length <= 11
+            ? `55${somenteNumeros}`
+            : somenteNumeros;
+
+
+    return (
+        `https://wa.me/${numeroCompleto}`
+    );
+
+}
+
+
+/* =========================================================
+   CONTADORES
+========================================================= */
+
+function atualizarContadoresParcerias(
+    lista = []
+) {
+
+    const total =
+        lista.length;
+
+
+    const novas =
+        lista.filter(
+            parceria =>
+                parceria.status ===
+                "nova"
+        ).length;
+
+
+    const emAnalise =
+        lista.filter(
+            parceria =>
+                parceria.status ===
+                "em_analise"
+        ).length;
+
+
+    const fechadas =
+        lista.filter(
+            parceria =>
+                parceria.status ===
+                "fechada"
+        ).length;
+
+
+    /*
+       CONTADOR DO DASHBOARD
+    */
+
+    if (totalParceriasNovas) {
+
+        totalParceriasNovas.textContent =
+            novas;
+
+    }
+
+
+    /*
+       CONTADORES DA PÁGINA
+       PARCERIAS
+    */
+
+    if (parceriasTotal) {
+
+        parceriasTotal.textContent =
+            total;
+
+    }
+
+
+    if (parceriasNovas) {
+
+        parceriasNovas.textContent =
+            novas;
+
+    }
+
+
+    if (parceriasAnalise) {
+
+        parceriasAnalise.textContent =
+            emAnalise;
+
+    }
+
+
+    if (parceriasFechadas) {
+
+        parceriasFechadas.textContent =
+            fechadas;
+
+    }
+
+}
+
+
+/* =========================================================
+   RENDERIZAR PARCERIAS
+========================================================= */
+
+function renderizarParceriasAdmin(
+    lista = []
+) {
+
+    if (!listaParceriasAdmin) {
+
+        return;
+
+    }
+
+
+    /*
+       GARANTIR ARRAY
+    */
+
+    if (!Array.isArray(lista)) {
+
+        lista = [];
+
+    }
+
+
+    /*
+       ATUALIZAR CONTADORES
+    */
+
+    atualizarContadoresParcerias(
+        lista
+    );
+
+
+    /*
+       LISTA VAZIA
+    */
+
+    if (lista.length === 0) {
+
+        listaParceriasAdmin.innerHTML = `
+
+            <div class="admin-empty-state">
+
+                <i data-lucide="inbox"></i>
+
+                <strong>
+                    Nenhuma proposta recebida
+                </strong>
+
+                <span>
+                    Quando uma nova proposta de parceria for enviada,
+                    ela aparecerá aqui.
+                </span>
+
+            </div>
+
+        `;
+
+
+        renderizarIcones();
+
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       GERAR CARDS
+    ===================================================== */
+
+    listaParceriasAdmin.innerHTML =
+        lista
+            .map(
+                parceria => {
+
+                    const id =
+                        Number(
+                            parceria.id
+                        );
+
+
+                    const nome =
+                        escaparHtmlAdmin(
+                            parceria.nome
+                        );
+
+
+                    const empresa =
+                        escaparHtmlAdmin(
+                            parceria.empresa
+                        );
+
+
+                    const email =
+                        escaparHtmlAdmin(
+                            parceria.email
+                        );
+
+
+                    const whatsapp =
+                        escaparHtmlAdmin(
+                            parceria.whatsapp ||
+                            "Não informado"
+                        );
+
+
+                    const tipo =
+                        escaparHtmlAdmin(
+                            parceria.tipo
+                        );
+
+
+                    const mensagem =
+                        escaparHtmlAdmin(
+                            parceria.mensagem
+                        );
+
+
+                    const status =
+                        obterClasseStatusParceria(
+                            parceria.status
+                        );
+
+
+                    const data =
+                        formatarDataAdmin(
+                            parceria.criado_em
+                        );
+
+
+                    const linkWhatsApp =
+                        montarLinkWhatsAppParceria(
+                            parceria.whatsapp
+                        );
+
+
+                    const emailEnviado =
+                        parceria.email_enviado ===
+                        true;
+
+
+                    /* =====================================
+                       CARD
+                    ===================================== */
+
+                    return `
+
+                        <article
+                            class="parceria-admin-card"
+                            data-parceria-id="${id}"
+                        >
+
+
+                            <!-- =========================
+                                 CABEÇALHO
+                            ========================== -->
+
+                            <div class="parceria-admin-top">
+
+
+                                <div class="parceria-admin-identidade">
+
+
+                                    <span
+                                        class="
+                                            parceria-status
+                                            ${status}
+                                        "
+                                    >
+                                        ${obterNomeStatusParceria(
+                                            status
+                                        )}
+                                    </span>
+
+
+                                    <h3>
+                                        ${nome}
+                                    </h3>
+
+
+                                    <p>
+                                        ${empresa}
+                                    </p>
+
+
+                                </div>
+
+
+                                <div class="parceria-admin-data">
+
+                                    <i data-lucide="calendar-days"></i>
+
+                                    <span>
+                                        ${escaparHtmlAdmin(
+                                            data ||
+                                            "Data não informada"
+                                        )}
+                                    </span>
+
+                                </div>
+
+
+                            </div>
+
+
+                            <!-- =========================
+                                 INFORMAÇÕES
+                            ========================== -->
+
+                            <div class="parceria-admin-grid">
+
+
+                                <div class="parceria-admin-info">
+
+                                    <span>
+                                        E-mail
+                                    </span>
+
+                                    <strong>
+                                        ${email}
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="parceria-admin-info">
+
+                                    <span>
+                                        WhatsApp
+                                    </span>
+
+                                    <strong>
+                                        ${whatsapp}
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="parceria-admin-info">
+
+                                    <span>
+                                        Tipo de parceria
+                                    </span>
+
+                                    <strong>
+                                        ${tipo}
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="parceria-admin-info">
+
+                                    <span>
+                                        Aviso por e-mail
+                                    </span>
+
+                                    <strong
+                                        class="
+                                            parceria-email-status
+                                            ${
+                                                emailEnviado
+                                                    ? "enviado"
+                                                    : "pendente"
+                                            }
+                                        "
+                                    >
+
+                                        ${
+                                            emailEnviado
+                                                ? "Enviado"
+                                                : "Não enviado"
+                                        }
+
+                                    </strong>
+
+                                </div>
+
+
+                            </div>
+
+
+                            <!-- =========================
+                                 MENSAGEM
+                            ========================== -->
+
+                            <div class="parceria-admin-mensagem">
+
+                                <span>
+                                    Mensagem
+                                </span>
+
+                                <p>
+                                    ${mensagem}
+                                </p>
+
+                            </div>
+
+
+                            <!-- =========================
+                                 RODAPÉ
+                            ========================== -->
+
+                            <div class="parceria-admin-footer">
+
+
+                                <!-- STATUS -->
+
+                                <div class="parceria-status-control">
+
+
+                                    <label
+                                        for="statusParceria-${id}"
+                                    >
+                                        Status
+                                    </label>
+
+
+                                    <select
+                                        id="statusParceria-${id}"
+                                        onchange="
+                                            alterarStatusParceria(
+                                                ${id},
+                                                this.value
+                                            )
+                                        "
+                                    >
+
+
+                                        <option
+                                            value="nova"
+                                            ${
+                                                status ===
+                                                "nova"
+                                                    ? "selected"
+                                                    : ""
+                                            }
+                                        >
+                                            Nova
+                                        </option>
+
+
+                                        <option
+                                            value="em_analise"
+                                            ${
+                                                status ===
+                                                "em_analise"
+                                                    ? "selected"
+                                                    : ""
+                                            }
+                                        >
+                                            Em análise
+                                        </option>
+
+
+                                        <option
+                                            value="respondida"
+                                            ${
+                                                status ===
+                                                "respondida"
+                                                    ? "selected"
+                                                    : ""
+                                            }
+                                        >
+                                            Respondida
+                                        </option>
+
+
+                                        <option
+                                            value="fechada"
+                                            ${
+                                                status ===
+                                                "fechada"
+                                                    ? "selected"
+                                                    : ""
+                                            }
+                                        >
+                                            Fechada
+                                        </option>
+
+
+                                        <option
+                                            value="recusada"
+                                            ${
+                                                status ===
+                                                "recusada"
+                                                    ? "selected"
+                                                    : ""
+                                            }
+                                        >
+                                            Recusada
+                                        </option>
+
+
+                                    </select>
+
+
+                                </div>
+
+
+                                <!-- AÇÕES -->
+
+                                <div class="parceria-admin-actions">
+
+
+                                    <!-- E-MAIL -->
+
+                                    <a
+                                        href="mailto:${email}"
+                                        class="parceria-action-button"
+                                    >
+
+                                        <i data-lucide="mail"></i>
+
+                                        E-mail
+
+                                    </a>
+
+
+                                    <!-- WHATSAPP -->
+
+                                    ${
+                                        linkWhatsApp
+                                            ? `
+
+                                                <a
+                                                    href="${linkWhatsApp}"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    class="parceria-action-button"
+                                                >
+
+                                                    <i data-lucide="message-circle"></i>
+
+                                                    WhatsApp
+
+                                                </a>
+
+                                            `
+                                            : ""
+                                    }
+
+
+                                    <!-- EXCLUIR -->
+
+                                    <button
+                                        type="button"
+                                        class="
+                                            parceria-action-button
+                                            danger
+                                        "
+                                        onclick="
+                                            confirmarExclusaoParceria(
+                                                ${id}
+                                            )
+                                        "
+                                    >
+
+                                        <i data-lucide="trash-2"></i>
+
+                                        Excluir
+
+                                    </button>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </article>
+
+                    `;
+
+                }
+            )
+            .join("");
+
+
+    renderizarIcones();
+
+}
+
+/* =========================================================
+   CARREGAR PARCERIAS
+========================================================= */
+
+async function carregarParceriasAdmin() {
+
+    if (!listaParceriasAdmin) {
+
+        return;
+
+    }
+
+
+    const tokenAdmin =
+        obterTokenAdmin();
+
+
+    /* =====================================================
+       SEM TOKEN
+    ===================================================== */
+
+    if (!tokenAdmin) {
+
+        atualizarContadoresParcerias(
+            []
+        );
+
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       LOADING
+    ===================================================== */
+
+    listaParceriasAdmin.innerHTML = `
+        <div class="admin-empty-state">
+
+            <i data-lucide="loader-circle"></i>
+
+            <strong>
+                Carregando propostas...
+            </strong>
+
+            <span>
+                Aguarde enquanto buscamos as parcerias.
+            </span>
+
+        </div>
+    `;
+
+
+    renderizarIcones();
+
+
+    try {
+
+
+        /* =================================================
+           API
+        ================================================= */
+
+        const resposta =
+            await fetch(
+                "/parcerias",
+                {
+
+                    method:
+                        "GET",
+
+                    headers: {
+
+                        Authorization:
+                            `Bearer ${tokenAdmin}`
+
+                    }
+
+                }
+            );
+
+
+        /* =================================================
+           TOKEN INVÁLIDO
+        ================================================= */
+
+        if (
+            resposta.status === 401 ||
+            resposta.status === 403
+        ) {
+
+            localStorage.removeItem(
+                "tokenAdmin"
+            );
+
+
+            window.location.href =
+                "login.html";
+
+
+            return;
+
+        }
+
+
+        const resultado =
+            await resposta
+                .json()
+                .catch(
+                    () => []
+                );
+
+
+        /* =================================================
+           ERRO DA API
+        ================================================= */
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                resultado.mensagem ||
+                resultado.erro ||
+                "Não foi possível carregar as propostas."
+            );
+
+        }
+
+
+        /* =================================================
+           ACEITAR DOIS FORMATOS
+
+           [
+             {...}
+           ]
+
+           OU
+
+           {
+             parcerias: [...]
+           }
+        ================================================= */
+
+        const lista =
+            Array.isArray(resultado)
+                ? resultado
+                : Array.isArray(
+                    resultado.parcerias
+                )
+                    ? resultado.parcerias
+                    : [];
+
+
+        renderizarParceriasAdmin(
+            lista
+        );
+
+
+    } catch (erro) {
+
+
+        console.error(
+            "Erro ao carregar parcerias:",
+            erro
+        );
+
+
+        atualizarContadoresParcerias(
+            []
+        );
+
+
+        listaParceriasAdmin.innerHTML = `
+            <div class="admin-empty-state">
+
+                <i data-lucide="triangle-alert"></i>
+
+                <strong>
+                    Não foi possível carregar as propostas
+                </strong>
+
+                <span>
+                    ${escaparHtmlAdmin(
+                        erro.message ||
+                        "Tente novamente em instantes."
+                    )}
+                </span>
+
+            </div>
+        `;
+
+
+        renderizarIcones();
+
+    }
+
+}
+
+
+/* =========================================================
+   ALTERAR STATUS
+========================================================= */
+
+async function alterarStatusParceria(
+    id,
+    novoStatus
+) {
+
+    const tokenAdmin =
+        obterTokenAdmin();
+
+
+    /* =====================================================
+       VERIFICAR LOGIN
+    ===================================================== */
+
+    if (!tokenAdmin) {
+
+        window.location.href =
+            "login.html";
+
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       STATUS PERMITIDOS
+    ===================================================== */
+
+    const permitidos = [
+
+        "nova",
+
+        "em_analise",
+
+        "respondida",
+
+        "fechada",
+
+        "recusada"
+
+    ];
+
+
+    if (
+        !permitidos.includes(
+            novoStatus
+        )
+    ) {
+
+        mostrarToast(
+            "Status de parceria inválido.",
+            "error"
+        );
+
+
+        return;
+
+    }
+
+
+    try {
+
+
+        /* =================================================
+           API
+        ================================================= */
+
+        const resposta =
+            await fetch(
+                `/parcerias/${id}/status`,
+                {
+
+                    method:
+                        "PATCH",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        Authorization:
+                            `Bearer ${tokenAdmin}`
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            status:
+                                novoStatus
+
+                        })
+
+                }
+            );
+
+
+        const resultado =
+            await resposta
+                .json()
+                .catch(
+                    () => ({})
+                );
+
+
+        /* =================================================
+           LOGIN EXPIRADO
+        ================================================= */
+
+        if (
+            resposta.status === 401 ||
+            resposta.status === 403
+        ) {
+
+            localStorage.removeItem(
+                "tokenAdmin"
+            );
+
+
+            window.location.href =
+                "login.html";
+
+
+            return;
+
+        }
+
+
+        /* =================================================
+           ERRO
+        ================================================= */
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                resultado.mensagem ||
+                resultado.erro ||
+                "Não foi possível alterar o status."
+            );
+
+        }
+
+
+        /* =================================================
+           SUCESSO
+        ================================================= */
+
+        mostrarToast(
+            "Status da parceria atualizado com sucesso."
+        );
+
+
+        await carregarParceriasAdmin();
+
+
+    } catch (erro) {
+
+
+        console.error(
+            "Erro ao alterar status da parceria:",
+            erro
+        );
+
+
+        mostrarToast(
+            erro.message ||
+            "Não foi possível alterar o status.",
+            "error"
+        );
+
+
+        /*
+            Recarregamos para devolver o select
+            ao valor verdadeiro do banco.
+        */
+
+        await carregarParceriasAdmin();
+
+    }
+
+}
+
+
+/* =========================================================
+   CONFIRMAR EXCLUSÃO
+========================================================= */
+
+function confirmarExclusaoParceria(id) {
+
+    abrirModalConfirmacao(
+
+        "Deseja realmente excluir esta proposta de parceria? Esta ação não poderá ser desfeita.",
+
+        async () => {
+
+            await excluirParceria(
+                id
+            );
+
+        }
+
+    );
+
+}
+
+
+/* =========================================================
+   EXCLUIR PARCERIA
+========================================================= */
+
+async function excluirParceria(id) {
+
+    const tokenAdmin =
+        obterTokenAdmin();
+
+
+    /* =====================================================
+       VERIFICAR LOGIN
+    ===================================================== */
+
+    if (!tokenAdmin) {
+
+        window.location.href =
+            "login.html";
+
+
+        return;
+
+    }
+
+
+    try {
+
+
+        /* =================================================
+           API
+        ================================================= */
+
+        const resposta =
+            await fetch(
+                `/parcerias/${id}`,
+                {
+
+                    method:
+                        "DELETE",
+
+                    headers: {
+
+                        Authorization:
+                            `Bearer ${tokenAdmin}`
+
+                    }
+
+                }
+            );
+
+
+        const resultado =
+            await resposta
+                .json()
+                .catch(
+                    () => ({})
+                );
+
+
+        /* =================================================
+           LOGIN EXPIRADO
+        ================================================= */
+
+        if (
+            resposta.status === 401 ||
+            resposta.status === 403
+        ) {
+
+            localStorage.removeItem(
+                "tokenAdmin"
+            );
+
+
+            window.location.href =
+                "login.html";
+
+
+            return;
+
+        }
+
+
+        /* =================================================
+           ERRO
+        ================================================= */
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                resultado.mensagem ||
+                resultado.erro ||
+                "Não foi possível excluir a proposta."
+            );
+
+        }
+
+
+        /* =================================================
+           SUCESSO
+        ================================================= */
+
+        mostrarToast(
+            "Proposta de parceria excluída com sucesso."
+        );
+
+
+        await carregarParceriasAdmin();
+
+
+    } catch (erro) {
+
+
+        console.error(
+            "Erro ao excluir parceria:",
+            erro
+        );
+
+
+        mostrarToast(
+            erro.message ||
+            "Não foi possível excluir a proposta.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   BOTÃO ATUALIZAR
+========================================================= */
+
+if (btnAtualizarParcerias) {
+
+    btnAtualizarParcerias.addEventListener(
+        "click",
+        async () => {
+
+            await carregarParceriasAdmin();
+
+        }
+    );
+
+}
+
+
+/* =========================================================
    GARANTIR FUNÇÕES PARA ONCLICK
 ========================================================= */
 
 /*
-   Como os cards dos posts usam onclick no HTML
-   gerado dinamicamente, deixamos essas funções
-   explicitamente disponíveis no window.
+   Os cards são criados dinamicamente.
+
+   Por isso as funções usadas em onclick/onchange
+   precisam ficar disponíveis no window.
 */
+
+
+/* POSTS */
 
 window.prepararEdicao =
     prepararEdicao;
@@ -3679,6 +4962,21 @@ window.confirmarExclusaoPost =
 
 window.excluirPost =
     excluirPost;
+
+
+/* PARCERIAS */
+
+window.alterarStatusParceria =
+    alterarStatusParceria;
+
+window.confirmarExclusaoParceria =
+    confirmarExclusaoParceria;
+
+window.excluirParceria =
+    excluirParceria;
+
+
+/* PAINEL */
 
 window.sairAdmin =
     sairAdmin;
@@ -3742,14 +5040,16 @@ async function iniciarPainelAdmin() {
 
 
     /* -------------------------
-       DADOS
+       DADOS DO PAINEL
     ------------------------- */
 
     await Promise.allSettled([
 
         carregarPostsAdmin(),
 
-        carregarTotalLeadsAdmin()
+        carregarTotalLeadsAdmin(),
+
+        carregarParceriasAdmin()
 
     ]);
 
