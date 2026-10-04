@@ -6,8 +6,10 @@ const rateLimit = require("express-rate-limit");
 require("dotenv").config();
 
 const db = require("./db");
+const renderPost = require("./services/renderPost");
 
 const app = express();
+
 
 /*
 |--------------------------------------------------------------------------
@@ -15,11 +17,14 @@ const app = express();
 |--------------------------------------------------------------------------
 */
 
-// Não revela que o servidor utiliza Express
 app.disable("x-powered-by");
 
-// Necessário quando a aplicação está atrás do proxy do Render.
-// Também permite que express-rate-limit identifique corretamente o IP.
+/*
+|--------------------------------------------------------------------------
+| TRUST PROXY
+|--------------------------------------------------------------------------
+*/
+
 app.set("trust proxy", 1);
 
 
@@ -48,9 +53,6 @@ app.use(
 |--------------------------------------------------------------------------
 | BODY / JSON
 |--------------------------------------------------------------------------
-|
-| Limita o tamanho das requisições recebidas pelo servidor.
-|--------------------------------------------------------------------------
 */
 
 app.use(
@@ -71,9 +73,6 @@ app.use(
 |--------------------------------------------------------------------------
 | RATE LIMIT GLOBAL
 |--------------------------------------------------------------------------
-|
-| Proteção geral contra excesso de requisições.
-|--------------------------------------------------------------------------
 */
 
 const limiteGlobal = rateLimit({
@@ -86,7 +85,8 @@ const limiteGlobal = rateLimit({
   legacyHeaders: false,
 
   message: {
-    erro: "Muitas requisições. Aguarde alguns minutos e tente novamente."
+    erro:
+      "Muitas requisições. Aguarde alguns minutos e tente novamente."
   }
 });
 
@@ -95,10 +95,7 @@ app.use(limiteGlobal);
 
 /*
 |--------------------------------------------------------------------------
-| RATE LIMIT DE AUTENTICAÇÃO
-|--------------------------------------------------------------------------
-|
-| Limite mais rigoroso para login e cadastro.
+| RATE LIMIT DE LOGIN / CADASTRO
 |--------------------------------------------------------------------------
 */
 
@@ -114,31 +111,315 @@ const limiteLogin = rateLimit({
   skipSuccessfulRequests: true,
 
   message: {
-    erro: "Muitas tentativas. Aguarde alguns minutos e tente novamente."
+    erro:
+      "Muitas tentativas. Aguarde alguns minutos e tente novamente."
   }
 });
 
 
 /*
 |--------------------------------------------------------------------------
-| ROTAS
+| IMPORTAÇÃO DAS ROTAS
 |--------------------------------------------------------------------------
 */
 
-const postsRoutes = require("./routes/posts");
-const leadsRoutes = require("./routes/leads");
-const authRoutes = require("./routes/auth");
-const uploadRoutes = require("./routes/upload");
-const interacoesRoutes = require("./routes/interacoes");
-const usuariosRoutes = require("./routes/usuarios");
-const perfilUserRoutes = require("./routes/perfilUser");
-const postsSalvosRoutes = require("./routes/postsSalvos");
-const frasesRoutes = require("./routes/frases");
-const preferenciasRoutes = require("./routes/preferencias");
-const pushRoutes = require("./routes/push");
-const notificacoesRoutes = require("./routes/notificacoes");
-const novidadesRoutes = require("./routes/novidades");
-const parceriasRouter = require("./routes/parcerias");
+const postsRoutes =
+  require("./routes/posts");
+
+const leadsRoutes =
+  require("./routes/leads");
+
+const authRoutes =
+  require("./routes/auth");
+
+const uploadRoutes =
+  require("./routes/upload");
+
+const interacoesRoutes =
+  require("./routes/interacoes");
+
+const usuariosRoutes =
+  require("./routes/usuarios");
+
+const perfilUserRoutes =
+  require("./routes/perfilUser");
+
+const postsSalvosRoutes =
+  require("./routes/postsSalvos");
+
+const frasesRoutes =
+  require("./routes/frases");
+
+const preferenciasRoutes =
+  require("./routes/preferencias");
+
+const pushRoutes =
+  require("./routes/push");
+
+const notificacoesRoutes =
+  require("./routes/notificacoes");
+
+const novidadesRoutes =
+  require("./routes/novidades");
+
+const parceriasRouter =
+  require("./routes/parcerias");
+
+
+/*
+|--------------------------------------------------------------------------
+| REDIRECIONAMENTO DAS URLs ANTIGAS DOS ARTIGOS
+|--------------------------------------------------------------------------
+|
+| IMPORTANTE:
+|
+| Esta rota precisa ficar ANTES do express.static().
+|
+| Isso acontece porque existe um arquivo físico:
+|
+| frontend/post.html
+|
+| Se o express.static() vier primeiro, ele poderá entregar
+| post.html diretamente e impedir que o redirecionamento
+| seja executado.
+|
+| Exemplo antigo:
+|
+| /post.html?id=10
+|
+| Nova URL:
+|
+| /artigos/como-cuidar-da-sua-saude-mental-no-dia-a-dia
+|
+| Status utilizado:
+|
+| 301 = mudança permanente.
+|
+|--------------------------------------------------------------------------
+*/
+
+app.get(
+  "/post.html",
+  async (req, res, next) => {
+
+    try {
+
+      /*
+      |--------------------------------------------------------------------------
+      | PEGAR ID
+      |--------------------------------------------------------------------------
+      */
+
+      const id =
+        String(
+          req.query.id || ""
+        ).trim();
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | SEM ID
+      |--------------------------------------------------------------------------
+      |
+      | Se alguém acessar simplesmente:
+      |
+      | /post.html
+      |
+      | não existe artigo específico para redirecionar.
+      |
+      */
+
+      if (!id) {
+
+        return res.redirect(
+          301,
+          "/"
+        );
+
+      }
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | VALIDAR ID
+      |--------------------------------------------------------------------------
+      */
+
+      if (!/^\d+$/.test(id)) {
+
+        return res.redirect(
+          301,
+          "/"
+        );
+
+      }
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | BUSCAR O SLUG DO POST
+      |--------------------------------------------------------------------------
+      */
+
+      const resultado =
+        await db.query(
+          `
+            SELECT
+              id,
+              slug
+            FROM posts
+            WHERE id = $1
+              AND status = 'publicado'
+            LIMIT 1
+          `,
+          [
+            id
+          ]
+        );
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | POST NÃO ENCONTRADO
+      |--------------------------------------------------------------------------
+      */
+
+      if (
+        resultado.rows.length === 0
+      ) {
+
+        return res
+          .status(404)
+          .type("html")
+          .send(
+`<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="robots"
+    content="noindex, follow"
+  >
+
+  <title>
+    Artigo não encontrado | PsiFácil
+  </title>
+
+</head>
+
+<body>
+
+  <h1>
+    Artigo não encontrado
+  </h1>
+
+  <p>
+    O artigo solicitado não está disponível.
+  </p>
+
+  <a href="/">
+    Voltar para o PsiFácil
+  </a>
+
+</body>
+
+</html>`
+          );
+
+      }
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | SLUG
+      |--------------------------------------------------------------------------
+      */
+
+      const post =
+        resultado.rows[0];
+
+
+      const slug =
+        String(
+          post.slug || ""
+        ).trim();
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | POST SEM SLUG
+      |--------------------------------------------------------------------------
+      |
+      | Isso não deveria acontecer após nossa migração,
+      | mas mantemos a proteção.
+      |
+      */
+
+      if (!slug) {
+
+        console.error(
+          `POST ${id} NÃO POSSUI SLUG.`
+        );
+
+
+        return res
+          .status(500)
+          .type("text/plain")
+          .send(
+            "Não foi possível localizar a nova URL deste artigo."
+          );
+
+      }
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | URL NOVA
+      |--------------------------------------------------------------------------
+      */
+
+      const novaUrl =
+        `/artigos/${encodeURIComponent(
+          slug
+        )}`;
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | REDIRECIONAMENTO PERMANENTE
+      |--------------------------------------------------------------------------
+      */
+
+      return res.redirect(
+        301,
+        novaUrl
+      );
+
+    } catch (error) {
+
+      console.error(
+        "ERRO AO REDIRECIONAR URL ANTIGA:",
+        error
+      );
+
+
+      return next(
+        error
+      );
+
+    }
+
+  }
+);
 
 
 /*
@@ -147,45 +428,65 @@ const parceriasRouter = require("./routes/parcerias");
 |--------------------------------------------------------------------------
 */
 
-// Imagens públicas dos posts
+/*
+|--------------------------------------------------------------------------
+| UPLOADS
+|--------------------------------------------------------------------------
+*/
+
 app.use(
   "/uploads",
-  express.static(path.join(__dirname, "uploads"), {
-    maxAge: "7d",
-    etag: true,
-    fallthrough: true
-  })
-);
 
-
-// Frontend público
-app.use(
-  express.static(path.join(__dirname, "../frontend"), {
-    etag: true,
-    lastModified: true
-  })
+  express.static(
+    path.join(
+      __dirname,
+      "uploads"
+    ),
+    {
+      maxAge: "7d",
+      etag: true,
+      fallthrough: true
+    }
+  )
 );
 
 
 /*
 |--------------------------------------------------------------------------
-| RATE LIMIT ESPECÍFICO PARA AUTENTICAÇÃO
+| FRONTEND
 |--------------------------------------------------------------------------
 */
 
-// Login do administrador
+app.use(
+  express.static(
+    path.join(
+      __dirname,
+      "../frontend"
+    ),
+    {
+      etag: true,
+      lastModified: true
+    }
+  )
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| RATE LIMIT ESPECÍFICO DE AUTENTICAÇÃO
+|--------------------------------------------------------------------------
+*/
+
 app.use(
   "/auth/login",
   limiteLogin
 );
 
-// Login dos usuários
 app.use(
   "/usuarios/login",
   limiteLogin
 );
 
-// Cadastro dos usuários
 app.use(
   "/usuarios/cadastro",
   limiteLogin
@@ -194,160 +495,345 @@ app.use(
 
 /*
 |--------------------------------------------------------------------------
-| API
+| ROTAS DA API
 |--------------------------------------------------------------------------
 */
 
-app.use("/posts", postsRoutes);
+app.use(
+  "/posts",
+  postsRoutes
+);
 
-app.use("/leads", leadsRoutes);
+app.use(
+  "/leads",
+  leadsRoutes
+);
 
-app.use("/auth", authRoutes);
+app.use(
+  "/auth",
+  authRoutes
+);
 
-app.use("/upload", uploadRoutes);
+app.use(
+  "/upload",
+  uploadRoutes
+);
 
-app.use("/interacoes", interacoesRoutes);
+app.use(
+  "/interacoes",
+  interacoesRoutes
+);
 
-app.use("/usuarios", usuariosRoutes);
+app.use(
+  "/usuarios",
+  usuariosRoutes
+);
 
-app.use("/perfil", perfilUserRoutes);
+app.use(
+  "/perfil",
+  perfilUserRoutes
+);
 
-app.use("/salvos", postsSalvosRoutes);
+app.use(
+  "/salvos",
+  postsSalvosRoutes
+);
 
-app.use("/frases", frasesRoutes);
+app.use(
+  "/frases",
+  frasesRoutes
+);
 
-app.use("/preferencias", preferenciasRoutes);
+app.use(
+  "/preferencias",
+  preferenciasRoutes
+);
 
-app.use("/push", pushRoutes);
+app.use(
+  "/push",
+  pushRoutes
+);
 
-app.use("/notificacoes", notificacoesRoutes);
+app.use(
+  "/notificacoes",
+  notificacoesRoutes
+);
 
-app.use("/novidades", novidadesRoutes);
+app.use(
+  "/novidades",
+  novidadesRoutes
+);
 
-app.use(express.json({limit: "1mb"}));
+app.use(
+  "/parcerias",
+  parceriasRouter
+);
 
-app.use("/parcerias", parceriasRouter);
 
 /*
 |--------------------------------------------------------------------------
 | SITEMAP.XML
 |--------------------------------------------------------------------------
 |
-| O sitemap consulta diretamente o PostgreSQL.
+| Sitemap dinâmico utilizando somente as URLs novas.
 |
-| Isso evita que o servidor precise fazer uma requisição HTTP
-| para o próprio domínio.
 |--------------------------------------------------------------------------
 */
 
-app.get("/sitemap.xml", async (req, res) => {
-  try {
+app.get(
+  "/sitemap.xml",
+  async (req, res) => {
 
-    const resultado = await db.query(`
-      SELECT id
-      FROM posts
-      WHERE status = 'publicado'
-      ORDER BY id DESC
-    `);
+    try {
 
-    const posts = resultado.rows;
+      /*
+      |--------------------------------------------------------------------------
+      | BUSCAR POSTS PUBLICADOS
+      |--------------------------------------------------------------------------
+      */
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | PÁGINAS FIXAS
-    |--------------------------------------------------------------------------
-    */
-
-    const urlsFixas = [
-      "https://psifacilblog.com.br/",
-      "https://psifacilblog.com.br/conteudo.html",
-      "https://psifacilblog.com.br/ebooks.html",
-      "https://psifacilblog.com.br/escuta.html"
-    ];
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | ARTIGOS
-    |--------------------------------------------------------------------------
-    */
-
-    const urlsPosts = posts.map((post) => {
-      return `https://psifacilblog.com.br/post.html?id=${post.id}`;
-    });
+      const resultado =
+        await db.query(`
+          SELECT
+            id,
+            slug,
+            criado_em
+          FROM posts
+          WHERE status = 'publicado'
+            AND slug IS NOT NULL
+            AND TRIM(slug) <> ''
+          ORDER BY criado_em DESC
+        `);
 
 
-    const todasUrls = [
-      ...urlsFixas,
-      ...urlsPosts
-    ];
+      const posts =
+        resultado.rows;
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | ESCAPE XML
-    |--------------------------------------------------------------------------
-    */
+      /*
+      |--------------------------------------------------------------------------
+      | ESCAPE XML
+      |--------------------------------------------------------------------------
+      */
 
-    const escaparXml = (valor) => {
-      return String(valor)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&apos;");
-    };
+      function escaparXml(valor = "") {
+
+        return String(valor)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&apos;");
+
+      }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | GERAR XML
-    |--------------------------------------------------------------------------
-    */
+      /*
+      |--------------------------------------------------------------------------
+      | FORMATAR DATA
+      |--------------------------------------------------------------------------
+      */
 
-    const urlsXml = todasUrls
-      .map((url) => {
-        return `  <url>
-    <loc>${escaparXml(url)}</loc>
+      function formatarDataSitemap(data) {
+
+        if (!data) {
+          return null;
+        }
+
+
+        const objetoData =
+          new Date(data);
+
+
+        if (
+          Number.isNaN(
+            objetoData.getTime()
+          )
+        ) {
+
+          return null;
+
+        }
+
+
+        return objetoData.toISOString();
+
+      }
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | PÁGINAS FIXAS
+      |--------------------------------------------------------------------------
+      */
+
+      const paginasFixas = [
+
+        {
+          loc:
+            "https://psifacilblog.com.br/"
+        },
+
+        {
+          loc:
+            "https://psifacilblog.com.br/conteudo.html"
+        },
+
+        {
+          loc:
+            "https://psifacilblog.com.br/ebooks.html"
+        },
+
+        {
+          loc:
+            "https://psifacilblog.com.br/escuta.html"
+        }
+
+      ];
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | ARTIGOS
+      |--------------------------------------------------------------------------
+      */
+
+      const urlsPosts =
+        posts.map(
+          (post) => {
+
+            const slug =
+              String(
+                post.slug
+              ).trim();
+
+
+            const url =
+              `https://psifacilblog.com.br/artigos/${encodeURIComponent(
+                slug
+              )}`;
+
+
+            const lastmod =
+              formatarDataSitemap(
+                post.criado_em
+              );
+
+
+            return {
+              loc: url,
+              lastmod
+            };
+
+          }
+        );
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | JUNTAR TODAS AS URLs
+      |--------------------------------------------------------------------------
+      */
+
+      const todasUrls = [
+        ...paginasFixas,
+        ...urlsPosts
+      ];
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | GERAR XML
+      |--------------------------------------------------------------------------
+      */
+
+      const urlsXml =
+        todasUrls
+
+          .map(
+            (item) => {
+
+              const loc =
+                escaparXml(
+                  item.loc
+                );
+
+
+              const lastmod =
+                item.lastmod
+                  ? `
+    <lastmod>${escaparXml(
+      item.lastmod
+    )}</lastmod>`
+                  : "";
+
+
+              return `  <url>
+    <loc>${loc}</loc>${lastmod}
   </url>`;
-      })
-      .join("\n");
+
+            }
+          )
+
+          .join("\n");
 
 
-    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+      /*
+      |--------------------------------------------------------------------------
+      | SITEMAP FINAL
+      |--------------------------------------------------------------------------
+      */
+
+      const sitemap =
+`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urlsXml}
 </urlset>`;
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | RESPOSTA
-    |--------------------------------------------------------------------------
-    */
+      /*
+      |--------------------------------------------------------------------------
+      | RESPOSTA
+      |--------------------------------------------------------------------------
+      */
 
-    res.status(200);
+      res.status(200);
 
-    res.set({
-      "Content-Type": "application/xml; charset=utf-8",
 
-      // O Google pode reutilizar o sitemap por um período curto.
-      "Cache-Control": "public, max-age=3600"
-    });
+      res.set({
 
-    return res.send(sitemap);
+        "Content-Type":
+          "application/xml; charset=utf-8",
 
-  } catch (error) {
+        "Cache-Control":
+          "public, max-age=3600"
 
-    console.error("ERRO AO GERAR SITEMAP:", error);
+      });
 
-    return res
-      .status(500)
-      .type("text/plain")
-      .send("Erro ao gerar sitemap.");
+
+      return res.send(
+        sitemap
+      );
+
+    } catch (error) {
+
+      console.error(
+        "ERRO AO GERAR SITEMAP:",
+        error
+      );
+
+
+      return res
+        .status(500)
+        .type("text/plain")
+        .send(
+          "Erro ao gerar sitemap."
+        );
+
+    }
+
   }
-});
+);
 
 
 /*
@@ -356,22 +842,216 @@ ${urlsXml}
 |--------------------------------------------------------------------------
 */
 
-app.get("/robots.txt", (req, res) => {
+app.get(
+  "/robots.txt",
+  (req, res) => {
 
-  res.status(200);
+    res.status(200);
 
-  res.set({
-    "Content-Type": "text/plain; charset=utf-8",
-    "Cache-Control": "public, max-age=3600"
-  });
 
-  return res.send(`User-agent: *
+    res.set({
+
+      "Content-Type":
+        "text/plain; charset=utf-8",
+
+      "Cache-Control":
+        "public, max-age=3600"
+
+    });
+
+
+    return res.send(
+`User-agent: *
 Allow: /
 
 Sitemap: https://psifacilblog.com.br/sitemap.xml
-`);
+`
+    );
 
-});
+  }
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| ARTIGOS COM URL AMIGÁVEL + SEO SERVER-SIDE
+|--------------------------------------------------------------------------
+|
+| Exemplo:
+|
+| /artigos/sintomas-crises-e-quando-procurar-ajuda
+|
+|--------------------------------------------------------------------------
+*/
+
+app.get(
+  "/artigos/:slug",
+  async (req, res) => {
+
+    try {
+
+      /*
+      |--------------------------------------------------------------------------
+      | SLUG
+      |--------------------------------------------------------------------------
+      */
+
+      const {
+        slug
+      } = req.params;
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | BUSCAR ARTIGO
+      |--------------------------------------------------------------------------
+      */
+
+      const resultado =
+        await db.query(
+          `
+            SELECT *
+            FROM posts
+            WHERE slug = $1
+              AND status = 'publicado'
+            LIMIT 1
+          `,
+          [
+            slug
+          ]
+        );
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | ARTIGO NÃO ENCONTRADO
+      |--------------------------------------------------------------------------
+      */
+
+      if (
+        resultado.rows.length === 0
+      ) {
+
+        return res
+          .status(404)
+          .type("html")
+          .send(
+`<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="robots"
+    content="noindex, follow"
+  >
+
+  <title>
+    Artigo não encontrado | PsiFácil
+  </title>
+
+</head>
+
+<body>
+
+  <h1>
+    Artigo não encontrado
+  </h1>
+
+  <p>
+    O conteúdo que você tentou acessar não está disponível.
+  </p>
+
+  <a href="/">
+    Voltar para o PsiFácil
+  </a>
+
+</body>
+
+</html>`
+          );
+
+      }
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | POST
+      |--------------------------------------------------------------------------
+      */
+
+      const post =
+        resultado.rows[0];
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | GERAR HTML SERVER-SIDE
+      |--------------------------------------------------------------------------
+      */
+
+      const html =
+        renderPost(
+          post
+        );
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | HEADERS
+      |--------------------------------------------------------------------------
+      */
+
+      res.set({
+
+        "Content-Type":
+          "text/html; charset=utf-8",
+
+        "Cache-Control":
+          "no-cache"
+
+      });
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | ENVIAR HTML
+      |--------------------------------------------------------------------------
+      */
+
+      return res
+        .status(200)
+        .send(
+          html
+        );
+
+    } catch (error) {
+
+      console.error(
+        "ERRO AO RENDERIZAR ARTIGO:",
+        error
+      );
+
+
+      return res
+        .status(500)
+        .type("text/plain")
+        .send(
+          "Erro ao carregar artigo."
+        );
+
+    }
+
+  }
+);
 
 
 /*
@@ -380,58 +1060,81 @@ Sitemap: https://psifacilblog.com.br/sitemap.xml
 |--------------------------------------------------------------------------
 */
 
-app.get("/", (req, res) => {
+app.get(
+  "/",
+  (req, res) => {
 
-  return res.sendFile(
-    path.join(
-      __dirname,
-      "../frontend/psifacil.html"
-    )
-  );
+    return res.sendFile(
+      path.join(
+        __dirname,
+        "../frontend/psifacil.html"
+      )
+    );
 
-});
+  }
+);
 
 
 /*
 |--------------------------------------------------------------------------
 | ROTA NÃO ENCONTRADA
 |--------------------------------------------------------------------------
-|
-| Sempre deve permanecer DEPOIS das outras rotas.
-|--------------------------------------------------------------------------
 */
 
-app.use((req, res) => {
+app.use(
+  (req, res) => {
 
-  return res.status(404).json({
-    erro: "Rota não encontrada."
-  });
+    return res
+      .status(404)
+      .json({
+        erro:
+          "Rota não encontrada."
+      });
 
-});
+  }
+);
 
 
 /*
 |--------------------------------------------------------------------------
 | TRATAMENTO GLOBAL DE ERROS
 |--------------------------------------------------------------------------
-|
-| Evita retornar detalhes internos do servidor para o navegador.
-|--------------------------------------------------------------------------
 */
 
-app.use((error, req, res, next) => {
+app.use(
+  (
+    error,
+    req,
+    res,
+    next
+  ) => {
 
-  console.error("ERRO GLOBAL DO SERVIDOR:", error);
+    console.error(
+      "ERRO GLOBAL DO SERVIDOR:",
+      error
+    );
 
-  if (res.headersSent) {
-    return next(error);
+
+    if (
+      res.headersSent
+    ) {
+
+      return next(
+        error
+      );
+
+    }
+
+
+    return res
+      .status(500)
+      .json({
+        erro:
+          "Erro interno do servidor."
+      });
+
   }
-
-  return res.status(500).json({
-    erro: "Erro interno do servidor."
-  });
-
-});
+);
 
 
 /*
@@ -440,12 +1143,18 @@ app.use((error, req, res, next) => {
 |--------------------------------------------------------------------------
 */
 
-const PORT = process.env.PORT || 3000;
+const PORT =
+  process.env.PORT ||
+  3000;
 
-app.listen(PORT, () => {
 
-  console.log(
-    `Servidor rodando na porta ${PORT}`
-  );
+app.listen(
+  PORT,
+  () => {
 
-});
+    console.log(
+      `Servidor rodando na porta ${PORT}`
+    );
+
+  }
+);

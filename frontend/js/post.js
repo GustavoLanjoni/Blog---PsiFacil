@@ -1,43 +1,237 @@
+/*
+|--------------------------------------------------------------------------
+| CONFIGURAÇÕES
+|--------------------------------------------------------------------------
+*/
+
 const apiPosts = "/posts";
 const apiInteracoes = "/interacoes";
 
-const postDetalhe = document.getElementById("postDetalhe");
-const btnCurtir = document.getElementById("btnCurtir");
-const totalCurtidas = document.getElementById("totalCurtidas");
-const btnCompartilhar = document.getElementById("btnCompartilhar");
-const formComentario = document.getElementById("formComentario");
-const listaComentarios = document.getElementById("listaComentarios");
-const btnSalvar = document.getElementById("btnSalvar");
-const readingBar = document.getElementById("readingBar");
-const postsRelacionados = document.getElementById("postsRelacionados");
 
-const token = localStorage.getItem("tokenUsuario");
+/*
+|--------------------------------------------------------------------------
+| ELEMENTOS
+|--------------------------------------------------------------------------
+*/
 
-const params = new URLSearchParams(window.location.search);
-const id = params.get("id");
+const postDetalhe =
+  document.getElementById("postDetalhe");
 
-const chaveCurtida = `curtiu_post_${id}`;
+const btnCurtir =
+  document.getElementById("btnCurtir");
+
+const totalCurtidas =
+  document.getElementById("totalCurtidas");
+
+const btnCompartilhar =
+  document.getElementById("btnCompartilhar");
+
+const formComentario =
+  document.getElementById("formComentario");
+
+const listaComentarios =
+  document.getElementById("listaComentarios");
+
+const btnSalvar =
+  document.getElementById("btnSalvar");
+
+const readingBar =
+  document.getElementById("readingBar");
+
+const postsRelacionados =
+  document.getElementById("postsRelacionados");
 
 
-/* =========================================================
-   SEO
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| USUÁRIO
+|--------------------------------------------------------------------------
+*/
+
+const token =
+  localStorage.getItem("tokenUsuario");
+
+
+/*
+|--------------------------------------------------------------------------
+| IDENTIFICAÇÃO DO POST
+|--------------------------------------------------------------------------
+|
+| Nova URL:
+|
+| /artigos/como-cuidar-da-sua-saude-mental-no-dia-a-dia
+|
+| O servidor coloca:
+|
+| window.PSIFACIL_POST = {
+|   id: 10,
+|   slug: "...",
+|   url: "..."
+| }
+|
+| Mantemos também compatibilidade temporária com:
+|
+| /post.html?id=10
+|--------------------------------------------------------------------------
+*/
+
+const params =
+  new URLSearchParams(window.location.search);
+
+const idAntigo =
+  params.get("id");
+
+const dadosServidor =
+  window.PSIFACIL_POST || null;
+
+const id =
+  dadosServidor?.id || idAntigo;
+
+const slug =
+  dadosServidor?.slug || null;
+
+const urlCanonica =
+  dadosServidor?.url || null;
+
+const chaveCurtida =
+  id
+    ? `curtiu_post_${id}`
+    : null;
+
+
+/*
+|--------------------------------------------------------------------------
+| UTILITÁRIOS
+|--------------------------------------------------------------------------
+*/
+
+function escaparHtml(texto = "") {
+  return String(texto)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 
 function limparTexto(texto) {
-  const div = document.createElement("div");
-  div.innerHTML = texto || "";
+  const div =
+    document.createElement("div");
 
-  return div.textContent
+  div.innerHTML =
+    texto || "";
+
+  return (
+    div.textContent ||
+    div.innerText ||
+    ""
+  )
     .replace(/\s+/g, " ")
     .trim();
 }
 
 
-function criarDescricao(post) {
-  const textoResumo = limparTexto(post.resumo || "");
-  const textoConteudo = limparTexto(post.conteudo || "");
+function pegarTextoLimpo(html) {
+  return limparTexto(html);
+}
 
-  const base = textoResumo || textoConteudo;
+
+function limitarTexto(
+  texto,
+  limite
+) {
+  if (!texto) {
+    return "Clique para ler este conteúdo completo.";
+  }
+
+  if (texto.length <= limite) {
+    return texto;
+  }
+
+  return (
+    texto
+      .substring(0, limite)
+      .trim() + "..."
+  );
+}
+
+
+function calcularTempoLeitura(texto) {
+  const palavras =
+    String(texto || "")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .length;
+
+  return (
+    Math.ceil(palavras / 200) || 1
+  );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| URL DO ARTIGO
+|--------------------------------------------------------------------------
+*/
+
+function obterUrlDoArtigo() {
+  /*
+  |----------------------------------------------------------------------
+  | Nova arquitetura
+  |----------------------------------------------------------------------
+  */
+
+  if (urlCanonica) {
+    return urlCanonica;
+  }
+
+
+  /*
+  |----------------------------------------------------------------------
+  | Compatibilidade temporária com URL antiga
+  |----------------------------------------------------------------------
+  */
+
+  const url =
+    new URL(window.location.href);
+
+  if (id) {
+    return (
+      `${url.origin}/post.html?id=` +
+      encodeURIComponent(id)
+    );
+  }
+
+  return window.location.href;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SEO PARA URL ANTIGA
+|--------------------------------------------------------------------------
+|
+| Na nova rota /artigos/:slug o SEO já vem pronto do servidor.
+|
+| Esta parte existe somente para manter post.html?id=... funcionando
+| enquanto concluímos a migração.
+|--------------------------------------------------------------------------
+*/
+
+function criarDescricao(post) {
+  const textoResumo =
+    limparTexto(post.resumo || "");
+
+  const textoConteudo =
+    limparTexto(post.conteudo || "");
+
+  const base =
+    textoResumo ||
+    textoConteudo ||
+    "Leia este artigo no PsiFácil.";
 
   return base
     .replace(/\s+/g, " ")
@@ -46,73 +240,118 @@ function criarDescricao(post) {
 }
 
 
-function obterUrlDoArtigo() {
-  const url = new URL(window.location.href);
+function atualizarMetaTag(
+  idElemento,
+  atributo,
+  valor
+) {
+  const elemento =
+    document.getElementById(idElemento);
 
-  return `${url.origin}${url.pathname}?id=${encodeURIComponent(id)}`;
-}
-
-
-function atualizarMetaTag(idElemento, atributo, valor) {
-  const elemento = document.getElementById(idElemento);
-
-  if (elemento && valor) {
-    elemento.setAttribute(atributo, valor);
+  if (
+    elemento &&
+    valor
+  ) {
+    elemento.setAttribute(
+      atributo,
+      valor
+    );
   }
 }
 
 
-function adicionarMetaProperty(property, content) {
+function adicionarMetaProperty(
+  property,
+  content
+) {
   if (!content) return;
 
-  let meta = document.querySelector(`meta[property="${property}"]`);
+  let meta =
+    document.querySelector(
+      `meta[property="${property}"]`
+    );
 
   if (!meta) {
-    meta = document.createElement("meta");
-    meta.setAttribute("property", property);
+    meta =
+      document.createElement("meta");
+
+    meta.setAttribute(
+      "property",
+      property
+    );
+
     document.head.appendChild(meta);
   }
 
-  meta.setAttribute("content", content);
+  meta.setAttribute(
+    "content",
+    content
+  );
 }
 
 
-function adicionarMetaName(name, content) {
+function adicionarMetaName(
+  name,
+  content
+) {
   if (!content) return;
 
-  let meta = document.querySelector(`meta[name="${name}"]`);
+  let meta =
+    document.querySelector(
+      `meta[name="${name}"]`
+    );
 
   if (!meta) {
-    meta = document.createElement("meta");
-    meta.setAttribute("name", name);
+    meta =
+      document.createElement("meta");
+
+    meta.setAttribute(
+      "name",
+      name
+    );
+
     document.head.appendChild(meta);
   }
 
-  meta.setAttribute("content", content);
+  meta.setAttribute(
+    "content",
+    content
+  );
 }
 
 
-function atualizarSEO(post) {
-  const titulo = limparTexto(post.titulo) || "Artigo | PsiFácil";
+function atualizarSEOAntigo(post) {
+  /*
+  |----------------------------------------------------------------------
+  | Na nova página SSR não alteramos o SEO.
+  | Ele já foi produzido corretamente pelo Node.
+  |----------------------------------------------------------------------
+  */
+
+  if (dadosServidor) {
+    return;
+  }
+
+  const titulo =
+    limparTexto(post.titulo) ||
+    "Artigo";
 
   const descricao =
-    criarDescricao(post) ||
-    "Leia este artigo no PsiFácil.";
+    criarDescricao(post);
 
-  const url = obterUrlDoArtigo();
+  const url =
+    obterUrlDoArtigo();
 
   const imagem =
-    post.imagem && post.imagem.trim()
+    post.imagem &&
+    post.imagem.trim()
       ? post.imagem.trim()
       : null;
 
 
-  /* TITLE */
+  document.title =
+    `${titulo} | PsiFácil`;
 
-  document.title = `${titulo} | PsiFácil`;
-
-
-  /* META DESCRIPTION */
 
   atualizarMetaTag(
     "metaDescription",
@@ -121,16 +360,18 @@ function atualizarSEO(post) {
   );
 
 
-  /* CANONICAL */
+  const canonical =
+    document.getElementById(
+      "canonicalUrl"
+    );
 
-  const canonicalUrl = document.getElementById("canonicalUrl");
-
-  if (canonicalUrl) {
-    canonicalUrl.setAttribute("href", url);
+  if (canonical) {
+    canonical.setAttribute(
+      "href",
+      url
+    );
   }
 
-
-  /* OPEN GRAPH */
 
   atualizarMetaTag(
     "ogTitle",
@@ -151,23 +392,15 @@ function atualizarSEO(post) {
   );
 
 
-  /* OG IMAGE */
-
   adicionarMetaProperty(
     "og:image",
     imagem
   );
 
-
-  /* OG SITE NAME */
-
   adicionarMetaProperty(
     "og:site_name",
     "PsiFácil"
   );
-
-
-  /* OG LOCALE */
 
   adicionarMetaProperty(
     "og:locale",
@@ -175,11 +408,11 @@ function atualizarSEO(post) {
   );
 
 
-  /* TWITTER CARD */
-
   adicionarMetaName(
     "twitter:card",
-    imagem ? "summary_large_image" : "summary"
+    imagem
+      ? "summary_large_image"
+      : "summary"
   );
 
   adicionarMetaName(
@@ -200,47 +433,65 @@ function atualizarSEO(post) {
   }
 
 
-  /* =====================================================
-     STRUCTURED DATA — BLOGPOSTING
-  ===================================================== */
-
   const articleSchema =
-    document.getElementById("articleSchema");
+    document.getElementById(
+      "articleSchema"
+    );
 
   if (articleSchema) {
-
     const schema = {
-      "@context": "https://schema.org",
-      "@type": "BlogPosting",
+      "@context":
+        "https://schema.org",
 
-      "headline": titulo,
+      "@type":
+        "BlogPosting",
 
-      "description": descricao,
+      headline:
+        titulo,
 
-      "url": url,
+      description:
+        descricao,
 
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": url
+      url,
+
+      mainEntityOfPage: {
+        "@type":
+          "WebPage",
+
+        "@id":
+          url
       },
 
-      "datePublished": post.criado_em,
+      datePublished:
+        post.criado_em,
 
-      "author": {
-        "@type": "Organization",
-        "name": "PsiFácil",
-        "url": "https://psifacilblog.com.br/"
+      author: {
+        "@type":
+          "Organization",
+
+        name:
+          "PsiFácil",
+
+        url:
+          "https://psifacilblog.com.br/"
       },
-      "publisher": {
-        "@type": "Organization",
-        "name": "PsiFácil",
-        "url": "https://psifacilblog.com.br/"
+
+      publisher: {
+        "@type":
+          "Organization",
+
+        name:
+          "PsiFácil",
+
+        url:
+          "https://psifacilblog.com.br/"
       }
     };
 
 
     if (imagem) {
-      schema.image = [imagem];
+      schema.image =
+        [imagem];
     }
 
 
@@ -249,8 +500,10 @@ function atualizarSEO(post) {
       post.updated_at ||
       post.data_modificacao;
 
+
     if (dataModificacao) {
-      schema.dateModified = dataModificacao;
+      schema.dateModified =
+        dataModificacao;
     }
 
 
@@ -260,189 +513,107 @@ function atualizarSEO(post) {
 }
 
 
-/* =========================================================
-   SALVAR POST
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| FONTES E CRÉDITOS
+|--------------------------------------------------------------------------
+|
+| Usado apenas na URL antiga.
+|
+| Na nova rota SSR as fontes já são geradas pelo renderPost.js.
+|--------------------------------------------------------------------------
+*/
 
-async function verificarSalvo() {
-  if (!token || !id || !btnSalvar) return;
-
-  try {
-    const resposta = await fetch(`/salvos/${id}/status`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    const dados = await resposta.json();
-
-    if (dados.salvo) {
-      atualizarBotaoSalvar(true);
-    }
-
-  } catch (error) {
-    console.error("Erro ao verificar salvo:", error);
-  }
-}
-
-
-function atualizarBotaoSalvar(salvo) {
-  if (!btnSalvar) return;
-
-  if (salvo) {
-
-    btnSalvar.classList.add("salvo");
-
-    btnSalvar.innerHTML = `
-      <i data-lucide="bookmark-check"></i>
-
-      <div class="action-text">
-        <span class="label">Salvo</span>
-        <span class="sub">Nos favoritos</span>
-      </div>
-    `;
-
-  } else {
-
-    btnSalvar.classList.remove("salvo");
-
-    btnSalvar.innerHTML = `
-      <i data-lucide="bookmark"></i>
-
-      <div class="action-text">
-        <span class="label">Salvar</span>
-        <span class="sub">Ler depois</span>
-      </div>
-    `;
-  }
-
-  if (window.lucide) {
-    lucide.createIcons();
-  }
-}
-
-
-if (btnSalvar) {
-
-  btnSalvar.addEventListener("click", async () => {
-
-    if (!token) {
-      window.location.href = "login-usuario.html";
-      return;
-    }
-
-    try {
-
-      const salvo =
-        btnSalvar.classList.contains("salvo");
-
-      const metodo =
-        salvo ? "DELETE" : "POST";
-
-      const resposta = await fetch(`/salvos/${id}`, {
-        method: metodo,
-
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      if (!resposta.ok) return;
-
-      atualizarBotaoSalvar(!salvo);
-
-    } catch (error) {
-      console.error(
-        "Erro ao salvar/remover post:",
-        error
-      );
-    }
-  });
-}
-
-
-/* =========================================================
-   TEMPO DE LEITURA
-========================================================= */
-
-function calcularTempoLeitura(texto) {
-
-  const palavras = texto
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .length;
-
-  const minutos = Math.ceil(palavras / 200);
-
-  return minutos || 1;
-}
-
-
-/* =========================================================
-   FONTES E CRÉDITOS
-========================================================= */
-
-function gerarFontesCreditos(fontes) {
-
-  if (!fontes || !fontes.trim()) {
+function gerarFontesCreditos(
+  fontes
+) {
+  if (
+    !fontes ||
+    !String(fontes).trim()
+  ) {
     return "";
   }
 
-  const linhas = fontes
-    .split(/\r?\n/)
-    .map((linha) => linha.trim())
-    .filter(Boolean);
 
-  if (linhas.length === 0) {
+  const linhas =
+    String(fontes)
+      .split(/\r?\n/)
+      .map(
+        (linha) =>
+          linha.trim()
+      )
+      .filter(Boolean);
+
+
+  if (
+    linhas.length === 0
+  ) {
     return "";
   }
 
-  const fontesHtml = linhas
-    .map((linha) => {
 
-      const urlRegex =
-        /(https?:\/\/[^\s]+)/g;
+  const fontesHtml =
+    linhas
+      .map((linha) => {
+        const urlRegex =
+          /(https?:\/\/[^\s]+)/g;
 
-      const partes = linha.split(urlRegex);
+        const partes =
+          linha.split(urlRegex);
 
-      const conteudo = partes
-        .map((parte) => {
 
-          if (/^https?:\/\//i.test(parte)) {
+        const conteudo =
+          partes
+            .map((parte) => {
+              if (
+                /^https?:\/\//i.test(
+                  parte
+                )
+              ) {
+                const urlLimpa =
+                  parte.replace(
+                    /[),.;]+$/,
+                    ""
+                  );
 
-            const urlLimpa = parte.replace(
-              /[),.;]+$/,
-              ""
-            );
+                const final =
+                  parte.substring(
+                    urlLimpa.length
+                  );
 
-            return `
-              <a
-                href="${urlLimpa}"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                ${urlLimpa}
-              </a>
-            `;
-          }
+                return `
+                  <a
+                    href="${escaparHtml(urlLimpa)}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    ${escaparHtml(urlLimpa)}
+                  </a>${escaparHtml(final)}
+                `;
+              }
 
-          return parte;
-        })
-        .join("");
+              return escaparHtml(
+                parte
+              );
+            })
+            .join("");
 
-      return `
-        <li>
-          ${conteudo}
-        </li>
-      `;
-    })
-    .join("");
+
+        return `
+          <li>
+            ${conteudo}
+          </li>
+        `;
+      })
+      .join("");
+
 
   return `
     <section class="fontes-creditos">
 
-      <h2>Fontes e créditos</h2>
+      <h2>
+        Fontes e créditos
+      </h2>
 
       <ul>
         ${fontesHtml}
@@ -453,31 +624,51 @@ function gerarFontesCreditos(fontes) {
 }
 
 
-/* =========================================================
-   CARREGAR POST
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| CARREGAR POST ANTIGO
+|--------------------------------------------------------------------------
+|
+| IMPORTANTE:
+|
+| Esta função SOMENTE é utilizada quando alguém acessa:
+|
+| /post.html?id=10
+|
+| Em /artigos/:slug o artigo já está no HTML e NÃO fazemos fetch para
+| reconstruir o conteúdo.
+|--------------------------------------------------------------------------
+*/
 
-async function carregarPost() {
+async function carregarPostAntigo() {
+  if (
+    dadosServidor ||
+    !postDetalhe
+  ) {
+    return null;
+  }
+
 
   if (!id) {
-
     postDetalhe.innerHTML =
       "<p>Post não encontrado.</p>";
 
-    return;
+    return null;
   }
 
-  try {
 
+  try {
     const resposta =
-      await fetch(`${apiPosts}/${id}`);
+      await fetch(
+        `${apiPosts}/${id}`
+      );
+
 
     if (!resposta.ok) {
-
       postDetalhe.innerHTML =
         "<p>Post não encontrado.</p>";
 
-      return;
+      return null;
     }
 
 
@@ -485,69 +676,104 @@ async function carregarPost() {
       await resposta.json();
 
 
-    /* SEO */
+    /*
+    |--------------------------------------------------------------------------
+    | SEO ANTIGO
+    |--------------------------------------------------------------------------
+    */
 
-    atualizarSEO(post);
+    atualizarSEOAntigo(post);
 
 
-    /* POSTS RELACIONADOS */
-
-    carregarRelacionados(post);
-
-
-    /* TEMPO DE LEITURA */
+    /*
+    |--------------------------------------------------------------------------
+    | TEMPO DE LEITURA
+    |--------------------------------------------------------------------------
+    */
 
     const textoLimpo =
-      limparTexto(post.conteudo || "");
+      limparTexto(
+        post.conteudo || ""
+      );
 
     const tempoLeitura =
-      calcularTempoLeitura(textoLimpo);
+      calcularTempoLeitura(
+        textoLimpo
+      );
 
 
-    /* FONTES */
+    /*
+    |--------------------------------------------------------------------------
+    | FONTES
+    |--------------------------------------------------------------------------
+    */
 
     const fontesHtml =
-      gerarFontesCreditos(post.fontes);
+      gerarFontesCreditos(
+        post.fontes
+      );
 
 
-    /* CONTEÚDO */
+    /*
+    |--------------------------------------------------------------------------
+    | CONTEÚDO
+    |--------------------------------------------------------------------------
+    */
 
     postDetalhe.innerHTML = `
 
       <span class="category">
-        ${post.categoria || "Blog"}
+        ${escaparHtml(
+          post.categoria ||
+          "Blog"
+        )}
       </span>
 
+
       <h1>
-        ${post.titulo}
+        ${escaparHtml(
+          post.titulo ||
+          "Artigo"
+        )}
       </h1>
+
 
       <div class="post-meta">
 
         <span>
           Publicado em
-          ${new Date(post.criado_em)
-        .toLocaleDateString("pt-BR")}
+          ${
+            post.criado_em
+              ? new Date(
+                  post.criado_em
+                )
+                  .toLocaleDateString(
+                    "pt-BR"
+                  )
+              : ""
+          }
         </span>
 
         <span class="dot"></span>
 
         <span>
-          ${tempoLeitura} min de leitura
+          ${tempoLeitura}
+          min de leitura
         </span>
 
       </div>
 
 
-      ${post.imagem
-        ? `
+      ${
+        post.imagem
+          ? `
             <img
-              src="${post.imagem}"
-              alt="${post.titulo}"
+              src="${escaparHtml(post.imagem)}"
+              alt="${escaparHtml(post.titulo || "")}"
               class="post-banner"
             >
           `
-        : `
+          : `
             <img
               src="https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=1200&q=80"
               alt=""
@@ -566,7 +792,7 @@ async function carregarPost() {
 
 
       <a
-        href="psifacil.html"
+        href="/"
         class="back-link"
       >
         ← Voltar para o blog
@@ -574,37 +800,265 @@ async function carregarPost() {
 
     `;
 
-  } catch (error) {
 
-    console.error(error);
+    return post;
+
+  } catch (error) {
+    console.error(
+      "Erro ao carregar artigo:",
+      error
+    );
 
     postDetalhe.innerHTML =
       "<p>Erro ao carregar o artigo.</p>";
+
+    return null;
   }
 }
 
 
-/* =========================================================
-   CURTIDAS
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| SALVAR POST
+|--------------------------------------------------------------------------
+*/
 
-async function carregarCurtidas() {
+async function verificarSalvo() {
+  if (
+    !token ||
+    !id ||
+    !btnSalvar
+  ) {
+    return;
+  }
+
 
   try {
+    const resposta =
+      await fetch(
+        `/salvos/${id}/status`,
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`
+          }
+        }
+      );
 
+
+    if (!resposta.ok) {
+      return;
+    }
+
+
+    const dados =
+      await resposta.json();
+
+
+    atualizarBotaoSalvar(
+      Boolean(dados.salvo)
+    );
+
+  } catch (error) {
+    console.error(
+      "Erro ao verificar artigo salvo:",
+      error
+    );
+  }
+}
+
+
+function atualizarBotaoSalvar(
+  salvo
+) {
+  if (!btnSalvar) {
+    return;
+  }
+
+
+  if (salvo) {
+    btnSalvar.classList.add(
+      "salvo"
+    );
+
+    btnSalvar.innerHTML = `
+
+      <span class="action-icon">
+        <i data-lucide="bookmark-check"></i>
+      </span>
+
+      <span class="action-text">
+
+        <span class="label">
+          Salvo
+        </span>
+
+        <span class="sub">
+          Nos favoritos
+        </span>
+
+      </span>
+    `;
+
+  } else {
+    btnSalvar.classList.remove(
+      "salvo"
+    );
+
+    btnSalvar.innerHTML = `
+
+      <span class="action-icon">
+        <i data-lucide="bookmark"></i>
+      </span>
+
+      <span class="action-text">
+
+        <span class="label">
+          Salvar
+        </span>
+
+        <span class="sub">
+          Ler depois
+        </span>
+
+      </span>
+    `;
+  }
+
+
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+}
+
+
+if (btnSalvar) {
+  btnSalvar.addEventListener(
+    "click",
+    async () => {
+      if (!id) {
+        return;
+      }
+
+
+      if (!token) {
+        window.location.href =
+          "/login-usuario.html";
+
+        return;
+      }
+
+
+      const salvo =
+        btnSalvar.classList.contains(
+          "salvo"
+        );
+
+
+      const metodo =
+        salvo
+          ? "DELETE"
+          : "POST";
+
+
+      btnSalvar.disabled =
+        true;
+
+
+      try {
+        const resposta =
+          await fetch(
+            `/salvos/${id}`,
+            {
+              method:
+                metodo,
+
+              headers: {
+                Authorization:
+                  `Bearer ${token}`
+              }
+            }
+          );
+
+
+        if (
+          resposta.status === 401 ||
+          resposta.status === 403
+        ) {
+          localStorage.removeItem(
+            "tokenUsuario"
+          );
+
+          window.location.href =
+            "/login-usuario.html";
+
+          return;
+        }
+
+
+        if (!resposta.ok) {
+          console.error(
+            "Não foi possível alterar o estado do artigo salvo."
+          );
+
+          return;
+        }
+
+
+        atualizarBotaoSalvar(
+          !salvo
+        );
+
+      } catch (error) {
+        console.error(
+          "Erro ao salvar/remover artigo:",
+          error
+        );
+
+      } finally {
+        btnSalvar.disabled =
+          false;
+      }
+    }
+  );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| CURTIDAS
+|--------------------------------------------------------------------------
+*/
+
+async function carregarCurtidas() {
+  if (
+    !id ||
+    !totalCurtidas
+  ) {
+    return;
+  }
+
+
+  try {
     const resposta =
       await fetch(
         `${apiInteracoes}/curtidas/${id}`
       );
 
+
+    if (!resposta.ok) {
+      return;
+    }
+
+
     const dados =
       await resposta.json();
 
+
     totalCurtidas.textContent =
-      dados.total;
+      dados.total ?? 0;
 
   } catch (error) {
-
     console.error(
       "Erro ao carregar curtidas:",
       error
@@ -614,201 +1068,434 @@ async function carregarCurtidas() {
 
 
 function atualizarEstadoCurtir() {
+  if (
+    !id ||
+    !chaveCurtida ||
+    !btnCurtir
+  ) {
+    return;
+  }
+
 
   if (
-    localStorage.getItem(chaveCurtida)
+    localStorage.getItem(
+      chaveCurtida
+    )
   ) {
-
-    btnCurtir.classList.add("curtido");
+    btnCurtir.classList.add(
+      "curtido"
+    );
   }
 }
 
 
-btnCurtir.addEventListener(
-  "click",
-  async () => {
+if (btnCurtir) {
+  btnCurtir.addEventListener(
+    "click",
+    async () => {
+      if (
+        !id ||
+        !chaveCurtida
+      ) {
+        return;
+      }
 
-    if (
-      localStorage.getItem(chaveCurtida)
-    ) {
-      return;
-    }
 
-    try {
+      if (
+        localStorage.getItem(
+          chaveCurtida
+        )
+      ) {
+        return;
+      }
 
-      await fetch(
-        `${apiInteracoes}/curtidas`,
-        {
-          method: "POST",
 
-          headers: {
-            "Content-Type":
-              "application/json"
-          },
+      btnCurtir.disabled =
+        true;
 
-          body: JSON.stringify({
-            post_id: id
-          })
+
+      try {
+        const resposta =
+          await fetch(
+            `${apiInteracoes}/curtidas`,
+            {
+              method:
+                "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+
+              body:
+                JSON.stringify({
+                  post_id:
+                    id
+                })
+            }
+          );
+
+
+        if (!resposta.ok) {
+          console.error(
+            "Não foi possível registrar a curtida."
+          );
+
+          return;
         }
-      );
 
-      localStorage.setItem(
-        chaveCurtida,
-        "true"
-      );
 
-      btnCurtir.classList.add(
-        "curtido"
-      );
+        localStorage.setItem(
+          chaveCurtida,
+          "true"
+        );
 
-      carregarCurtidas();
 
-    } catch (error) {
+        btnCurtir.classList.add(
+          "curtido"
+        );
 
-      console.error(
-        "Erro ao curtir:",
-        error
-      );
+
+        await carregarCurtidas();
+
+      } catch (error) {
+        console.error(
+          "Erro ao curtir:",
+          error
+        );
+
+      } finally {
+        btnCurtir.disabled =
+          false;
+      }
     }
-  }
-);
+  );
+}
 
 
-/* =========================================================
-   COMPARTILHAR
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| COMPARTILHAR
+|--------------------------------------------------------------------------
+*/
 
-btnCompartilhar.addEventListener(
-  "click",
-  async () => {
-
-    const url =
-      window.location.href;
-
-    if (navigator.share) {
-
-      await navigator.share({
-        title: document.title,
-        url
-      });
-
-    } else {
-
-      await navigator.clipboard
-        .writeText(url);
-
-      alert("Link copiado!");
-    }
-  }
-);
+if (btnCompartilhar) {
+  btnCompartilhar.addEventListener(
+    "click",
+    async () => {
+      const url =
+        obterUrlDoArtigo();
 
 
-/* =========================================================
-   COMENTÁRIOS
-========================================================= */
+      try {
+        if (navigator.share) {
+          await navigator.share({
+            title:
+              document.title,
 
-formComentario.addEventListener(
-  "submit",
-  async (e) => {
+            url
+          });
 
-    e.preventDefault();
-
-    const nome =
-      document
-        .getElementById("nomeComentario")
-        .value
-        .trim();
-
-    const comentario =
-      document
-        .getElementById("textoComentario")
-        .value
-        .trim();
-
-    if (!nome || !comentario) {
-
-      alert(
-        "Preencha seu nome e comentário."
-      );
-
-      return;
-    }
-
-    try {
-
-      await fetch(
-        `${apiInteracoes}/comentarios`,
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type":
-              "application/json"
-          },
-
-          body: JSON.stringify({
-            post_id: id,
-            nome,
-            comentario
-          })
+          return;
         }
-      );
 
-      formComentario.reset();
 
-      carregarComentarios();
+        if (
+          navigator.clipboard &&
+          window.isSecureContext
+        ) {
+          await navigator.clipboard
+            .writeText(url);
 
-    } catch (error) {
+          alert(
+            "Link do artigo copiado."
+          );
 
-      console.error(
-        "Erro ao comentar:",
-        error
-      );
+          return;
+        }
+
+
+        const textarea =
+          document.createElement(
+            "textarea"
+          );
+
+        textarea.value =
+          url;
+
+        textarea.setAttribute(
+          "readonly",
+          ""
+        );
+
+        textarea.style.position =
+          "fixed";
+
+        textarea.style.opacity =
+          "0";
+
+
+        document.body.appendChild(
+          textarea
+        );
+
+        textarea.select();
+
+        document.execCommand(
+          "copy"
+        );
+
+        textarea.remove();
+
+
+        alert(
+          "Link do artigo copiado."
+        );
+
+      } catch (error) {
+        /*
+        |------------------------------------------------------------------
+        | O usuário pode cancelar o compartilhamento nativo.
+        | Isso não precisa ser tratado como erro da aplicação.
+        |------------------------------------------------------------------
+        */
+
+        if (
+          error?.name !==
+          "AbortError"
+        ) {
+          console.error(
+            "Erro ao compartilhar:",
+            error
+          );
+        }
+      }
     }
-  }
-);
+  );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| COMENTÁRIOS
+|--------------------------------------------------------------------------
+*/
+
+if (formComentario) {
+  formComentario.addEventListener(
+    "submit",
+    async (event) => {
+      event.preventDefault();
+
+
+      if (!id) {
+        return;
+      }
+
+
+      const campoNome =
+        document.getElementById(
+          "nomeComentario"
+        );
+
+      const campoComentario =
+        document.getElementById(
+          "textoComentario"
+        );
+
+
+      const nome =
+        campoNome?.value
+          .trim();
+
+      const comentario =
+        campoComentario?.value
+          .trim();
+
+
+      if (
+        !nome ||
+        !comentario
+      ) {
+        alert(
+          "Preencha seu nome e comentário."
+        );
+
+        return;
+      }
+
+
+      const botaoEnviar =
+        formComentario.querySelector(
+          'button[type="submit"]'
+        );
+
+
+      if (botaoEnviar) {
+        botaoEnviar.disabled =
+          true;
+      }
+
+
+      try {
+        const resposta =
+          await fetch(
+            `${apiInteracoes}/comentarios`,
+            {
+              method:
+                "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+
+              body:
+                JSON.stringify({
+                  post_id:
+                    id,
+
+                  nome,
+
+                  comentario
+                })
+            }
+          );
+
+
+        if (!resposta.ok) {
+          console.error(
+            "Não foi possível enviar o comentário."
+          );
+
+          return;
+        }
+
+
+        formComentario.reset();
+
+
+        await carregarComentarios();
+
+      } catch (error) {
+        console.error(
+          "Erro ao comentar:",
+          error
+        );
+
+      } finally {
+        if (botaoEnviar) {
+          botaoEnviar.disabled =
+            false;
+        }
+      }
+    }
+  );
+}
 
 
 async function carregarComentarios() {
+  if (
+    !id ||
+    !listaComentarios
+  ) {
+    return;
+  }
+
 
   try {
-
     const resposta =
       await fetch(
         `${apiInteracoes}/comentarios/${id}`
       );
 
+
+    if (!resposta.ok) {
+      return;
+    }
+
+
     const comentarios =
       await resposta.json();
 
-    listaComentarios.innerHTML = "";
 
-    comentarios.forEach((item) => {
+    listaComentarios.innerHTML =
+      "";
 
-      listaComentarios.innerHTML += `
 
-        <div class="comentario-card">
+    if (
+      !Array.isArray(comentarios) ||
+      comentarios.length === 0
+    ) {
+      return;
+    }
 
-          <strong>
-            ${item.nome}
-          </strong>
 
-          <p>
-            ${item.comentario}
-          </p>
+    comentarios.forEach(
+      (item) => {
+        const card =
+          document.createElement(
+            "div"
+          );
 
-          <small>
-            ${new Date(item.criado_em)
-          .toLocaleDateString("pt-BR")}
-          </small>
+        card.className =
+          "comentario-card";
 
-        </div>
 
-      `;
-    });
+        const nome =
+          document.createElement(
+            "strong"
+          );
+
+        nome.textContent =
+          item.nome || "Visitante";
+
+
+        const texto =
+          document.createElement(
+            "p"
+          );
+
+        texto.textContent =
+          item.comentario || "";
+
+
+        const data =
+          document.createElement(
+            "small"
+          );
+
+        data.textContent =
+          item.criado_em
+            ? new Date(
+                item.criado_em
+              )
+                .toLocaleDateString(
+                  "pt-BR"
+                )
+            : "";
+
+
+        card.appendChild(
+          nome
+        );
+
+        card.appendChild(
+          texto
+        );
+
+        card.appendChild(
+          data
+        );
+
+
+        listaComentarios.appendChild(
+          card
+        );
+      }
+    );
 
   } catch (error) {
-
     console.error(
       "Erro ao carregar comentários:",
       error
@@ -817,140 +1504,331 @@ async function carregarComentarios() {
 }
 
 
-/* =========================================================
-   BARRA DE LEITURA
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| BARRA DE PROGRESSO DA LEITURA
+|--------------------------------------------------------------------------
+*/
+
+function atualizarBarraLeitura() {
+  if (!readingBar) {
+    return;
+  }
+
+
+  const scrollTop =
+    window.scrollY ||
+    document.documentElement.scrollTop;
+
+
+  const docHeight =
+    document.documentElement.scrollHeight -
+    window.innerHeight;
+
+
+  if (docHeight <= 0) {
+    readingBar.style.width =
+      "0%";
+
+    return;
+  }
+
+
+  const progresso =
+    (scrollTop / docHeight) *
+    100;
+
+
+  readingBar.style.width =
+    `${Math.min(
+      Math.max(
+        progresso,
+        0
+      ),
+      100
+    )}%`;
+}
+
 
 window.addEventListener(
   "scroll",
-  () => {
-
-    if (!readingBar) return;
-
-    const scrollTop =
-      window.scrollY;
-
-    const docHeight =
-      document.documentElement
-        .scrollHeight -
-      window.innerHeight;
-
-    if (docHeight <= 0) {
-
-      readingBar.style.width =
-        "0%";
-
-      return;
-    }
-
-    const progresso =
-      (scrollTop / docHeight) * 100;
-
-    readingBar.style.width =
-      `${Math.min(progresso, 100)}%`;
+  atualizarBarraLeitura,
+  {
+    passive: true
   }
 );
 
 
-/* =========================================================
-   POSTS RELACIONADOS
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| POSTS RELACIONADOS
+|--------------------------------------------------------------------------
+*/
 
 async function carregarRelacionados(
   postAtual
 ) {
+  if (!postsRelacionados) {
+    return;
+  }
 
-  if (!postsRelacionados) return;
 
   try {
-
     const resposta =
-      await fetch(apiPosts);
+      await fetch(
+        apiPosts
+      );
+
+
+    if (!resposta.ok) {
+      return;
+    }
+
 
     const posts =
       await resposta.json();
 
-    const relacionados =
-      posts
-        .filter((post) => {
 
+    if (!Array.isArray(posts)) {
+      return;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PRIMEIRA TENTATIVA:
+    | mesma categoria
+    |--------------------------------------------------------------------------
+    */
+
+    let relacionados =
+      posts.filter((post) => {
+        const outroId =
+          String(post.id);
+
+        const atualId =
+          String(id);
+
+
+        return (
+          outroId !== atualId &&
+          post.categoria &&
+          postAtual?.categoria &&
+          post.categoria
+            .toLowerCase() ===
+          postAtual.categoria
+            .toLowerCase()
+        );
+      });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Se não houver artigos suficientes da mesma categoria,
+    | completamos com outros artigos publicados.
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+      relacionados.length < 3
+    ) {
+      const idsJaUsados =
+        new Set(
+          relacionados.map(
+            (post) =>
+              String(post.id)
+          )
+        );
+
+
+      const adicionais =
+        posts.filter((post) => {
           return (
-            post.id !== postAtual.id &&
-            post.categoria &&
-            postAtual.categoria &&
-            post.categoria
-              .toLowerCase() ===
-            postAtual.categoria
-              .toLowerCase()
+            String(post.id) !==
+              String(id) &&
+            !idsJaUsados.has(
+              String(post.id)
+            )
           );
-
-        })
-        .slice(0, 3);
+        });
 
 
-    postsRelacionados.innerHTML = "";
+      relacionados = [
+        ...relacionados,
+        ...adicionais
+      ];
+    }
 
 
-    if (relacionados.length === 0) {
+    relacionados =
+      relacionados.slice(
+        0,
+        3
+      );
 
+
+    postsRelacionados.innerHTML =
+      "";
+
+
+    if (
+      relacionados.length === 0
+    ) {
       postsRelacionados.innerHTML = `
-
         <p class="sem-relacionados">
           Nenhum artigo relacionado encontrado.
         </p>
-
       `;
 
       return;
     }
 
 
-    relacionados.forEach((post) => {
+    relacionados.forEach(
+      (post) => {
+        const titulo =
+          escaparHtml(
+            post.titulo ||
+            "Artigo"
+          );
 
-      postsRelacionados.innerHTML += `
 
-        <a
-          href="post.html?id=${post.id}"
-          class="relacionado-card"
-        >
+        const categoria =
+          escaparHtml(
+            post.categoria ||
+            "Blog"
+          );
 
-          <img
-            src="${post.imagem ||
-        "https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=900&q=80"
-        }"
-            alt="${post.titulo}"
-          >
 
-          <div class="relacionado-content">
+        const imagem =
+          post.imagem ||
+          "https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=900&q=80";
 
-            <span>
-              ${post.categoria || "Blog"}
-            </span>
 
-            <h3>
-              ${post.titulo}
-            </h3>
+        const resumo =
+          limitarTexto(
+            pegarTextoLimpo(
+              post.resumo ||
+              post.conteudo ||
+              ""
+            ),
+            110
+          );
 
-            <p>
-              ${limitarTexto(
-          pegarTextoLimpo(
-            post.resumo ||
-            post.conteudo ||
-            ""
-          ),
-          110
-        )}
-            </p>
 
-          </div>
+        /*
+        |--------------------------------------------------------------------------
+        | NOVA URL
+        |--------------------------------------------------------------------------
+        |
+        | Se o post já possui slug:
+        |
+        | /artigos/slug
+        |
+        | Se por algum motivo não possuir slug, mantemos fallback antigo.
+        |--------------------------------------------------------------------------
+        */
 
-        </a>
+        const href =
+          post.slug
+            ? `/artigos/${encodeURIComponent(post.slug)}`
+            : `/post.html?id=${encodeURIComponent(post.id)}`;
 
-      `;
-    });
+
+        const card =
+          document.createElement(
+            "a"
+          );
+
+        card.href =
+          href;
+
+        card.className =
+          "relacionado-card";
+
+
+        const img =
+          document.createElement(
+            "img"
+          );
+
+        img.src =
+          imagem;
+
+        img.alt =
+          post.titulo || "Artigo";
+
+        img.loading =
+          "lazy";
+
+
+        const content =
+          document.createElement(
+            "div"
+          );
+
+        content.className =
+          "relacionado-content";
+
+
+        const span =
+          document.createElement(
+            "span"
+          );
+
+        span.textContent =
+          post.categoria ||
+          "Blog";
+
+
+        const h3 =
+          document.createElement(
+            "h3"
+          );
+
+        h3.textContent =
+          post.titulo ||
+          "Artigo";
+
+
+        const p =
+          document.createElement(
+            "p"
+          );
+
+        p.textContent =
+          resumo;
+
+
+        content.appendChild(
+          span
+        );
+
+        content.appendChild(
+          h3
+        );
+
+        content.appendChild(
+          p
+        );
+
+
+        card.appendChild(
+          img
+        );
+
+        card.appendChild(
+          content
+        );
+
+
+        postsRelacionados.appendChild(
+          card
+        );
+      }
+    );
 
   } catch (error) {
-
     console.error(
       "Erro ao carregar relacionados:",
       error
@@ -959,45 +1837,163 @@ async function carregarRelacionados(
 }
 
 
-function pegarTextoLimpo(html) {
+/*
+|--------------------------------------------------------------------------
+| OBTER DADOS DO POST PARA RELACIONADOS
+|--------------------------------------------------------------------------
+|
+| Na página SSR o HTML principal já está pronto, mas precisamos da categoria
+| para encontrar relacionados.
+|
+| Fazemos uma chamada à API apenas para recursos complementares.
+|
+| IMPORTANTE:
+| isso NÃO substitui nem recria o conteúdo principal.
+|--------------------------------------------------------------------------
+*/
 
-  const div =
-    document.createElement("div");
+async function obterDadosComplementaresPost() {
+  if (!id) {
+    return null;
+  }
 
-  div.innerHTML =
-    html || "";
 
-  return div.textContent.trim();
+  try {
+    const resposta =
+      await fetch(
+        `${apiPosts}/${id}`
+      );
+
+
+    if (!resposta.ok) {
+      return null;
+    }
+
+
+    return await resposta.json();
+
+  } catch (error) {
+    console.error(
+      "Erro ao obter dados complementares:",
+      error
+    );
+
+    return null;
+  }
 }
 
 
-function limitarTexto(
-  texto,
-  limite
-) {
+/*
+|--------------------------------------------------------------------------
+| INICIALIZAÇÃO
+|--------------------------------------------------------------------------
+*/
 
-  if (!texto) {
-    return "Clique para ler este conteúdo completo.";
+async function iniciarPaginaPost() {
+  /*
+  |--------------------------------------------------------------------------
+  | Sem ID não executamos APIs de interação.
+  |--------------------------------------------------------------------------
+  */
+
+  if (!id) {
+    console.error(
+      "PsiFácil: não foi possível identificar o artigo."
+    );
+
+    return;
   }
 
-  if (texto.length <= limite) {
-    return texto;
+
+  /*
+  |--------------------------------------------------------------------------
+  | URL ANTIGA
+  |--------------------------------------------------------------------------
+  |
+  | Se não existe window.PSIFACIL_POST, significa que estamos no
+  | post.html?id=...
+  |
+  | Nesse caso mantemos temporariamente o comportamento antigo.
+  |--------------------------------------------------------------------------
+  */
+
+  let postAtual =
+    null;
+
+
+  if (!dadosServidor) {
+    postAtual =
+      await carregarPostAntigo();
+
+  } else {
+    /*
+    |--------------------------------------------------------------------------
+    | NOVA URL SSR
+    |--------------------------------------------------------------------------
+    |
+    | NÃO carregamos/recriamos o conteúdo principal.
+    |--------------------------------------------------------------------------
+    */
+
+    postAtual =
+      await obterDadosComplementaresPost();
   }
 
-  return (
-    texto
-      .substring(0, limite)
-      .trim() + "..."
-  );
+
+  /*
+  |--------------------------------------------------------------------------
+  | INTERAÇÕES
+  |--------------------------------------------------------------------------
+  */
+
+  await Promise.allSettled([
+    carregarCurtidas(),
+    carregarComentarios(),
+    verificarSalvo()
+  ]);
+
+
+  atualizarEstadoCurtir();
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | RELACIONADOS
+  |--------------------------------------------------------------------------
+  */
+
+  if (postAtual) {
+    await carregarRelacionados(
+      postAtual
+    );
+  }
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | ÍCONES
+  |--------------------------------------------------------------------------
+  */
+
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | BARRA DE LEITURA
+  |--------------------------------------------------------------------------
+  */
+
+  atualizarBarraLeitura();
 }
 
 
-/* =========================================================
-   INICIAR
-========================================================= */
+/*
+|--------------------------------------------------------------------------
+| INICIAR
+|--------------------------------------------------------------------------
+*/
 
-carregarPost();
-carregarCurtidas();
-carregarComentarios();
-atualizarEstadoCurtir();
-verificarSalvo();
+iniciarPaginaPost();

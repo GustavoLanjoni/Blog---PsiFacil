@@ -10,7 +10,6 @@ const postsGrid = document.querySelector(".posts-grid");
 ========================================================= */
 
 function calcularTempoLeitura(conteudo) {
-
   if (!conteudo) {
     return 1;
   }
@@ -41,7 +40,6 @@ function calcularTempoLeitura(conteudo) {
 ========================================================= */
 
 function formatarDataPublicacaoPost(data) {
-
   if (!data) {
     return "";
   }
@@ -92,18 +90,9 @@ function formatarDataPublicacaoPost(data) {
 ========================================================= */
 
 function obterDataPublicacaoPost(post) {
-
   if (!post) {
     return "";
   }
-
-  /*
-   * Tentamos os campos mais comuns.
-   *
-   * Assim o frontend continua funcionando
-   * caso sua API esteja usando criado_em,
-   * created_at ou publicado_em.
-   */
 
   const data =
     post.publicado_em ||
@@ -120,23 +109,49 @@ function obterDataPublicacaoPost(post) {
 
 
 /* =========================================================
+   CRIAR URL DO ARTIGO
+========================================================= */
+
+/*
+ * Nova estrutura:
+ *
+ * /artigos/como-cuidar-da-sua-saude-mental-no-dia-a-dia
+ *
+ * Se algum artigo estiver sem slug,
+ * usamos temporariamente a URL antiga.
+ */
+
+function obterUrlPost(post) {
+  if (
+    post &&
+    post.slug &&
+    String(post.slug).trim()
+  ) {
+    return `/artigos/${encodeURIComponent(
+      String(post.slug).trim()
+    )}`;
+  }
+
+  return `/post.html?id=${encodeURIComponent(
+    post.id
+  )}`;
+}
+
+
+/* =========================================================
    CARREGAR QUANTIDADE DE CURTIDAS
 ========================================================= */
 
 async function carregarCurtidas(postId) {
-
   try {
-
     const resposta = await fetch(
       `${apiCurtidas}/${postId}`
     );
 
     if (!resposta.ok) {
-
       throw new Error(
         "Erro ao buscar curtidas."
       );
-
     }
 
     const dados =
@@ -147,16 +162,13 @@ async function carregarCurtidas(postId) {
     ) || 0;
 
   } catch (error) {
-
     console.error(
       `Erro ao carregar curtidas do post ${postId}:`,
       error
     );
 
     return 0;
-
   }
-
 }
 
 
@@ -168,7 +180,6 @@ async function curtirPost(
   postId,
   botao
 ) {
-
   if (
     botao.dataset.curtindo ===
     "true"
@@ -180,11 +191,9 @@ async function curtirPost(
     "true";
 
   try {
-
     const resposta = await fetch(
       apiCurtidas,
       {
-
         method: "POST",
 
         headers: {
@@ -195,16 +204,13 @@ async function curtirPost(
         body: JSON.stringify({
           post_id: postId
         })
-
       }
     );
 
     if (!resposta.ok) {
-
       throw new Error(
         "Erro ao registrar curtida."
       );
-
     }
 
     const dados =
@@ -231,14 +237,12 @@ async function curtirPost(
       );
 
     if (contador) {
-
       contador.textContent =
         novaQuantidade;
-
     }
 
     /*
-     * Estado visual do coração
+     * Estado visual do coração.
      */
 
     botao.classList.add(
@@ -251,12 +255,10 @@ async function curtirPost(
       );
 
     if (icone) {
-
       icone.setAttribute(
         "data-lucide",
         "heart"
       );
-
     }
 
     /*
@@ -270,13 +272,10 @@ async function curtirPost(
       typeof lucide !==
       "undefined"
     ) {
-
       lucide.createIcons();
-
     }
 
   } catch (error) {
-
     console.error(
       "Erro ao curtir post:",
       error
@@ -287,12 +286,9 @@ async function curtirPost(
     );
 
   } finally {
-
     botao.dataset.curtindo =
       "false";
-
   }
-
 }
 
 
@@ -301,11 +297,9 @@ async function curtirPost(
 ========================================================= */
 
 function obterTokenUsuario() {
-
   return localStorage.getItem(
     "tokenUsuario"
   );
-
 }
 
 
@@ -316,30 +310,22 @@ function obterTokenUsuario() {
 async function verificarPostSalvo(
   postId
 ) {
-
   const token =
     obterTokenUsuario();
 
   if (!token) {
-
     return false;
-
   }
 
   try {
-
     const resposta =
       await fetch(
         `/salvos/${postId}/status`,
         {
-
           headers: {
-
             Authorization:
               `Bearer ${token}`
-
           }
-
         }
       );
 
@@ -350,7 +336,6 @@ async function verificarPostSalvo(
     if (
       resposta.status === 401
     ) {
-
       localStorage.removeItem(
         "tokenUsuario"
       );
@@ -360,13 +345,10 @@ async function verificarPostSalvo(
       );
 
       return false;
-
     }
 
     if (!resposta.ok) {
-
       return false;
-
     }
 
     const dados =
@@ -377,16 +359,13 @@ async function verificarPostSalvo(
     );
 
   } catch (error) {
-
     console.error(
       `Erro ao verificar post salvo ${postId}:`,
       error
     );
 
     return false;
-
   }
-
 }
 
 
@@ -398,7 +377,6 @@ async function alternarPostSalvo(
   postId,
   botao
 ) {
-
   const token =
     obterTokenUsuario();
 
@@ -408,12 +386,10 @@ async function alternarPostSalvo(
    */
 
   if (!token) {
-
     window.location.href =
       "login-usuario.html";
 
     return;
-
   }
 
   if (
@@ -432,25 +408,21 @@ async function alternarPostSalvo(
     );
 
   try {
-
     const resposta =
       await fetch(
         `/salvos/${postId}`,
         {
-
           method:
             estavaSalvo
               ? "DELETE"
               : "POST",
 
           headers: {
-
             "Content-Type":
               "application/json",
 
             Authorization:
               `Bearer ${token}`
-
           },
 
           body:
@@ -460,21 +432,16 @@ async function alternarPostSalvo(
                   post_id:
                     Number(postId)
                 })
-
         }
       );
 
     let dados = {};
 
     try {
-
       dados =
         await resposta.json();
-
     } catch (error) {
-
       dados = {};
-
     }
 
     /*
@@ -484,7 +451,6 @@ async function alternarPostSalvo(
     if (
       resposta.status === 401
     ) {
-
       localStorage.removeItem(
         "tokenUsuario"
       );
@@ -497,17 +463,14 @@ async function alternarPostSalvo(
         "login-usuario.html";
 
       return;
-
     }
 
     if (!resposta.ok) {
-
       throw new Error(
         dados.erro ||
         dados.mensagem ||
         "Não foi possível alterar o artigo salvo."
       );
-
     }
 
     /*
@@ -545,13 +508,10 @@ async function alternarPostSalvo(
       typeof lucide !==
       "undefined"
     ) {
-
       lucide.createIcons();
-
     }
 
   } catch (error) {
-
     console.error(
       "Erro ao salvar artigo:",
       error
@@ -578,12 +538,9 @@ async function alternarPostSalvo(
     );
 
   } finally {
-
     botao.dataset.carregando =
       "false";
-
   }
-
 }
 
 
@@ -592,7 +549,6 @@ async function alternarPostSalvo(
 ========================================================= */
 
 async function criarPostCard(post) {
-
   const tempoLeitura =
     calcularTempoLeitura(
       post.conteudo
@@ -602,7 +558,6 @@ async function criarPostCard(post) {
     quantidadeCurtidas,
     postSalvo
   ] = await Promise.all([
-
     carregarCurtidas(
       post.id
     ),
@@ -610,7 +565,6 @@ async function criarPostCard(post) {
     verificarPostSalvo(
       post.id
     )
-
   ]);
 
   const imagem =
@@ -634,6 +588,29 @@ async function criarPostCard(post) {
       post
     );
 
+
+  /*
+  =========================================================
+     URL AMIGÁVEL
+  =========================================================
+
+  Antes:
+
+  /post.html?id=10
+
+  Agora:
+
+  /artigos/como-cuidar-da-sua-saude-mental-no-dia-a-dia
+
+  Se o slug estiver ausente,
+  usamos a URL antiga como fallback.
+  =========================================================
+  */
+
+  const urlPost =
+    obterUrlPost(post);
+
+
   const article =
     document.createElement(
       "article"
@@ -642,10 +619,11 @@ async function criarPostCard(post) {
   article.className =
     "post-card";
 
+
   article.innerHTML = `
 
     <a
-      href="post.html?id=${post.id}"
+      href="${urlPost}"
       class="post-image-link"
       aria-label="Ler o artigo: ${titulo}"
     >
@@ -718,7 +696,7 @@ async function criarPostCard(post) {
         <!-- LER ARTIGO -->
 
         <a
-          href="post.html?id=${post.id}"
+          href="${urlPost}"
           class="post-read-more"
           aria-label="Ler artigo: ${titulo}"
         >
@@ -798,19 +776,15 @@ async function criarPostCard(post) {
     );
 
   if (botaoSalvar) {
-
     botaoSalvar.addEventListener(
       "click",
       () => {
-
         alternarPostSalvo(
           post.id,
           botaoSalvar
         );
-
       }
     );
-
   }
 
 
@@ -824,24 +798,19 @@ async function criarPostCard(post) {
     );
 
   if (botaoCurtir) {
-
     botaoCurtir.addEventListener(
       "click",
       () => {
-
         curtirPost(
           post.id,
           botaoCurtir
         );
-
       }
     );
-
   }
 
 
   return article;
-
 }
 
 
@@ -850,24 +819,20 @@ async function criarPostCard(post) {
 ========================================================= */
 
 async function carregarPosts() {
-
   if (!postsGrid) {
     return;
   }
 
   try {
-
     const resposta =
       await fetch(
         apiPosts
       );
 
     if (!resposta.ok) {
-
       throw new Error(
         "Erro ao buscar posts."
       );
-
     }
 
     const posts =
@@ -889,7 +854,6 @@ async function carregarPosts() {
     if (
       postsRecentes.length === 0
     ) {
-
       postsGrid.innerHTML = `
 
         <div class="posts-empty">
@@ -903,7 +867,6 @@ async function carregarPosts() {
       `;
 
       return;
-
     }
 
     /*
@@ -913,21 +876,17 @@ async function carregarPosts() {
 
     const cards =
       await Promise.all(
-
         postsRecentes.map(
           (post) =>
             criarPostCard(post)
         )
-
       );
 
     cards.forEach(
       (card) => {
-
         postsGrid.appendChild(
           card
         );
-
       }
     );
 
@@ -940,13 +899,10 @@ async function carregarPosts() {
       typeof lucide !==
       "undefined"
     ) {
-
       lucide.createIcons();
-
     }
 
   } catch (error) {
-
     console.error(
       "Erro ao carregar posts:",
       error
@@ -963,9 +919,7 @@ async function carregarPosts() {
       </div>
 
     `;
-
   }
-
 }
 
 
@@ -985,11 +939,9 @@ const ebookMensagem =
 
 
 if (ebookForm) {
-
   ebookForm.addEventListener(
     "submit",
     async (e) => {
-
       e.preventDefault();
 
       const nomeInput =
@@ -1013,51 +965,39 @@ if (ebookForm) {
           : "";
 
       if (!nome || !email) {
-
         alert(
           "Preencha nome e e-mail."
         );
 
         return;
-
       }
 
       try {
-
         const resposta =
           await fetch(
             apiLeads,
             {
-
               method: "POST",
 
               headers: {
-
                 "Content-Type":
                   "application/json"
-
               },
 
               body:
                 JSON.stringify({
-
                   nome,
-
                   email
-
                 })
-
             }
           );
 
         if (!resposta.ok) {
-
           alert(
             "Erro ao cadastrar. Tente novamente."
           );
 
           return;
-
         }
 
         ebookForm.reset();
@@ -1066,14 +1006,11 @@ if (ebookForm) {
           "none";
 
         if (ebookMensagem) {
-
           ebookMensagem.style.display =
             "block";
-
         }
 
       } catch (error) {
-
         console.error(
           "Erro ao cadastrar lead:",
           error
@@ -1082,13 +1019,11 @@ if (ebookForm) {
         alert(
           "Erro ao conectar com o servidor."
         );
-
       }
-
     }
   );
-
 }
+
 
 /* =========================================================
    VERIFICAR SE A FRASE ESTÁ SALVA
@@ -1097,23 +1032,19 @@ if (ebookForm) {
 async function verificarFraseSalva(
   fraseId
 ) {
-
   const btnSalvar =
     document.getElementById(
       "btnSalvarFrase"
     );
 
-
   if (!btnSalvar) {
     return;
   }
-
 
   const token =
     localStorage.getItem(
       "tokenUsuario"
     );
-
 
   /*
    * Usuário não está logado.
@@ -1121,44 +1052,32 @@ async function verificarFraseSalva(
    */
 
   if (!token) {
-
     btnSalvar.classList.remove(
       "salvo"
     );
-
 
     btnSalvar.setAttribute(
       "aria-label",
       "Salvar frase"
     );
 
-
     btnSalvar.title =
       "Salvar frase";
 
-
     return;
-
   }
 
-
   try {
-
     const resposta =
       await fetch(
         `/frases/${fraseId}/status`,
         {
-
           headers: {
-
             Authorization:
               `Bearer ${token}`
-
           }
-
         }
       );
-
 
     /*
      * Token inválido ou expirado.
@@ -1170,49 +1089,37 @@ async function verificarFraseSalva(
     if (
       resposta.status === 401
     ) {
-
       localStorage.removeItem(
         "tokenUsuario"
       );
-
 
       localStorage.removeItem(
         "usuarioLogado"
       );
 
-
       btnSalvar.classList.remove(
         "salvo"
       );
-
 
       btnSalvar.setAttribute(
         "aria-label",
         "Salvar frase"
       );
 
-
       btnSalvar.title =
         "Salvar frase";
 
-
       return;
-
     }
 
-
     if (!resposta.ok) {
-
       throw new Error(
         "Erro ao verificar frase salva."
       );
-
     }
-
 
     const dados =
       await resposta.json();
-
 
     /*
      * O banco decide o estado
@@ -1224,7 +1131,6 @@ async function verificarFraseSalva(
       dados.salvo
     );
 
-
     btnSalvar.setAttribute(
       "aria-label",
       dados.salvo
@@ -1232,22 +1138,17 @@ async function verificarFraseSalva(
         : "Salvar frase"
     );
 
-
     btnSalvar.title =
       dados.salvo
         ? "Remover dos salvos"
         : "Salvar frase";
 
-
   } catch (error) {
-
     console.error(
       "Erro ao verificar frase salva:",
       error
     );
-
   }
-
 }
 
 
@@ -1256,52 +1157,41 @@ async function verificarFraseSalva(
 ========================================================= */
 
 async function carregarFraseDoDia() {
-
   const fraseTexto =
     document.getElementById(
       "fraseDoDia"
     );
-
 
   const fraseTipo =
     document.getElementById(
       "fraseTipo"
     );
 
-
   const fraseAutor =
     document.getElementById(
       "fraseAutor"
     );
-
 
   const btnSalvar =
     document.getElementById(
       "btnSalvarFrase"
     );
 
-
   if (!fraseTexto) {
     return;
   }
 
-
   try {
-
     const resposta =
       await fetch(
         "/frases/dia"
       );
 
-
     if (!resposta.ok) {
-
       throw new Error(
         "Não foi possível carregar a frase do dia."
       );
-
     }
-
 
     const frase =
       await resposta.json();
@@ -1320,11 +1210,9 @@ async function carregarFraseDoDia() {
     ========================= */
 
     if (fraseAutor) {
-
       fraseAutor.textContent =
         frase.autor ||
         "PsiFácil";
-
     }
 
 
@@ -1333,9 +1221,7 @@ async function carregarFraseDoDia() {
     ========================= */
 
     if (fraseTipo) {
-
       const nomesTipos = {
-
         motivacao:
           "Motivação",
 
@@ -1356,14 +1242,11 @@ async function carregarFraseDoDia() {
 
         acolhimento:
           "Acolhimento"
-
       };
-
 
       fraseTipo.textContent =
         nomesTipos[frase.tipo] ||
         "Reflexão";
-
     }
 
 
@@ -1372,10 +1255,8 @@ async function carregarFraseDoDia() {
     ========================= */
 
     if (btnSalvar) {
-
       btnSalvar.dataset.fraseId =
         frase.id;
-
 
       /*
        * Depois que sabemos qual é
@@ -1386,17 +1267,13 @@ async function carregarFraseDoDia() {
       await verificarFraseSalva(
         frase.id
       );
-
     }
 
-
   } catch (error) {
-
     console.error(
       "Erro ao carregar frase do dia:",
       error
     );
-
 
     /*
      * Não apagamos a frase padrão
@@ -1406,9 +1283,7 @@ async function carregarFraseDoDia() {
      * o card continua mostrando
      * a reflexão padrão.
      */
-
   }
-
 }
 
 
@@ -1417,21 +1292,17 @@ async function carregarFraseDoDia() {
 ========================================================= */
 
 async function alternarFraseSalva() {
-
   const btnSalvar =
     document.getElementById(
       "btnSalvarFrase"
     );
 
-
   if (!btnSalvar) {
     return;
   }
 
-
   const fraseId =
     btnSalvar.dataset.fraseId;
-
 
   /*
    * Ainda não carregou a frase.
@@ -1440,7 +1311,6 @@ async function alternarFraseSalva() {
   if (!fraseId) {
     return;
   }
-
 
   const token =
     localStorage.getItem(
@@ -1453,15 +1323,11 @@ async function alternarFraseSalva() {
   ========================= */
 
   if (!token) {
-
     window.location.href =
       "login-usuario.html";
 
-
     return;
-
   }
-
 
   /*
    * Evita clique duplo enquanto
@@ -1472,9 +1338,7 @@ async function alternarFraseSalva() {
     return;
   }
 
-
   btnSalvar.disabled = true;
-
 
   /*
    * Estado atual ANTES da
@@ -1486,42 +1350,30 @@ async function alternarFraseSalva() {
       "salvo"
     );
 
-
   try {
-
     const resposta =
       await fetch(
         `/frases/${fraseId}/salvar`,
         {
-
           method:
             estavaSalva
               ? "DELETE"
               : "POST",
 
           headers: {
-
             Authorization:
               `Bearer ${token}`
-
           }
-
         }
       );
 
-
     let dados = {};
 
-
     try {
-
       dados =
         await resposta.json();
-
     } catch (error) {
-
       dados = {};
-
     }
 
 
@@ -1532,23 +1384,18 @@ async function alternarFraseSalva() {
     if (
       resposta.status === 401
     ) {
-
       localStorage.removeItem(
         "tokenUsuario"
       );
-
 
       localStorage.removeItem(
         "usuarioLogado"
       );
 
-
       window.location.href =
         "login-usuario.html";
 
-
       return;
-
     }
 
 
@@ -1557,14 +1404,11 @@ async function alternarFraseSalva() {
     ========================= */
 
     if (!resposta.ok) {
-
       throw new Error(
         dados.erro ||
         "Erro ao salvar frase."
       );
-
     }
-
 
     /*
      * IMPORTANTE:
@@ -1579,7 +1423,6 @@ async function alternarFraseSalva() {
       dados.salvo
     );
 
-
     btnSalvar.setAttribute(
       "aria-label",
       dados.salvo
@@ -1587,20 +1430,16 @@ async function alternarFraseSalva() {
         : "Salvar frase"
     );
 
-
     btnSalvar.title =
       dados.salvo
         ? "Remover dos salvos"
         : "Salvar frase";
 
-
   } catch (error) {
-
     console.error(
       "Erro ao alterar frase salva:",
       error
     );
-
 
     /*
      * Se houver erro, consultamos
@@ -1613,14 +1452,10 @@ async function alternarFraseSalva() {
       fraseId
     );
 
-
   } finally {
-
     btnSalvar.disabled =
       false;
-
   }
-
 }
 
 
@@ -1631,13 +1466,11 @@ async function alternarFraseSalva() {
 document.addEventListener(
   "DOMContentLoaded",
   () => {
-
     /*
      * Primeiro carrega a frase.
      */
 
     carregarFraseDoDia();
-
 
     /*
      * Depois conecta o clique
@@ -1649,16 +1482,12 @@ document.addEventListener(
         "btnSalvarFrase"
       );
 
-
     if (btnSalvar) {
-
       btnSalvar.addEventListener(
         "click",
         alternarFraseSalva
       );
-
     }
-
   }
 );
 
