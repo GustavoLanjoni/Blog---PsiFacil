@@ -1,0 +1,1100 @@
+/* =========================================================
+   PSIFÁCIL
+   PÁGINA DE LINKS
+========================================================= */
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    color: #243d3a;
+
+    background:
+        radial-gradient(
+            circle at 50% -5%,
+            rgba(91, 153, 147, 0.18) 0%,
+            transparent 32%
+        ),
+        linear-gradient(
+            180deg,
+            #eef7f5 0%,
+            #f7f8f3 50%,
+            #f6f2e9 100%
+        );
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   DECORAÇÃO DO FUNDO
+========================================================= */
+
+.background-decoration {
+    position: fixed;
+    z-index: 0;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+.background-decoration-one {
+    width: 420px;
+    height: 420px;
+
+    top: -250px;
+    left: -220px;
+
+    background:
+        rgba(83, 143, 138, 0.09);
+}
+
+.background-decoration-two {
+    width: 380px;
+    height: 380px;
+
+    right: -220px;
+    bottom: -220px;
+
+    background:
+        rgba(187, 166, 126, 0.08);
+}
+
+
+/* =========================================================
+   CONTAINER DA PÁGINA
+========================================================= */
+
+.links-page {
+    position: relative;
+    z-index: 1;
+
+    width: 100%;
+    max-width: 580px;
+
+    min-height: 100vh;
+
+    margin: 0 auto;
+
+    padding:
+        44px
+        20px
+        28px;
+}
+
+
+/* =========================================================
+   PERFIL
+========================================================= */
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+
+    margin-bottom: 29px;
+}
+
+
+/* =========================================================
+   LOGO SUPERIOR
+========================================================= */
+
+.brand-icon {
+    width: 96px;
+    height: 96px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 17px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.92);
+
+    border:
+        1px solid
+        rgba(48, 78, 73, 0.10);
+
+    box-shadow:
+        0 12px 28px
+        rgba(39, 69, 65, 0.13);
+}
+
+.brand-icon-inner {
+    width: 76px;
+    height: 76px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            145deg,
+            #315650,
+            #44766f
+        );
+
+    box-shadow:
+        0 7px 16px
+        rgba(35, 68, 63, 0.20);
+}
+
+.brand-icon-inner svg {
+    width: 35px;
+    height: 35px;
+
+    stroke-width: 1.8;
+}
+
+
+/* =========================================================
+   NOME
+========================================================= */
+
+.profile h1 {
+    color: #244d48;
+
+    font-size: 31px;
+    font-weight: 750;
+
+    line-height: 1.1;
+
+    letter-spacing: -0.7px;
+}
+
+.profile-user {
+    margin-top: 6px;
+
+    color: #6c837f;
+
+    font-size: 13.5px;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   DESCRIÇÃO DO PERFIL
+========================================================= */
+
+.profile-description {
+    width: 100%;
+    max-width: 420px;
+
+    margin-top: 14px;
+
+    color: #607570;
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.profile-description span {
+    display: block;
+
+    margin-top: 2px;
+}
+
+
+/* =========================================================
+   ONDE NOS ENCONTRAR
+========================================================= */
+
+.links-heading {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 16px;
+}
+
+.links-heading > span {
+    flex: 1;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #d5ddd6
+        );
+}
+
+.links-heading > span:last-child {
+    background:
+        linear-gradient(
+            90deg,
+            #d5ddd6,
+            transparent
+        );
+}
+
+.links-heading p {
+    flex-shrink: 0;
+
+    color: #748984;
+
+    font-size: 10.5px;
+    font-weight: 700;
+
+    letter-spacing: 1.3px;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   LISTA DE LINKS
+========================================================= */
+
+.social-links {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 11px;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.social-card {
+    width: 100%;
+    min-height: 80px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding:
+        11px
+        21px;
+
+    border: none;
+
+    border-radius: 999px;
+
+    text-decoration: none;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 5px 13px
+        rgba(40, 61, 57, 0.09);
+
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        filter 0.22s ease;
+}
+
+
+/* =========================================================
+   CARD CLARO
+========================================================= */
+
+.social-card-light {
+    color: #243a36;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eee6d7,
+            #e5dccb
+        );
+}
+
+
+/* =========================================================
+   CARD VERDE
+========================================================= */
+
+.social-card-dark {
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #304e48,
+            #385a53
+        );
+}
+
+
+/* =========================================================
+   HOVER DO CARD
+========================================================= */
+
+.social-card:hover {
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 10px 23px
+        rgba(40, 61, 57, 0.15);
+
+    filter:
+        brightness(1.02);
+}
+
+
+/* =========================================================
+   ÁREA DO ÍCONE
+========================================================= */
+
+.social-icon {
+    width: 56px;
+    height: 56px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* =========================================================
+   CONTAINER DOS LOGOS
+========================================================= */
+
+.social-logo {
+    width: 46px;
+    height: 46px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition:
+        transform 0.22s ease;
+}
+
+
+/* =========================================================
+   IMAGENS DOS LOGOS
+========================================================= */
+
+.social-logo-image {
+    width: 42px;
+    height: 42px;
+
+    display: block;
+
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   YOUTUBE SHORTS
+========================================================= */
+
+.social-logo-image[src*="youtubeshorts"] {
+    width: 43px;
+    height: 43px;
+}
+
+
+/* =========================================================
+   YOUTUBE
+========================================================= */
+
+.youtube-logo {
+    width: 45px;
+    height: 45px;
+
+    display: block;
+
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   INSTAGRAM
+========================================================= */
+
+.instagram-logo-box {
+    width: 44px;
+    height: 44px;
+
+    overflow: hidden;
+
+    border-radius: 11px;
+
+    box-shadow:
+        0 4px 11px
+        rgba(193, 53, 132, 0.20);
+}
+
+.instagram-logo {
+    width: 44px;
+    height: 44px;
+
+    display: block;
+}
+
+
+/* =========================================================
+   KWAI
+========================================================= */
+
+.social-logo-image[src*="kuaishou"] {
+    width: 43px;
+    height: 43px;
+}
+
+
+/* =========================================================
+   BLOG PSIFÁCIL
+========================================================= */
+
+/* =========================================================
+   BLOG PSIFÁCIL
+========================================================= */
+
+.social-logo-blog {
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    padding: 7px;
+
+    overflow: hidden;
+
+    border-radius: 50%;
+
+    background: #f3eadb;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.35);
+
+    box-shadow:
+        0 4px 12px
+        rgba(20, 45, 41, 0.22);
+
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+
+.blog-logo-image {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: contain;
+}
+
+
+/* CARD VERDE */
+
+.social-card-dark .social-logo-blog {
+    background: #f6efe3;
+
+    border-color:
+        rgba(255, 255, 255, 0.55);
+}
+
+
+/* CARD CLARO */
+
+.social-card-light .social-logo-blog {
+    background: #ffffff;
+
+    border-color:
+        rgba(48, 78, 72, 0.12);
+}
+
+
+/* HOVER */
+
+.social-card:hover .social-logo-blog {
+    transform: scale(1.07);
+
+    box-shadow:
+        0 6px 15px
+        rgba(20, 45, 41, 0.26);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 520px) {
+
+    .social-logo-blog {
+        width: 41px;
+        height: 41px;
+
+        padding: 6px;
+    }
+
+}
+
+
+/* =========================================================
+   CELULARES PEQUENOS
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .social-logo-blog {
+        width: 38px;
+        height: 38px;
+
+        padding: 5px;
+    }
+
+}
+
+/* =========================================================
+   HOVER DOS ÍCONES
+========================================================= */
+
+.social-card:hover .social-logo {
+    transform:
+        scale(1.07);
+}
+
+
+/* =========================================================
+   CONTEÚDO DO CARD
+========================================================= */
+
+.social-content {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+
+    gap: 3px;
+}
+
+
+/* =========================================================
+   TÍTULO DO CARD
+========================================================= */
+
+.social-content strong {
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 16px;
+    font-weight: 500;
+
+    line-height: 1.15;
+}
+
+.social-card-light .social-content strong {
+    color: #243a36;
+}
+
+.social-card-dark .social-content strong {
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   DESCRIÇÃO DO CARD
+========================================================= */
+
+.social-content span {
+    width: 100%;
+    max-width: 330px;
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    font-size: 11.5px;
+
+    line-height: 1.35;
+
+    white-space: normal;
+}
+
+.social-card-light .social-content span {
+    color: #596b66;
+}
+
+.social-card-dark .social-content span {
+    color:
+        rgba(255, 255, 255, 0.78);
+}
+
+
+/* =========================================================
+   SETA
+========================================================= */
+
+.social-arrow {
+    width: 32px;
+    height: 32px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: transparent;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 21px;
+    font-weight: 300;
+
+    transition:
+        transform 0.2s ease;
+}
+
+.social-card-light .social-arrow {
+    color: #304d47;
+}
+
+.social-card-dark .social-arrow {
+    color: #ffffff;
+}
+
+.social-card:hover .social-arrow {
+    transform:
+        translateX(4px);
+}
+
+
+/* =========================================================
+   RODAPÉ
+========================================================= */
+
+.links-footer {
+    padding-top: 36px;
+    padding-bottom: 5px;
+
+    text-align: center;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    color: #315650;
+}
+
+.footer-logo {
+    width: 22px;
+    height: 22px;
+
+    display: block;
+
+    object-fit: contain;
+
+    border-radius: 50%;
+}
+
+.footer-brand strong {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.links-footer p {
+    margin-top: 7px;
+
+    color: #7e918d;
+
+    font-size: 11.5px;
+
+    line-height: 1.5;
+}
+
+.footer-copy {
+    display: block;
+
+    margin-top: 10px;
+
+    color: #9ba9a6;
+
+    font-size: 10.5px;
+}
+
+
+/* =========================================================
+   ACESSIBILIDADE
+========================================================= */
+
+.social-card:focus-visible {
+    outline:
+        3px solid
+        rgba(48, 78, 72, 0.22);
+
+    outline-offset: 3px;
+}
+
+
+/* =========================================================
+   TABLET / CELULAR
+========================================================= */
+
+@media (max-width: 520px) {
+
+    .links-page {
+        max-width: 100%;
+
+        padding:
+            30px
+            10px
+            22px;
+    }
+
+
+    /* PERFIL */
+
+    .profile {
+        margin-bottom: 25px;
+    }
+
+    .brand-icon {
+        width: 88px;
+        height: 88px;
+
+        margin-bottom: 14px;
+    }
+
+    .brand-icon-inner {
+        width: 69px;
+        height: 69px;
+    }
+
+    .brand-icon-inner svg {
+        width: 31px;
+        height: 31px;
+    }
+
+    .profile h1 {
+        font-size: 28px;
+    }
+
+    .profile-user {
+        font-size: 12.5px;
+    }
+
+    .profile-description {
+        max-width: 350px;
+
+        margin-top: 12px;
+
+        padding:
+            0
+            8px;
+
+        font-size: 13px;
+
+        line-height: 1.55;
+    }
+
+
+    /* TÍTULO */
+
+    .links-heading {
+        margin-bottom: 14px;
+
+        padding:
+            0
+            4px;
+    }
+
+    .links-heading p {
+        font-size: 9.5px;
+    }
+
+
+    /* LISTA */
+
+    .social-links {
+        gap: 10px;
+    }
+
+
+    /* CARD */
+
+    .social-card {
+        min-height: 76px;
+
+        gap: 10px;
+
+        padding:
+            9px
+            16px;
+    }
+
+
+    /* ÍCONE */
+
+    .social-icon {
+        width: 49px;
+        height: 49px;
+    }
+
+    .social-logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .social-logo-image {
+        width: 37px;
+        height: 37px;
+    }
+
+    .social-logo-image[src*="youtubeshorts"] {
+        width: 39px;
+        height: 39px;
+    }
+
+    .youtube-logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .instagram-logo-box,
+    .instagram-logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .social-logo-image[src*="kuaishou"] {
+        width: 39px;
+        height: 39px;
+    }
+
+    .blog-logo-box {
+        width: 41px;
+        height: 41px;
+    }
+
+
+    /* TEXTO */
+
+    .social-content strong {
+        font-size: 15px;
+    }
+
+    .social-content span {
+        max-width: 260px;
+
+        font-size: 10.5px;
+
+        line-height: 1.3;
+    }
+
+
+    /* SETA */
+
+    .social-arrow {
+        width: 27px;
+        height: 27px;
+
+        font-size: 19px;
+    }
+
+
+    /* FOOTER */
+
+    .links-footer {
+        padding-top: 31px;
+    }
+
+}
+
+
+/* =========================================================
+   CELULARES PEQUENOS
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .links-page {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .social-card {
+        min-height: 72px;
+
+        gap: 7px;
+
+        padding:
+            8px
+            13px;
+    }
+
+    .social-icon {
+        width: 45px;
+        height: 45px;
+    }
+
+    .social-logo {
+        width: 37px;
+        height: 37px;
+    }
+
+    .social-logo-image {
+        width: 34px;
+        height: 34px;
+    }
+
+    .social-logo-image[src*="youtubeshorts"] {
+        width: 36px;
+        height: 36px;
+    }
+
+    .youtube-logo {
+        width: 37px;
+        height: 37px;
+    }
+
+    .instagram-logo-box,
+    .instagram-logo {
+        width: 37px;
+        height: 37px;
+    }
+
+    .social-logo-image[src*="kuaishou"] {
+        width: 36px;
+        height: 36px;
+    }
+
+    .blog-logo-box {
+        width: 38px;
+        height: 38px;
+    }
+
+    .social-content strong {
+        font-size: 14px;
+    }
+
+    .social-content span {
+        max-width: 215px;
+
+        font-size: 9.7px;
+    }
+
+    .social-arrow {
+        width: 25px;
+        height: 25px;
+
+        font-size: 18px;
+    }
+
+}
+
+
+/* =========================================================
+   DISPOSITIVOS SEM HOVER
+========================================================= */
+
+@media (hover: none) {
+
+    .social-card:hover {
+        transform: none;
+
+        filter: none;
+    }
+
+    .social-card:hover .social-logo {
+        transform: none;
+    }
+
+    .social-card:hover .social-arrow {
+        transform: none;
+    }
+
+}
+
+
+/* =========================================================
+   REDUZIR ANIMAÇÕES
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+    }
+
+}

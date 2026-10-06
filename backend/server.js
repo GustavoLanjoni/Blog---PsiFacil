@@ -292,7 +292,7 @@ app.get(
           .status(404)
           .type("html")
           .send(
-`<!DOCTYPE html>
+            `<!DOCTYPE html>
 
 <html lang="pt-BR">
 
@@ -763,8 +763,8 @@ app.get(
                 item.lastmod
                   ? `
     <lastmod>${escaparXml(
-      item.lastmod
-    )}</lastmod>`
+                    item.lastmod
+                  )}</lastmod>`
                   : "";
 
 
@@ -785,7 +785,7 @@ app.get(
       */
 
       const sitemap =
-`<?xml version="1.0" encoding="UTF-8"?>
+        `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urlsXml}
 </urlset>`;
@@ -861,7 +861,7 @@ app.get(
 
 
     return res.send(
-`User-agent: *
+      `User-agent: *
 Allow: /
 
 Sitemap: https://psifacilblog.com.br/sitemap.xml
@@ -936,7 +936,7 @@ app.get(
           .status(404)
           .type("html")
           .send(
-`<!DOCTYPE html>
+            `<!DOCTYPE html>
 
 <html lang="pt-BR">
 
@@ -1049,6 +1049,52 @@ app.get(
         );
 
     }
+
+  }
+);
+
+/*
+|--------------------------------------------------------------------------
+| PÁGINA DE LINKS / REDES SOCIAIS
+|--------------------------------------------------------------------------
+|
+| URL pública:
+|
+| https://psifacilblog.com.br/links
+|
+|--------------------------------------------------------------------------
+*/
+
+app.get(
+  "/links",
+  (req, res) => {
+
+    return res.sendFile(
+      path.join(
+        __dirname,
+        "../frontend/linksPSIFacil/linksRedes.html"
+      )
+    );
+
+  }
+);
+
+/*
+|--------------------------------------------------------------------------
+| PÁGINA DE LINKS PSIFÁCIL
+|--------------------------------------------------------------------------
+*/
+
+app.get(
+  "/links",
+  (req, res) => {
+
+    return res.sendFile(
+      path.join(
+        __dirname,
+        "../frontend/linksPSIFacil/linksRedes.html"
+      )
+    );
 
   }
 );
