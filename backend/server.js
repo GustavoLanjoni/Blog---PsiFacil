@@ -687,6 +687,11 @@ app.get(
         {
           loc:
             "https://psifacilblog.com.br/escuta.html"
+        },
+
+        {
+          loc:
+            "https://psifacilblog.com.br/links"
         }
 
       ];
