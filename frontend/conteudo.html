@@ -2,67 +2,855 @@
 <html lang="pt-BR">
 
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXHLZFTYTN"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
 
-    gtag('config', 'G-QXHLZFTYTN');
-  </script>
+    <meta charset="UTF-8">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Todos os Conteúdos | PsiBlog</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Conteúdos | PsiFácil
+    </title>
+
+    <meta
+        name="description"
+        content="Explore os conteúdos do PsiFácil sobre saúde emocional, autoconhecimento, relacionamentos e bem-estar."
+    >
+
+    <meta
+        name="theme-color"
+        content="#f7f3ee"
+    >
+
+    <!-- =====================================================
+         FAVICON
+    ====================================================== -->
+
+    <link
+        rel="icon"
+        type="image/svg+xml"
+        href="img/favicon.svg"
+    >
 
 
-  <!-- Google adsense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8328619879268221"
-    crossorigin="anonymous"></script>
+    <!-- =====================================================
+         FONTES
+    ====================================================== -->
 
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         CSS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/conteudo.css"
+    >
+
+
+    <!-- =====================================================
+         LUCIDE
+    ====================================================== -->
+
+    <script
+        src="https://unpkg.com/lucide@latest"
+        defer
+    ></script>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script
+        src="js/conteudo.js"
+        defer
+    ></script>
 
 </head>
 
+
 <body>
 
-  <header class="header">
-    <nav class="navbar">
-      <div class="logo">PsiBlog</div>
 
-      <ul class="menu">
-        <li><a href="psifacil.html">Início</a></li>
-        <li><a href="psifacil.html#sobre">Sobre</a></li>
-        <li><a href="conteudo.html">Conteúdos</a></li>
-        <li><a href="psifacil.html#contato">Contato</a></li>
-      </ul>
+    <!-- =====================================================
+         HEADER PADRÃO PSIFÁCIL
+    ====================================================== -->
 
-      <a href="login.html" class="btn-perfil">
-        <i data-lucide="circle-user-round"></i>
-        <span>Perfil</span>
-      </a>
-    </nav>
-  </header>
+    <header class="header">
 
-  <main>
-    <section class="posts-section">
-      <div class="section-title">
-        <span>Conteúdos</span>
-        <h2>Todos os artigos</h2>
-      </div>
+        <div class="header-container">
 
-      <div class="posts-grid" id="todosPosts"></div>
-    </section>
-  </main>
 
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>
-    lucide.createIcons();
-  </script>
-  <script src="js/conteudo.js"></script>
+            <!-- =================================================
+                 LOGO
+            ================================================== -->
+
+            <a
+                href="psifacil.html"
+                class="logo"
+                aria-label="Página inicial do PsiFácil"
+            >
+
+                <span class="logo-main">
+                    PsiFácil
+                </span>
+
+                <span class="logo-sub">
+                    saúde mental
+                </span>
+
+            </a>
+
+
+            <!-- =================================================
+                 NAVEGAÇÃO DESKTOP
+            ================================================== -->
+
+            <nav
+                class="nav-menu"
+                aria-label="Navegação principal"
+            >
+
+                <a href="psifacil.html">
+                    Início
+                </a>
+
+                <a
+                    href="conteudo.html"
+                    class="active"
+                    aria-current="page"
+                >
+                    Conteúdos
+                </a>
+
+                <a href="sobre.html">
+                    Sobre
+                </a>
+
+                <a href="parcerias.html">
+                    Parcerias
+                </a>
+
+            </nav>
+
+
+            <!-- =================================================
+                 AÇÕES DO HEADER
+            ================================================== -->
+
+            <div class="header-actions">
+
+
+                <!-- PERFIL -->
+
+                <a
+                    href="perfil.html"
+                    class="btn-perfil"
+                    aria-label="Acessar meu perfil"
+                >
+
+                    <i data-lucide="circle-user-round"></i>
+
+                    <span>
+                        Perfil
+                    </span>
+
+                </a>
+
+
+                <!-- MENU MOBILE -->
+
+                <button
+                    type="button"
+                    class="menu-toggle"
+                    aria-label="Abrir menu"
+                    aria-expanded="false"
+                    aria-controls="mobileMenu"
+                >
+
+                    <i data-lucide="menu"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             MENU MOBILE
+        ================================================== -->
+
+        <nav
+            class="mobile-menu"
+            id="mobileMenu"
+            aria-label="Navegação mobile"
+        >
+
+            <a href="psifacil.html">
+                Início
+            </a>
+
+            <a
+                href="conteudo.html"
+                class="active"
+                aria-current="page"
+            >
+                Conteúdos
+            </a>
+
+            <a href="sobre.html">
+                Sobre
+            </a>
+
+            <a href="parcerias.html">
+                Parcerias
+            </a>
+
+            <a href="perfil.html">
+                Meu perfil
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- =====================================================
+         CONTEÚDO PRINCIPAL
+    ====================================================== -->
+
+    <main>
+
+
+        <!-- =================================================
+             HERO
+        ================================================== -->
+
+        <section class="conteudos-hero">
+
+            <div class="conteudos-hero-container">
+
+
+                <span class="conteudos-eyebrow">
+                    Biblioteca PsiFácil
+                </span>
+
+
+                <h1>
+                    Conteúdos para entender melhor
+                    <span>
+                        você e suas emoções.
+                    </span>
+                </h1>
+
+
+                <p>
+                    Explore nossos artigos sobre saúde emocional,
+                    autoconhecimento, relacionamentos e bem-estar
+                    em uma linguagem simples e acessível.
+                </p>
+
+
+                <!-- =============================================
+                     PESQUISA
+                ============================================== -->
+
+                <div class="conteudos-pesquisa">
+
+                    <i data-lucide="search"></i>
+
+
+                    <input
+                        type="search"
+                        id="pesquisaConteudos"
+                        placeholder="Pesquisar artigos..."
+                        autocomplete="off"
+                        aria-label="Pesquisar artigos"
+                    >
+
+
+                    <button
+                        type="button"
+                        id="limparPesquisa"
+                        class="limpar-pesquisa"
+                        aria-label="Limpar pesquisa"
+                        title="Limpar pesquisa"
+                        hidden
+                    >
+
+                        <i data-lucide="x"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             BIBLIOTECA
+        ================================================== -->
+
+        <section
+            class="conteudos-section"
+            id="artigos"
+        >
+
+            <div class="conteudos-container">
+
+
+                <!-- =============================================
+                     CABEÇALHO
+                ============================================== -->
+
+                <div class="conteudos-section-header">
+
+                    <div>
+
+                        <span class="section-eyebrow">
+                            Explore
+                        </span>
+
+                        <h2 id="tituloResultados">
+                            Todos os artigos
+                        </h2>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         CONTADOR
+                    ========================================== -->
+
+                    <div
+                        class="conteudos-contador"
+                        aria-live="polite"
+                    >
+
+                        <strong id="quantidadeConteudos">
+                            0
+                        </strong>
+
+                        <span id="textoQuantidadeConteudos">
+                            artigos encontrados
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =============================================
+                     CATEGORIAS
+                ============================================== -->
+
+                <div
+                    class="categorias-wrapper"
+                    id="categorias"
+                >
+
+                    <div
+                        class="categorias-conteudos"
+                        id="categoriasConteudos"
+                        aria-label="Filtrar artigos por categoria"
+                    >
+                        <!-- Gerado pelo JavaScript -->
+                    </div>
+
+                </div>
+
+
+                <!-- =============================================
+                     LOADING
+                ============================================== -->
+
+                <div
+                    class="conteudos-loading"
+                    id="conteudosLoading"
+                >
+
+                    <div
+                        class="loading-spinner"
+                        aria-hidden="true"
+                    ></div>
+
+                    <span>
+                        Carregando conteúdos...
+                    </span>
+
+                </div>
+
+
+                <!-- =============================================
+                     GRID DOS ARTIGOS
+                ============================================== -->
+
+                <div
+                    class="posts-grid"
+                    id="todosPosts"
+                >
+                    <!-- Cards gerados pelo conteudo.js -->
+                </div>
+
+
+                <!-- =============================================
+                     NENHUM RESULTADO
+                ============================================== -->
+
+                <div
+                    class="conteudos-vazio"
+                    id="conteudosVazio"
+                    hidden
+                >
+
+                    <div class="conteudos-vazio-icon">
+
+                        <i data-lucide="search-x"></i>
+
+                    </div>
+
+
+                    <h3>
+                        Nenhum artigo encontrado
+                    </h3>
+
+
+                    <p>
+                        Não encontramos conteúdos correspondentes
+                        à sua pesquisa ou aos filtros selecionados.
+                    </p>
+
+
+                    <button
+                        type="button"
+                        id="limparFiltros"
+                    >
+
+                        Limpar filtros
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER PADRÃO PSIFÁCIL
+    ====================================================== -->
+
+    <footer class="footer">
+
+        <div class="footer-container">
+
+
+            <!-- =================================================
+                 MARCA
+            ================================================== -->
+
+            <div class="footer-brand">
+
+                <a
+                    href="psifacil.html"
+                    class="footer-logo"
+                >
+
+                    <img
+                        src="img/favicon.svg"
+                        alt=""
+                        class="footer-logo-icon"
+                    >
+
+                    <span>
+                        PsiFácil
+                    </span>
+
+                </a>
+
+
+                <p>
+                    Conteúdos sobre saúde emocional,
+                    autoconhecimento e bem-estar
+                    em uma linguagem simples,
+                    acessível e acolhedora.
+                </p>
+
+
+                <a
+                    href="sobre.html"
+                    class="footer-about-btn"
+                >
+
+                    Sobre o PsiFácil
+
+                    <i data-lucide="arrow-right"></i>
+
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 NAVEGAÇÃO
+            ================================================== -->
+
+            <div class="footer-column">
+
+                <h3>
+                    Navegação
+                </h3>
+
+
+                <a href="psifacil.html">
+                    Início
+                </a>
+
+
+                <a href="conteudo.html">
+                    Artigos
+                </a>
+
+
+                <a href="psifacil.html#categorias">
+                    Categorias
+                </a>
+
+
+                <a href="sobre.html">
+                    Sobre
+                </a>
+
+
+                <a href="parcerias.html">
+                    Parcerias
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 CONTEÚDOS
+            ================================================== -->
+
+            <div class="footer-column">
+
+                <h3>
+                    Conteúdos
+                </h3>
+
+
+                <a
+                    href="conteudo.html"
+                    aria-current="page"
+                >
+                    Todos os artigos
+                </a>
+
+
+                <a href="ebooks.html">
+                    Ebooks
+                </a>
+
+
+                <a href="escuta.html">
+                    Espaço de Escuta
+                </a>
+
+
+                <a href="perfil.html">
+                    Meu perfil
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 REDES SOCIAIS
+            ================================================== -->
+
+            <div class="footer-column">
+
+                <h3>
+                    Acompanhe nas redes
+                </h3>
+
+
+                <div class="social-icons">
+
+
+                    <!-- INSTAGRAM -->
+
+                    <a
+                        href="https://www.instagram.com/psifacil.oficial/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Instagram"
+                        class="footer-instagram"
+                    >
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                            class="brand-icon instagram-brand-icon"
+                        >
+
+                            <rect
+                                x="3"
+                                y="3"
+                                width="18"
+                                height="18"
+                                rx="5"
+                                ry="5"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            ></rect>
+
+                            <circle
+                                cx="12"
+                                cy="12"
+                                r="4.2"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            ></circle>
+
+                            <circle
+                                cx="17.4"
+                                cy="6.6"
+                                r="1.15"
+                                fill="currentColor"
+                            ></circle>
+
+                        </svg>
+
+                    </a>
+
+
+                    <!-- YOUTUBE -->
+
+                    <a
+                        href="https://www.youtube.com/@PSIFACIL.OFICIAL"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="YouTube"
+                        class="footer-youtube"
+                    >
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                            class="brand-icon youtube-brand-icon"
+                        >
+
+                            <path
+                                d="M23.5 6.2c-.3-1.2-1.2-2.1-2.4-2.4C19 3.4 12 3.4 12 3.4s-7 0-9.1.4C1.7 4.1.8 5 .5 6.2.2 8 .2 12 .2 12s0 4 .3 5.8c.3 1.2 1.2 2.1 2.4 2.4 2.1.4 9.1.4 9.1.4s7 0 9.1-.4c1.2-.3 2.1-1.2 2.4-2.4.3-1.8.3-5.8.3-5.8s0-4-.3-5.8zM9.8 15.8V8.2l6.4 3.8-6.4 3.8z"
+                            ></path>
+
+                        </svg>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FOOTER INFERIOR
+        ================================================== -->
+
+        <div class="footer-bottom">
+
+
+            <!-- COPYRIGHT -->
+
+            <div class="footer-bottom-content">
+
+                <p>
+                    ©
+                    <span id="anoAtual"></span>
+                    PsiFácil — Todos os direitos reservados.
+                </p>
+
+                <span>
+                    Conteúdo educativo sobre saúde emocional.
+                </span>
+
+            </div>
+
+
+            <!-- ASSINATURA -->
+
+            <div class="footer-love">
+
+                <span>
+                    Desenvolvido com muito
+                </span>
+
+                <span
+                    class="footer-heart"
+                    aria-label="amor"
+                >
+                    ♥
+                </span>
+
+                <span>
+                    por
+                </span>
+
+                <strong>
+                    Gustavo Lanjoni &amp; Milene Angelo
+                </strong>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         MENU MOBILE
+    ====================================================== -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            () => {
+
+                const menuToggle =
+                    document.querySelector(
+                        ".menu-toggle"
+                    );
+
+                const mobileMenu =
+                    document.querySelector(
+                        ".mobile-menu"
+                    );
+
+
+                if (
+                    menuToggle &&
+                    mobileMenu
+                ) {
+
+                    menuToggle.addEventListener(
+                        "click",
+                        () => {
+
+                            const aberto =
+                                mobileMenu.classList.toggle(
+                                    "active"
+                                );
+
+
+                            menuToggle.setAttribute(
+                                "aria-expanded",
+                                aberto
+                                    ? "true"
+                                    : "false"
+                            );
+
+
+                            menuToggle.innerHTML =
+                                aberto
+                                    ? '<i data-lucide="x"></i>'
+                                    : '<i data-lucide="menu"></i>';
+
+
+                            if (window.lucide) {
+
+                                window.lucide.createIcons();
+
+                            }
+
+                        }
+                    );
+
+
+                    mobileMenu
+                        .querySelectorAll("a")
+                        .forEach(
+                            (link) => {
+
+                                link.addEventListener(
+                                    "click",
+                                    () => {
+
+                                        mobileMenu
+                                            .classList
+                                            .remove(
+                                                "active"
+                                            );
+
+
+                                        menuToggle
+                                            .setAttribute(
+                                                "aria-expanded",
+                                                "false"
+                                            );
+
+
+                                        menuToggle.innerHTML =
+                                            '<i data-lucide="menu"></i>';
+
+
+                                        if (window.lucide) {
+
+                                            window.lucide.createIcons();
+
+                                        }
+
+                                    }
+                                );
+
+                            }
+                        );
+
+                }
+
+
+                if (window.lucide) {
+
+                    window.lucide.createIcons();
+
+                }
+
+            }
+        );
+
+    </script>
+
 
 </body>
 
