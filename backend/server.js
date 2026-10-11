@@ -1,3 +1,4 @@
+
 const express = require("express");
 const path = require("path");
 const helmet = require("helmet");
@@ -10,29 +11,19 @@ const renderPost = require("./services/renderPost");
 
 const app = express();
 
-
-/*
-|--------------------------------------------------------------------------
-| CONFIGURAÇÕES GERAIS
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   CONFIGURAÇÕES GERAIS
+========================================= */
 
 app.disable("x-powered-by");
 
-/*
-|--------------------------------------------------------------------------
-| TRUST PROXY
-|--------------------------------------------------------------------------
-*/
-
+// Necessário quando o servidor está atrás
+// de um proxy, como no Render.
 app.set("trust proxy", 1);
 
-
-/*
-|--------------------------------------------------------------------------
-| HEADERS DE SEGURANÇA
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   HEADERS DE SEGURANÇA
+========================================= */
 
 app.use(
   helmet({
@@ -48,12 +39,9 @@ app.use(
   })
 );
 
-
-/*
-|--------------------------------------------------------------------------
-| BODY / JSON
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   BODY / JSON
+========================================= */
 
 app.use(
   express.json({
@@ -68,20 +56,14 @@ app.use(
   })
 );
 
-
-/*
-|--------------------------------------------------------------------------
-| RATE LIMIT GLOBAL
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   RATE LIMIT GLOBAL
+========================================= */
 
 const limiteGlobal = rateLimit({
   windowMs: 15 * 60 * 1000,
-
   max: 300,
-
   standardHeaders: true,
-
   legacyHeaders: false,
 
   message: {
@@ -92,22 +74,15 @@ const limiteGlobal = rateLimit({
 
 app.use(limiteGlobal);
 
-
-/*
-|--------------------------------------------------------------------------
-| RATE LIMIT DE LOGIN / CADASTRO
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   RATE LIMIT LOGIN / CADASTRO
+========================================= */
 
 const limiteLogin = rateLimit({
   windowMs: 15 * 60 * 1000,
-
   max: 10,
-
   standardHeaders: true,
-
   legacyHeaders: false,
-
   skipSuccessfulRequests: true,
 
   message: {
@@ -116,12 +91,9 @@ const limiteLogin = rateLimit({
   }
 });
 
-
-/*
-|--------------------------------------------------------------------------
-| IMPORTAÇÃO DAS ROTAS
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   IMPORTAÇÃO DAS ROTAS
+========================================= */
 
 const postsRoutes =
   require("./routes/posts");
@@ -165,211 +137,82 @@ const novidadesRoutes =
 const parceriasRouter =
   require("./routes/parcerias");
 
+/* =========================================
+   NOVA ROTA: HISTÓRICO DE LEITURA
+========================================= */
 
-/*
-|--------------------------------------------------------------------------
-| REDIRECIONAMENTO DAS URLs ANTIGAS DOS ARTIGOS
-|--------------------------------------------------------------------------
-|
-| IMPORTANTE:
-|
-| Esta rota precisa ficar ANTES do express.static().
-|
-| Isso acontece porque existe um arquivo físico:
-|
-| frontend/post.html
-|
-| Se o express.static() vier primeiro, ele poderá entregar
-| post.html diretamente e impedir que o redirecionamento
-| seja executado.
-|
-| Exemplo antigo:
-|
-| /post.html?id=10
-|
-| Nova URL:
-|
-| /artigos/como-cuidar-da-sua-saude-mental-no-dia-a-dia
-|
-| Status utilizado:
-|
-| 301 = mudança permanente.
-|
-|--------------------------------------------------------------------------
-*/
+const historicoLeituraRoutes =
+  require("./routes/historicoLeitura");
+
+/* =========================================
+   REDIRECIONAMENTO DAS URLs ANTIGAS
+========================================= */
 
 app.get(
   "/post.html",
   async (req, res, next) => {
-
     try {
-
-      /*
-      |--------------------------------------------------------------------------
-      | PEGAR ID
-      |--------------------------------------------------------------------------
-      */
-
-      const id =
-        String(
-          req.query.id || ""
-        ).trim();
-
-
-      /*
-      |--------------------------------------------------------------------------
-      | SEM ID
-      |--------------------------------------------------------------------------
-      |
-      | Se alguém acessar simplesmente:
-      |
-      | /post.html
-      |
-      | não existe artigo específico para redirecionar.
-      |
-      */
+      const id = String(
+        req.query.id || ""
+      ).trim();
 
       if (!id) {
-
-        return res.redirect(
-          301,
-          "/"
-        );
-
+        return res.redirect(301, "/");
       }
-
-
-      /*
-      |--------------------------------------------------------------------------
-      | VALIDAR ID
-      |--------------------------------------------------------------------------
-      */
 
       if (!/^\d+$/.test(id)) {
-
-        return res.redirect(
-          301,
-          "/"
-        );
-
+        return res.redirect(301, "/");
       }
 
+      const resultado = await db.query(
+        `
+        SELECT
+          id,
+          slug
+        FROM posts
+        WHERE id = $1
+          AND status = 'publicado'
+        LIMIT 1
+        `,
+        [id]
+      );
 
-      /*
-      |--------------------------------------------------------------------------
-      | BUSCAR O SLUG DO POST
-      |--------------------------------------------------------------------------
-      */
-
-      const resultado =
-        await db.query(
-          `
-            SELECT
-              id,
-              slug
-            FROM posts
-            WHERE id = $1
-              AND status = 'publicado'
-            LIMIT 1
-          `,
-          [
-            id
-          ]
-        );
-
-
-      /*
-      |--------------------------------------------------------------------------
-      | POST NÃO ENCONTRADO
-      |--------------------------------------------------------------------------
-      */
-
-      if (
-        resultado.rows.length === 0
-      ) {
-
+      if (resultado.rows.length === 0) {
         return res
           .status(404)
           .type("html")
-          .send(
-            `<!DOCTYPE html>
-
+          .send(`<!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
   <meta charset="UTF-8">
-
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   >
-
   <meta
     name="robots"
     content="noindex, follow"
   >
-
-  <title>
-    Artigo não encontrado | PsiFácil
-  </title>
-
+  <title>Artigo não encontrado | PsiFácil</title>
 </head>
-
 <body>
-
-  <h1>
-    Artigo não encontrado
-  </h1>
-
-  <p>
-    O artigo solicitado não está disponível.
-  </p>
-
-  <a href="/">
-    Voltar para o PsiFácil
-  </a>
-
+  <h1>Artigo não encontrado</h1>
+  <p>O artigo solicitado não está disponível.</p>
+  <a href="/">Voltar para o PsiFácil</a>
 </body>
-
-</html>`
-          );
-
+</html>`);
       }
 
+      const post = resultado.rows[0];
 
-      /*
-      |--------------------------------------------------------------------------
-      | SLUG
-      |--------------------------------------------------------------------------
-      */
-
-      const post =
-        resultado.rows[0];
-
-
-      const slug =
-        String(
-          post.slug || ""
-        ).trim();
-
-
-      /*
-      |--------------------------------------------------------------------------
-      | POST SEM SLUG
-      |--------------------------------------------------------------------------
-      |
-      | Isso não deveria acontecer após nossa migração,
-      | mas mantemos a proteção.
-      |
-      */
+      const slug = String(
+        post.slug || ""
+      ).trim();
 
       if (!slug) {
-
         console.error(
           `POST ${id} NÃO POSSUI SLUG.`
         );
-
 
         return res
           .status(500)
@@ -377,66 +220,32 @@ app.get(
           .send(
             "Não foi possível localizar a nova URL deste artigo."
           );
-
       }
 
-
-      /*
-      |--------------------------------------------------------------------------
-      | URL NOVA
-      |--------------------------------------------------------------------------
-      */
-
       const novaUrl =
-        `/artigos/${encodeURIComponent(
-          slug
-        )}`;
-
-
-      /*
-      |--------------------------------------------------------------------------
-      | REDIRECIONAMENTO PERMANENTE
-      |--------------------------------------------------------------------------
-      */
+        `/artigos/${encodeURIComponent(slug)}`;
 
       return res.redirect(
         301,
         novaUrl
       );
-
     } catch (error) {
-
       console.error(
         "ERRO AO REDIRECIONAR URL ANTIGA:",
         error
       );
 
-
-      return next(
-        error
-      );
-
+      return next(error);
     }
-
   }
 );
 
-
-/*
-|--------------------------------------------------------------------------
-| ARQUIVOS ESTÁTICOS
-|--------------------------------------------------------------------------
-*/
-
-/*
-|--------------------------------------------------------------------------
-| UPLOADS
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   ARQUIVOS ESTÁTICOS / UPLOADS
+========================================= */
 
 app.use(
   "/uploads",
-
   express.static(
     path.join(
       __dirname,
@@ -450,12 +259,9 @@ app.use(
   )
 );
 
-
-/*
-|--------------------------------------------------------------------------
-| FRONTEND
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   FRONTEND
+========================================= */
 
 app.use(
   express.static(
@@ -470,12 +276,9 @@ app.use(
   )
 );
 
-
-/*
-|--------------------------------------------------------------------------
-| RATE LIMIT ESPECÍFICO DE AUTENTICAÇÃO
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   LIMITES DE AUTENTICAÇÃO
+========================================= */
 
 app.use(
   "/auth/login",
@@ -492,12 +295,9 @@ app.use(
   limiteLogin
 );
 
-
-/*
-|--------------------------------------------------------------------------
-| ROTAS DA API
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   ROTAS DA API
+========================================= */
 
 app.use(
   "/posts",
@@ -569,264 +369,151 @@ app.use(
   parceriasRouter
 );
 
+/* =========================================
+   NOVA API: HISTÓRICO DE LEITURA
+========================================= */
 
-/*
-|--------------------------------------------------------------------------
-| SITEMAP.XML
-|--------------------------------------------------------------------------
-|
-| Sitemap dinâmico utilizando somente as URLs novas.
-|
-|--------------------------------------------------------------------------
-*/
+app.use(
+  "/historico",
+  historicoLeituraRoutes
+);
+
+/* =========================================
+   SITEMAP.XML
+========================================= */
 
 app.get(
   "/sitemap.xml",
   async (req, res) => {
-
     try {
+      const resultado = await db.query(`
+        SELECT
+          id,
+          slug,
+          criado_em
+        FROM posts
+        WHERE status = 'publicado'
+          AND slug IS NOT NULL
+          AND TRIM(slug) <> ''
+        ORDER BY criado_em DESC
+      `);
 
-      /*
-      |--------------------------------------------------------------------------
-      | BUSCAR POSTS PUBLICADOS
-      |--------------------------------------------------------------------------
-      */
-
-      const resultado =
-        await db.query(`
-          SELECT
-            id,
-            slug,
-            criado_em
-          FROM posts
-          WHERE status = 'publicado'
-            AND slug IS NOT NULL
-            AND TRIM(slug) <> ''
-          ORDER BY criado_em DESC
-        `);
-
-
-      const posts =
-        resultado.rows;
-
-
-      /*
-      |--------------------------------------------------------------------------
-      | ESCAPE XML
-      |--------------------------------------------------------------------------
-      */
+      const posts = resultado.rows;
 
       function escaparXml(valor = "") {
-
         return String(valor)
           .replace(/&/g, "&amp;")
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;")
           .replace(/"/g, "&quot;")
           .replace(/'/g, "&apos;");
-
       }
 
-
-      /*
-      |--------------------------------------------------------------------------
-      | FORMATAR DATA
-      |--------------------------------------------------------------------------
-      */
-
       function formatarDataSitemap(data) {
-
         if (!data) {
           return null;
         }
 
-
-        const objetoData =
-          new Date(data);
-
+        const objetoData = new Date(data);
 
         if (
           Number.isNaN(
             objetoData.getTime()
           )
         ) {
-
           return null;
-
         }
 
-
         return objetoData.toISOString();
-
       }
 
-
-      /*
-      |--------------------------------------------------------------------------
-      | PÁGINAS FIXAS
-      |--------------------------------------------------------------------------
-      */
-
       const paginasFixas = [
-
         {
           loc:
             "https://psifacilblog.com.br/"
         },
-
         {
           loc:
             "https://psifacilblog.com.br/conteudo.html"
         },
-
         {
           loc:
             "https://psifacilblog.com.br/ebooks.html"
         },
-
         {
           loc:
             "https://psifacilblog.com.br/escuta.html"
         },
-
         {
           loc:
             "https://psifacilblog.com.br/links"
         }
-
       ];
 
+      const urlsPosts = posts.map(
+        (post) => {
+          const slug = String(
+            post.slug
+          ).trim();
 
-      /*
-      |--------------------------------------------------------------------------
-      | ARTIGOS
-      |--------------------------------------------------------------------------
-      */
+          const url =
+            `https://psifacilblog.com.br/artigos/${encodeURIComponent(slug)}`;
 
-      const urlsPosts =
-        posts.map(
-          (post) => {
+          const lastmod =
+            formatarDataSitemap(
+              post.criado_em
+            );
 
-            const slug =
-              String(
-                post.slug
-              ).trim();
-
-
-            const url =
-              `https://psifacilblog.com.br/artigos/${encodeURIComponent(
-                slug
-              )}`;
-
-
-            const lastmod =
-              formatarDataSitemap(
-                post.criado_em
-              );
-
-
-            return {
-              loc: url,
-              lastmod
-            };
-
-          }
-        );
-
-
-      /*
-      |--------------------------------------------------------------------------
-      | JUNTAR TODAS AS URLs
-      |--------------------------------------------------------------------------
-      */
+          return {
+            loc: url,
+            lastmod
+          };
+        }
+      );
 
       const todasUrls = [
         ...paginasFixas,
         ...urlsPosts
       ];
 
+      const urlsXml = todasUrls
+        .map((item) => {
+          const loc = escaparXml(
+            item.loc
+          );
 
-      /*
-      |--------------------------------------------------------------------------
-      | GERAR XML
-      |--------------------------------------------------------------------------
-      */
+          const lastmod = item.lastmod
+            ? `
+    <lastmod>${escaparXml(item.lastmod)}</lastmod>`
+            : "";
 
-      const urlsXml =
-        todasUrls
-
-          .map(
-            (item) => {
-
-              const loc =
-                escaparXml(
-                  item.loc
-                );
-
-
-              const lastmod =
-                item.lastmod
-                  ? `
-    <lastmod>${escaparXml(
-                    item.lastmod
-                  )}</lastmod>`
-                  : "";
-
-
-              return `  <url>
+          return `  <url>
     <loc>${loc}</loc>${lastmod}
   </url>`;
+        })
+        .join("\n");
 
-            }
-          )
-
-          .join("\n");
-
-
-      /*
-      |--------------------------------------------------------------------------
-      | SITEMAP FINAL
-      |--------------------------------------------------------------------------
-      */
-
-      const sitemap =
-        `<?xml version="1.0" encoding="UTF-8"?>
+      const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urlsXml}
 </urlset>`;
 
-
-      /*
-      |--------------------------------------------------------------------------
-      | RESPOSTA
-      |--------------------------------------------------------------------------
-      */
-
       res.status(200);
 
-
       res.set({
-
         "Content-Type":
           "application/xml; charset=utf-8",
 
         "Cache-Control":
           "public, max-age=3600"
-
       });
 
-
-      return res.send(
-        sitemap
-      );
-
+      return res.send(sitemap);
     } catch (error) {
-
       console.error(
         "ERRO AO GERAR SITEMAP:",
         error
       );
-
 
       return res
         .status(500)
@@ -834,36 +521,26 @@ ${urlsXml}
         .send(
           "Erro ao gerar sitemap."
         );
-
     }
-
   }
 );
 
-
-/*
-|--------------------------------------------------------------------------
-| ROBOTS.TXT
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   ROBOTS.TXT
+========================================= */
 
 app.get(
   "/robots.txt",
   (req, res) => {
-
     res.status(200);
 
-
     res.set({
-
       "Content-Type":
         "text/plain; charset=utf-8",
 
       "Cache-Control":
         "public, max-age=3600"
-
     });
-
 
     return res.send(
       `User-agent: *
@@ -872,179 +549,79 @@ Allow: /
 Sitemap: https://psifacilblog.com.br/sitemap.xml
 `
     );
-
   }
 );
 
-
-/*
-|--------------------------------------------------------------------------
-| ARTIGOS COM URL AMIGÁVEL + SEO SERVER-SIDE
-|--------------------------------------------------------------------------
-|
-| Exemplo:
-|
-| /artigos/sintomas-crises-e-quando-procurar-ajuda
-|
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   ARTIGOS COM URL AMIGÁVEL
+   E SEO SERVER-SIDE
+========================================= */
 
 app.get(
   "/artigos/:slug",
   async (req, res) => {
-
     try {
+      const { slug } = req.params;
 
-      /*
-      |--------------------------------------------------------------------------
-      | SLUG
-      |--------------------------------------------------------------------------
-      */
+      const resultado = await db.query(
+        `
+        SELECT *
+        FROM posts
+        WHERE slug = $1
+          AND status = 'publicado'
+        LIMIT 1
+        `,
+        [slug]
+      );
 
-      const {
-        slug
-      } = req.params;
-
-
-      /*
-      |--------------------------------------------------------------------------
-      | BUSCAR ARTIGO
-      |--------------------------------------------------------------------------
-      */
-
-      const resultado =
-        await db.query(
-          `
-            SELECT *
-            FROM posts
-            WHERE slug = $1
-              AND status = 'publicado'
-            LIMIT 1
-          `,
-          [
-            slug
-          ]
-        );
-
-
-      /*
-      |--------------------------------------------------------------------------
-      | ARTIGO NÃO ENCONTRADO
-      |--------------------------------------------------------------------------
-      */
-
-      if (
-        resultado.rows.length === 0
-      ) {
-
+      if (resultado.rows.length === 0) {
         return res
           .status(404)
           .type("html")
-          .send(
-            `<!DOCTYPE html>
-
+          .send(`<!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
   <meta charset="UTF-8">
-
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   >
-
   <meta
     name="robots"
     content="noindex, follow"
   >
-
-  <title>
-    Artigo não encontrado | PsiFácil
-  </title>
-
+  <title>Artigo não encontrado | PsiFácil</title>
 </head>
-
 <body>
-
-  <h1>
-    Artigo não encontrado
-  </h1>
-
+  <h1>Artigo não encontrado</h1>
   <p>
     O conteúdo que você tentou acessar não está disponível.
   </p>
-
-  <a href="/">
-    Voltar para o PsiFácil
-  </a>
-
+  <a href="/">Voltar para o PsiFácil</a>
 </body>
-
-</html>`
-          );
-
+</html>`);
       }
 
+      const post = resultado.rows[0];
 
-      /*
-      |--------------------------------------------------------------------------
-      | POST
-      |--------------------------------------------------------------------------
-      */
-
-      const post =
-        resultado.rows[0];
-
-
-      /*
-      |--------------------------------------------------------------------------
-      | GERAR HTML SERVER-SIDE
-      |--------------------------------------------------------------------------
-      */
-
-      const html =
-        renderPost(
-          post
-        );
-
-
-      /*
-      |--------------------------------------------------------------------------
-      | HEADERS
-      |--------------------------------------------------------------------------
-      */
+      const html = renderPost(post);
 
       res.set({
-
         "Content-Type":
           "text/html; charset=utf-8",
 
         "Cache-Control":
           "no-cache"
-
       });
-
-
-      /*
-      |--------------------------------------------------------------------------
-      | ENVIAR HTML
-      |--------------------------------------------------------------------------
-      */
 
       return res
         .status(200)
-        .send(
-          html
-        );
-
+        .send(html);
     } catch (error) {
-
       console.error(
         "ERRO AO RENDERIZAR ARTIGO:",
         error
       );
-
 
       return res
         .status(500)
@@ -1052,130 +629,71 @@ app.get(
         .send(
           "Erro ao carregar artigo."
         );
-
     }
-
   }
 );
 
-/*
-|--------------------------------------------------------------------------
-| PÁGINA DE LINKS / REDES SOCIAIS
-|--------------------------------------------------------------------------
-|
-| URL pública:
-|
-| https://psifacilblog.com.br/links
-|
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   PÁGINA DE LINKS / REDES SOCIAIS
+========================================= */
 
 app.get(
   "/links",
   (req, res) => {
-
     return res.sendFile(
       path.join(
         __dirname,
         "../frontend/linksPSIFacil/linksRedes.html"
       )
     );
-
   }
 );
 
-/*
-|--------------------------------------------------------------------------
-| PÁGINA DE LINKS PSIFÁCIL
-|--------------------------------------------------------------------------
-*/
-
-app.get(
-  "/links",
-  (req, res) => {
-
-    return res.sendFile(
-      path.join(
-        __dirname,
-        "../frontend/linksPSIFacil/linksRedes.html"
-      )
-    );
-
-  }
-);
-
-
-/*
-|--------------------------------------------------------------------------
-| PÁGINA INICIAL
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   PÁGINA INICIAL
+========================================= */
 
 app.get(
   "/",
   (req, res) => {
-
     return res.sendFile(
       path.join(
         __dirname,
         "../frontend/psifacil.html"
       )
     );
-
   }
 );
 
-
-/*
-|--------------------------------------------------------------------------
-| ROTA NÃO ENCONTRADA
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   ROTA NÃO ENCONTRADA
+========================================= */
 
 app.use(
   (req, res) => {
-
     return res
       .status(404)
       .json({
         erro:
           "Rota não encontrada."
       });
-
   }
 );
 
-
-/*
-|--------------------------------------------------------------------------
-| TRATAMENTO GLOBAL DE ERROS
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   TRATAMENTO GLOBAL DE ERROS
+========================================= */
 
 app.use(
-  (
-    error,
-    req,
-    res,
-    next
-  ) => {
-
+  (error, req, res, next) => {
     console.error(
       "ERRO GLOBAL DO SERVIDOR:",
       error
     );
 
-
-    if (
-      res.headersSent
-    ) {
-
-      return next(
-        error
-      );
-
+    if (res.headersSent) {
+      return next(error);
     }
-
 
     return res
       .status(500)
@@ -1183,29 +701,21 @@ app.use(
         erro:
           "Erro interno do servidor."
       });
-
   }
 );
 
-
-/*
-|--------------------------------------------------------------------------
-| INICIAR SERVIDOR
-|--------------------------------------------------------------------------
-*/
+/* =========================================
+   INICIAR SERVIDOR
+========================================= */
 
 const PORT =
-  process.env.PORT ||
-  3000;
-
+  process.env.PORT || 3000;
 
 app.listen(
   PORT,
   () => {
-
     console.log(
       `Servidor rodando na porta ${PORT}`
     );
-
   }
 );

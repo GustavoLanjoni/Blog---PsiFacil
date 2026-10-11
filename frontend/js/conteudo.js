@@ -412,15 +412,14 @@ function criarCardPost(post) {
                         ${categoria}
                     </span>
 
-                    ${
-                        data
-                            ? `
+                    ${data
+            ? `
                                 <span class="post-date">
                                     ${escaparHtml(data)}
                                 </span>
                             `
-                            : ""
-                    }
+            : ""
+        }
 
                 </div>
 
@@ -501,11 +500,10 @@ function criarCardPost(post) {
 
                         <button
                             type="button"
-                            class="post-like ${
-                                curtido
-                                    ? "curtido"
-                                    : ""
-                            }"
+                            class="post-like ${curtido
+            ? "curtido"
+            : ""
+        }"
                             data-post-id="${escaparHtml(id)}"
                             aria-label="Curtir artigo"
                             title="Curtir artigo"
@@ -634,11 +632,10 @@ function renderizarCategorias() {
 
                         <button
                             type="button"
-                            class="categoria-filtro ${
-                                ativo
-                                    ? "categoria-filtro-ativo"
-                                    : ""
-                            }"
+                            class="categoria-filtro ${ativo
+                            ? "categoria-filtro-ativo"
+                            : ""
+                        }"
                             data-categoria="${escaparHtml(categoria)}"
                         >
 
@@ -681,96 +678,108 @@ function renderizarCategorias() {
 }
 
 
+
 /* =========================================================
-   FILTRAR POSTS
+   PESQUISA INTELIGENTE DE ARTIGOS
 ========================================================= */
 
 function filtrarPosts() {
+    const palavras = normalizarTexto(termoPesquisa)
+        .split(/\s+/)
+        .filter(Boolean);
 
-    const pesquisa =
-        normalizarTexto(
-            termoPesquisa
-        );
-
-
-    return posts.filter(
-        (post) => {
-
-            const categoria =
-                limparTexto(
-                    post.categoria ||
-                    "Conteúdo"
-                );
-
-
-            const correspondeCategoria =
-
-                categoriaSelecionada ===
-                    "Todos"
-
-                ||
-
-                normalizarTexto(
-                    categoria
-                ) ===
-                normalizarTexto(
-                    categoriaSelecionada
-                );
-
-
-            /*
-            -------------------------------------------------
-            PESQUISA SOMENTE TEXTO LIMPO
-            -------------------------------------------------
-            */
-
-            const textoPesquisa =
-                normalizarTexto(
-
-                    `${
-
-                        limparTexto(
-                            post.titulo ||
-                            ""
-                        )
-
-                    } ${
-
-                        limparTexto(
-                            post.resumo ||
-                            ""
-                        )
-
-                    } ${
-
-                        categoria
-
-                    }`
-
-                );
-
-
-            const correspondePesquisa =
-
-                !pesquisa ||
-
-                textoPesquisa.includes(
-                    pesquisa
-                );
-
-
-            return (
-
-                correspondeCategoria &&
-
-                correspondePesquisa
-
-            );
-
-        }
+    const categoriaAtiva = normalizarTexto(
+        categoriaSelecionada
     );
 
+    return posts
+        .map((post, indice) => {
+            const categoria = normalizarTexto(
+                limparTexto(post.categoria || "Conteúdo")
+            );
+
+            // Filtrar pela categoria selecionada
+            if (
+                categoriaSelecionada !== "Todos" &&
+                categoria !== categoriaAtiva
+            ) {
+                return null;
+            }
+
+            // Preparar os campos para pesquisa
+            const titulo = normalizarTexto(
+                limparTexto(post.titulo || "")
+            );
+
+            const resumo = normalizarTexto(
+                limparTexto(post.resumo || "")
+            );
+
+            const conteudo = normalizarTexto(
+                limparTexto(post.conteudo || "")
+            );
+
+            const textoCompleto = [
+                titulo,
+                resumo,
+                categoria,
+                conteudo
+            ].join(" ");
+
+            // Todas as palavras pesquisadas precisam existir
+            // Não importa a ordem em que foram digitadas
+            const correspondePesquisa = palavras.every(
+                palavra => textoCompleto.includes(palavra)
+            );
+
+            if (!correspondePesquisa) {
+                return null;
+            }
+
+            // Pontuação para ordenar os melhores resultados
+            const pontuacao = palavras.reduce(
+                (total, palavra) => {
+                    if (titulo.includes(palavra)) {
+                        total += 8;
+                    }
+
+                    if (categoria.includes(palavra)) {
+                        total += 4;
+                    }
+
+                    if (resumo.includes(palavra)) {
+                        total += 2;
+                    }
+
+                    if (conteudo.includes(palavra)) {
+                        total += 1;
+                    }
+
+                    return total;
+                },
+                0
+            );
+
+            return {
+                post,
+                indice,
+                pontuacao
+            };
+        })
+        .filter(Boolean)
+        .sort((a, b) => {
+            if (palavras.length === 0) {
+                return a.indice - b.indice;
+            }
+
+            return (
+                b.pontuacao - a.pontuacao ||
+                a.indice - b.indice
+            );
+        })
+        .map(resultado => resultado.post);
 }
+
 
 
 /* =========================================================
@@ -915,23 +924,23 @@ function renderizarPosts(
 }
 
 
+
 /* =========================================================
-   APLICAR FILTROS
+   APLICAR FILTROS E ATUALIZAR RESULTADOS
 ========================================================= */
 
 function aplicarFiltros() {
+    // Cancela uma atualização pendente
+    clearTimeout(temporizadorPesquisa);
 
-    const postsFiltrados =
-        filtrarPosts();
+    // Obtém os artigos que correspondem à pesquisa
+    const postsFiltrados = filtrarPosts();
 
-
+    // Atualiza o título da biblioteca
     atualizarTituloResultados();
 
-
-    renderizarPosts(
-        postsFiltrados
-    );
-
+    // Atualiza os cards e o contador
+    renderizarPosts(postsFiltrados);
 }
 
 
@@ -1512,33 +1521,33 @@ function carregarInteracoesCards(
 }
 
 
+
 /* =========================================================
-   PESQUISA
+   PESQUISA EM TEMPO REAL
 ========================================================= */
 
-if (pesquisaConteudos) {
+let temporizadorPesquisa = null;
 
+if (pesquisaConteudos) {
     pesquisaConteudos.addEventListener(
         "input",
         (event) => {
-
-            termoPesquisa =
-                event.target.value;
-
+            termoPesquisa = event.target.value;
 
             if (limparPesquisa) {
-
                 limparPesquisa.hidden =
                     !termoPesquisa.trim();
-
             }
 
+            // Cancela a atualização anterior
+            clearTimeout(temporizadorPesquisa);
 
-            aplicarFiltros();
-
+            // Aguarda 180ms para atualizar os resultados
+            temporizadorPesquisa = setTimeout(() => {
+                aplicarFiltros();
+            }, 180);
         }
     );
-
 }
 
 

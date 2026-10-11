@@ -344,7 +344,7 @@ function atualizarSEOAntigo(post) {
 
   const imagem =
     post.imagem &&
-    post.imagem.trim()
+      post.imagem.trim()
       ? post.imagem.trim()
       : null;
 
@@ -724,17 +724,17 @@ async function carregarPostAntigo() {
 
       <span class="category">
         ${escaparHtml(
-          post.categoria ||
-          "Blog"
-        )}
+      post.categoria ||
+      "Blog"
+    )}
       </span>
 
 
       <h1>
         ${escaparHtml(
-          post.titulo ||
-          "Artigo"
-        )}
+      post.titulo ||
+      "Artigo"
+    )}
       </h1>
 
 
@@ -742,16 +742,15 @@ async function carregarPostAntigo() {
 
         <span>
           Publicado em
-          ${
-            post.criado_em
-              ? new Date(
-                  post.criado_em
-                )
-                  .toLocaleDateString(
-                    "pt-BR"
-                  )
-              : ""
-          }
+          ${post.criado_em
+        ? new Date(
+          post.criado_em
+        )
+          .toLocaleDateString(
+            "pt-BR"
+          )
+        : ""
+      }
         </span>
 
         <span class="dot"></span>
@@ -764,16 +763,15 @@ async function carregarPostAntigo() {
       </div>
 
 
-      ${
-        post.imagem
-          ? `
+      ${post.imagem
+        ? `
             <img
               src="${escaparHtml(post.imagem)}"
               alt="${escaparHtml(post.titulo || "")}"
               class="post-banner"
             >
           `
-          : `
+        : `
             <img
               src="https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=1200&q=80"
               alt=""
@@ -1468,11 +1466,11 @@ async function carregarComentarios() {
         data.textContent =
           item.criado_em
             ? new Date(
-                item.criado_em
+              item.criado_em
+            )
+              .toLocaleDateString(
+                "pt-BR"
               )
-                .toLocaleDateString(
-                  "pt-BR"
-                )
             : "";
 
 
@@ -1645,7 +1643,7 @@ async function carregarRelacionados(
         posts.filter((post) => {
           return (
             String(post.id) !==
-              String(id) &&
+            String(id) &&
             !idsJaUsados.has(
               String(post.id)
             )
@@ -1997,3 +1995,803 @@ async function iniciarPaginaPost() {
 */
 
 iniciarPaginaPost();
+
+
+
+
+/* =====================================================
+   PSIFÁCIL — HISTÓRICO DE LEITURA
+   Progresso real, sincronização e retomada
+===================================================== */
+
+(() => {
+  "use strict";
+
+  const API = "/historico";
+  const CHAVE_LOCAL = "psifacil_historico_ativo";
+
+  const INTERVALO_SALVAMENTO = 15000;
+  const ATRASO_SCROLL = 1200;
+
+  const artigoId =
+    window.PSIFACIL_POST?.id ||
+    new URLSearchParams(window.location.search).get("id");
+
+  if (
+    !artigoId ||
+    !/^[1-9]\d*$/.test(String(artigoId))
+  ) {
+    return;
+  }
+
+  let autorizado = false;
+  let iniciado = false;
+  let encerrado = false;
+
+  let progressoSalvo = 0;
+  let maiorProgresso = 0;
+
+  let ultimoEnvio = 0;
+  let envioEmAndamento = false;
+
+  let temporizadorScroll = null;
+  let temporizadorPeriodico = null;
+  let observador = null;
+
+  function obterToken() {
+    return localStorage.getItem("tokenUsuario");
+  }
+
+  function obterConteudo() {
+    return document.querySelector(
+      "#postDetalhe .post-text"
+    );
+  }
+
+  function permitidoLocalmente() {
+    return (
+      localStorage.getItem(CHAVE_LOCAL) === "true" &&
+      Boolean(obterToken())
+    );
+  }
+
+  function limitarPorcentagem(valor) {
+    return Math.max(
+      0,
+      Math.min(100, Math.round(Number(valor) || 0))
+    );
+  }
+
+  function calcularProgresso() {
+    const conteudo = obterConteudo();
+
+    if (!conteudo) return null;
+
+    const retangulo = conteudo.getBoundingClientRect();
+
+    const inicio = retangulo.top + window.scrollY;
+    const altura = retangulo.height;
+
+    if (altura <= 0) return null;
+
+    const fim = inicio + altura;
+
+    // A posição inferior da tela representa
+    // até onde o leitor conseguiu visualizar.
+    const posicaoVisivel =
+      window.scrollY + window.innerHeight;
+
+    if (posicaoVisivel <= inicio) {
+      return 0;
+    }
+
+    if (posicaoVisivel >= fim) {
+      return 100;
+    }
+
+    return limitarPorcentagem(
+      ((posicaoVisivel - inicio) / altura) * 100
+    );
+  }
+
+  async function consultarPreferencia() {
+    const token = obterToken();
+
+    if (!token) return false;
+
+    try {
+      const resposta = await fetch(
+        `${API}/preferencia`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          cache: "no-store"
+        }
+      );
+
+      if (!resposta.ok) {
+        return false;
+      }
+
+      const dados = await resposta.json();
+
+      const ativo = dados.historico_ativo === true;
+
+      localStorage.setItem(
+        CHAVE_LOCAL,
+        ativo ? "true" : "false"
+      );
+
+      return ativo;
+    } catch (erro) {
+      console.warn(
+        "Não foi possível consultar a preferência de histórico:",
+        erro
+      );
+
+      return false;
+    }
+  }
+
+  async function consultarProgressoSalvo() {
+    const token = obterToken();
+
+    if (!token || !autorizado) {
+      return 0;
+    }
+
+    try {
+      const resposta = await fetch(API, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        cache: "no-store"
+      });
+
+      if (!resposta.ok) {
+        return 0;
+      }
+
+      const dados = await resposta.json();
+
+      const artigos = Array.isArray(dados)
+        ? dados
+        : Array.isArray(dados.historico)
+          ? dados.historico
+          : [];
+
+      const artigo = artigos.find(
+        (item) =>
+          String(item.post_id) === String(artigoId)
+      );
+
+      return limitarPorcentagem(
+        artigo?.progresso ?? 0
+      );
+    } catch (erro) {
+      console.warn(
+        "Não foi possível consultar o progresso anterior:",
+        erro
+      );
+
+      return 0;
+    }
+  }
+
+  async function enviarProgresso(forcar = false) {
+    if (
+      encerrado ||
+      !autorizado ||
+      !permitidoLocalmente()
+    ) {
+      return;
+    }
+
+    const progressoAtual = calcularProgresso();
+
+    if (progressoAtual === null) {
+      return;
+    }
+
+    maiorProgresso = Math.max(
+      maiorProgresso,
+      progressoAtual
+    );
+
+    const progresso = limitarPorcentagem(
+      maiorProgresso
+    );
+
+    // Não cria um registro apenas porque
+    // o usuário abriu o artigo.
+    if (progresso <= 0) {
+      return;
+    }
+
+    if (progresso <= progressoSalvo) {
+      return;
+    }
+
+    if (envioEmAndamento) {
+      return;
+    }
+
+    const agora = Date.now();
+
+    if (
+      !forcar &&
+      agora - ultimoEnvio < INTERVALO_SALVAMENTO
+    ) {
+      return;
+    }
+
+    const token = obterToken();
+
+    if (!token) return;
+
+    envioEmAndamento = true;
+    ultimoEnvio = agora;
+
+    try {
+      const resposta = await fetch(API, {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+
+        body: JSON.stringify({
+          post_id: Number(artigoId),
+          progresso
+        }),
+
+        keepalive: true
+      });
+
+      if (resposta.status === 403) {
+        autorizado = false;
+        pararMonitoramento();
+        return;
+      }
+
+      if (resposta.status === 401) {
+        autorizado = false;
+        pararMonitoramento();
+        return;
+      }
+
+      if (!resposta.ok) {
+        console.warn(
+          "Falha ao salvar progresso:",
+          resposta.status
+        );
+        return;
+      }
+
+      progressoSalvo = Math.max(
+        progressoSalvo,
+        progresso
+      );
+
+    } catch (erro) {
+      console.warn(
+        "Erro ao salvar progresso de leitura:",
+        erro
+      );
+    } finally {
+      envioEmAndamento = false;
+    }
+  }
+
+  function verificarProgresso() {
+    if (
+      encerrado ||
+      !autorizado ||
+      !permitidoLocalmente() ||
+      document.visibilityState === "hidden"
+    ) {
+      return;
+    }
+
+    const progresso = calcularProgresso();
+
+    if (progresso === null) {
+      return;
+    }
+
+    maiorProgresso = Math.max(
+      maiorProgresso,
+      progresso
+    );
+
+    if (temporizadorScroll !== null) {
+      clearTimeout(temporizadorScroll);
+    }
+
+    temporizadorScroll = setTimeout(() => {
+      enviarProgresso();
+    }, ATRASO_SCROLL);
+  }
+
+  function retomarLeitura(progresso) {
+    const conteudo = obterConteudo();
+
+    if (!conteudo) return;
+
+    const porcentagem = limitarPorcentagem(
+      progresso
+    );
+
+    // Artigos finalizados começam normalmente.
+    if (porcentagem <= 0 || porcentagem >= 100) {
+      return;
+    }
+
+    // Evita mover a página caso o visitante
+    // já tenha começado a navegar manualmente.
+    if (window.scrollY > 20) {
+      return;
+    }
+
+    const inicio =
+      conteudo.getBoundingClientRect().top +
+      window.scrollY;
+
+    const altura = conteudo.getBoundingClientRect().height;
+
+    if (altura <= 0) return;
+
+    const posicao =
+      inicio +
+      (altura * porcentagem) / 100 -
+      window.innerHeight * 0.75;
+
+    const limite =
+      document.documentElement.scrollHeight -
+      window.innerHeight;
+
+    window.scrollTo({
+      top: Math.max(
+        0,
+        Math.min(posicao, limite)
+      ),
+      behavior: "instant"
+    });
+  }
+
+  function aoAlterarVisibilidade() {
+    if (document.visibilityState === "hidden") {
+      enviarProgresso(true);
+      return;
+    }
+
+    verificarProgresso();
+  }
+
+  function aoAlterarPreferencia(evento) {
+    if (
+      evento.key !== CHAVE_LOCAL &&
+      evento.key !== "tokenUsuario"
+    ) {
+      return;
+    }
+
+    if (!permitidoLocalmente()) {
+      autorizado = false;
+      pararMonitoramento();
+      return;
+    }
+
+    // Reconsulta o servidor antes de iniciar
+    // qualquer novo monitoramento.
+    if (!iniciado) {
+      iniciarHistorico();
+    }
+  }
+
+  function pararMonitoramento() {
+    window.removeEventListener(
+      "scroll",
+      verificarProgresso
+    );
+
+    window.removeEventListener(
+      "resize",
+      verificarProgresso
+    );
+
+    document.removeEventListener(
+      "visibilitychange",
+      aoAlterarVisibilidade
+    );
+
+    if (temporizadorScroll !== null) {
+      clearTimeout(temporizadorScroll);
+      temporizadorScroll = null;
+    }
+
+    if (temporizadorPeriodico !== null) {
+      clearInterval(temporizadorPeriodico);
+      temporizadorPeriodico = null;
+    }
+
+    if (observador) {
+      observador.disconnect();
+      observador = null;
+    }
+
+    iniciado = false;
+  }
+
+  function instalarMonitoramento() {
+    if (iniciado || encerrado) {
+      return;
+    }
+
+    iniciado = true;
+
+    window.addEventListener(
+      "scroll",
+      verificarProgresso,
+      { passive: true }
+    );
+
+    window.addEventListener(
+      "resize",
+      verificarProgresso,
+      { passive: true }
+    );
+
+    document.addEventListener(
+      "visibilitychange",
+      aoAlterarVisibilidade
+    );
+
+    temporizadorPeriodico = setInterval(() => {
+      if (
+        document.visibilityState === "visible" &&
+        permitidoLocalmente()
+      ) {
+        enviarProgresso();
+      }
+    }, INTERVALO_SALVAMENTO);
+  }
+
+  async function prepararArtigo() {
+    if (
+      encerrado ||
+      !autorizado ||
+      !permitidoLocalmente()
+    ) {
+      return;
+    }
+
+    const conteudo = obterConteudo();
+
+    if (!conteudo) return;
+
+    progressoSalvo =
+      await consultarProgressoSalvo();
+
+    if (
+      encerrado ||
+      !autorizado ||
+      !permitidoLocalmente()
+    ) {
+      return;
+    }
+
+    maiorProgresso = progressoSalvo;
+
+    // Aguarda o navegador posicionar o conteúdo.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (
+          encerrado ||
+          !autorizado ||
+          !permitidoLocalmente()
+        ) {
+          return;
+        }
+
+        retomarLeitura(progressoSalvo);
+        instalarMonitoramento();
+
+        // Não registra automaticamente uma leitura
+        // antes de uma interação do visitante.
+      });
+    });
+  }
+
+  async function iniciarHistorico() {
+    if (encerrado || iniciado) {
+      return;
+    }
+
+    const tokenInicial = obterToken();
+
+    if (!tokenInicial) {
+      return;
+    }
+
+    autorizado = await consultarPreferencia();
+
+    if (
+      !autorizado ||
+      encerrado ||
+      obterToken() !== tokenInicial
+    ) {
+      return;
+    }
+
+    if (obterConteudo()) {
+      await prepararArtigo();
+      return;
+    }
+
+    // Compatibilidade com post.html?id=...
+    // O conteúdo é carregado por JavaScript.
+    observador = new MutationObserver(() => {
+      if (!obterConteudo()) {
+        return;
+      }
+
+      observador.disconnect();
+      observador = null;
+
+      prepararArtigo();
+    });
+
+    observador.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  window.addEventListener(
+    "storage",
+    aoAlterarPreferencia
+  );
+
+  window.addEventListener("pagehide", () => {
+    // Tenta registrar o último avanço antes
+    // de a página ser encerrada.
+    if (
+      autorizado &&
+      permitidoLocalmente()
+    ) {
+      enviarProgresso(true);
+    }
+
+    encerrado = true;
+    pararMonitoramento();
+  });
+
+  iniciarHistorico();
+
+})();
+
+
+/* =========================================
+   LOCALIZAR O CONTEÚDO DO ARTIGO
+========================================= */
+
+function obterConteudoArtigo() {
+  return document.querySelector(
+    "#postDetalhe .post-text, .post-detail .post-text, .post-text"
+  );
+}
+
+/* =========================================
+   CALCULAR PROGRESSO REAL
+========================================= */
+
+function calcularProgressoArtigo() {
+  const conteudo = obterConteudoArtigo();
+
+  if (!conteudo) {
+    return null;
+  }
+
+  const inicio =
+    conteudo.getBoundingClientRect().top +
+    window.scrollY;
+
+  const fim =
+    inicio + conteudo.offsetHeight;
+
+  if (fim <= inicio) {
+    return null;
+  }
+
+  // Usa a parte inferior da área visível para
+  // estimar até onde o leitor chegou.
+  const posicaoLeitura =
+    window.scrollY + window.innerHeight;
+
+  const porcentagem =
+    ((posicaoLeitura - inicio) /
+      (fim - inicio)) * 100;
+
+  return Math.round(
+    Math.min(
+      100,
+      Math.max(0, porcentagem)
+    )
+  );
+}
+
+/* =========================================
+   ENVIAR PROGRESSO PARA A API
+========================================= */
+
+async function registrarProgresso(progresso) {
+  if (envioEmAndamento) {
+    envioPendente = progresso;
+    return;
+  }
+
+  envioEmAndamento = true;
+
+  try {
+    const resposta = await fetch(
+      API_HISTORICO,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            `Bearer ${tokenHistorico}`
+        },
+
+        body: JSON.stringify({
+          post_id: String(artigoId),
+          progresso
+        }),
+
+        keepalive: true
+      }
+    );
+
+    if (!resposta.ok) {
+      if (resposta.status === 401) {
+        // Não remove o token nem redireciona:
+        // outras funcionalidades controlam a sessão.
+        pararMonitoramento();
+      }
+
+      return;
+    }
+
+    ultimoProgressoEnviado = progresso;
+    ultimoEnvio = Date.now();
+
+  } catch (erro) {
+    console.warn(
+      "Não foi possível atualizar o histórico:",
+      erro
+    );
+  } finally {
+    envioEmAndamento = false;
+
+    if (envioPendente !== null) {
+      const pendente = envioPendente;
+      envioPendente = null;
+
+      if (
+        pendente !== ultimoProgressoEnviado &&
+        Date.now() - ultimoEnvio >= INTERVALO_ENVIO
+      ) {
+        registrarProgresso(pendente);
+      }
+    }
+  }
+}
+
+/* =========================================
+   MONITORAR LEITURA
+========================================= */
+
+function verificarProgresso() {
+  if (document.visibilityState === "hidden") {
+    return;
+  }
+
+  const progresso = calcularProgressoArtigo();
+
+  if (progresso === null) {
+    return;
+  }
+
+  const agora = Date.now();
+
+  if (
+    progresso === ultimoProgressoEnviado ||
+    agora - ultimoEnvio < INTERVALO_ENVIO
+  ) {
+    return;
+  }
+
+  registrarProgresso(progresso);
+}
+
+/* =========================================
+   ENCERRAR MONITORAMENTO
+========================================= */
+
+let intervalo = null;
+
+function pararMonitoramento() {
+  window.removeEventListener(
+    "scroll",
+    verificarProgresso
+  );
+
+  document.removeEventListener(
+    "visibilitychange",
+    verificarProgresso
+  );
+
+  if (intervalo !== null) {
+    clearInterval(intervalo);
+    intervalo = null;
+  }
+}
+
+/* =========================================
+   INICIAR
+========================================= */
+
+function iniciarHistorico() {
+  if (!obterConteudoArtigo()) {
+    return false;
+  }
+
+  verificarProgresso();
+
+  window.addEventListener(
+    "scroll",
+    verificarProgresso,
+    { passive: true }
+  );
+
+  document.addEventListener(
+    "visibilitychange",
+    verificarProgresso
+  );
+
+  intervalo = setInterval(
+    verificarProgresso,
+    INTERVALO_ENVIO
+  );
+
+  return true;
+}
+
+// A página SSR já pode ter o conteúdo pronto.
+// Na URL antiga, o artigo pode carregar depois.
+if (!iniciarHistorico()) {
+  const observador = new MutationObserver(() => {
+    if (iniciarHistorico()) {
+      observador.disconnect();
+    }
+  });
+
+  observador.observe(
+    document.body,
+    {
+      childList: true,
+      subtree: true
+    }
+  );
+
+  window.addEventListener(
+    "pagehide",
+    () => observador.disconnect(),
+    { once: true }
+  );
+}
+

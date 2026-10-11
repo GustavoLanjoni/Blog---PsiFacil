@@ -3732,20 +3732,29 @@ if (preferenciaNovosArtigos) {
 ========================================================= */
 
 const listaNotificacoes =
-    document.getElementById(
-        "listaNotificacoes"
-    );
+  document.getElementById(
+    "listaNotificacoes"
+  );
 
 const contadorNotificacoes =
-    document.getElementById(
-        "contadorNotificacoes"
-    );
+  document.getElementById(
+    "contadorNotificacoes"
+  );
 
 const btnMarcarTodasLidas =
-    document.getElementById(
-        "btnMarcarTodasLidas"
-    );
+  document.getElementById(
+    "btnMarcarTodasLidas"
+  );
 
+/* =========================================================
+CONTROLE DE EXIBIÇÃO DAS NOTIFICAÇÕES
+========================================================= */
+
+const LIMITE_INICIAL_NOTIFICACOES = 5;
+const QUANTIDADE_CARREGAR_MAIS = 10;
+
+let quantidadeNotificacoesVisiveis =
+  LIMITE_INICIAL_NOTIFICACOES;
 
 /* =========================================================
    FORMATAR DATA DA NOTIFICAÇÃO
@@ -3753,73 +3762,73 @@ const btnMarcarTodasLidas =
 
 function formatarDataNotificacao(data) {
 
-    const dataNotificacao =
-        new Date(data);
+  const dataNotificacao =
+    new Date(data);
 
-    const agora =
-        new Date();
+  const agora =
+    new Date();
 
-    const diferenca =
-        agora - dataNotificacao;
+  const diferenca =
+    agora - dataNotificacao;
 
-    const minutos =
-        Math.floor(
-            diferenca / 60000
-        );
+  const minutos =
+    Math.floor(
+      diferenca / 60000
+    );
 
-    const horas =
-        Math.floor(
-            diferenca / 3600000
-        );
+  const horas =
+    Math.floor(
+      diferenca / 3600000
+    );
 
-    const dias =
-        Math.floor(
-            diferenca / 86400000
-        );
-
-
-    if (minutos < 1) {
-        return "Agora";
-    }
+  const dias =
+    Math.floor(
+      diferenca / 86400000
+    );
 
 
-    if (minutos < 60) {
-
-        return `Há ${minutos} min`;
-
-    }
+  if (minutos < 1) {
+    return "Agora";
+  }
 
 
-    if (horas < 24) {
+  if (minutos < 60) {
 
-        return horas === 1
-            ? "Há 1 hora"
-            : `Há ${horas} horas`;
+    return `Há ${minutos} min`;
 
-    }
+  }
 
 
-    if (dias === 1) {
-        return "Ontem";
-    }
+  if (horas < 24) {
+
+    return horas === 1
+      ? "Há 1 hora"
+      : `Há ${horas} horas`;
+
+  }
 
 
-    if (dias < 7) {
-
-        return `Há ${dias} dias`;
-
-    }
+  if (dias === 1) {
+    return "Ontem";
+  }
 
 
-    return dataNotificacao
-        .toLocaleDateString(
-            "pt-BR",
-            {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric"
-            }
-        );
+  if (dias < 7) {
+
+    return `Há ${dias} dias`;
+
+  }
+
+
+  return dataNotificacao
+    .toLocaleDateString(
+      "pt-BR",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+      }
+    );
 
 }
 
@@ -3829,52 +3838,52 @@ function formatarDataNotificacao(data) {
 ========================================================= */
 
 function atualizarContadorNotificacoes(
-    notificacoes
+  notificacoes
 ) {
 
-    if (!contadorNotificacoes) {
-        return;
-    }
+  if (!contadorNotificacoes) {
+    return;
+  }
 
 
-    const naoLidas =
-        notificacoes.filter(
-            notificacao =>
-                !notificacao.lida
-        ).length;
+  const naoLidas =
+    notificacoes.filter(
+      notificacao =>
+        !notificacao.lida
+    ).length;
 
 
-    if (naoLidas === 0) {
-
-        contadorNotificacoes.textContent =
-            "Nenhuma notificação nova";
-
-
-        if (btnMarcarTodasLidas) {
-
-            btnMarcarTodasLidas.hidden =
-                true;
-
-        }
-
-
-        return;
-
-    }
-
+  if (naoLidas === 0) {
 
     contadorNotificacoes.textContent =
-        naoLidas === 1
-            ? "1 nova"
-            : `${naoLidas} novas`;
+      "Nenhuma notificação nova";
 
 
     if (btnMarcarTodasLidas) {
 
-        btnMarcarTodasLidas.hidden =
-            false;
+      btnMarcarTodasLidas.hidden =
+        true;
 
     }
+
+
+    return;
+
+  }
+
+
+  contadorNotificacoes.textContent =
+    naoLidas === 1
+      ? "1 nova"
+      : `${naoLidas} novas`;
+
+
+  if (btnMarcarTodasLidas) {
+
+    btnMarcarTodasLidas.hidden =
+      false;
+
+  }
 
 }
 
@@ -3884,53 +3893,53 @@ function atualizarContadorNotificacoes(
 ========================================================= */
 
 async function marcarNotificacaoComoLida(
-    id
+  id
 ) {
 
-    try {
+  try {
 
-        const resposta =
-            await fetch(
-                `/notificacoes/${id}/lida`,
-                {
-                    method: "PATCH",
+    const resposta =
+      await fetch(
+        `/notificacoes/${id}/lida`,
+        {
+          method: "PATCH",
 
-                    headers: {
-                        Authorization:
-                            `Bearer ${token}`
-                    }
-                }
-            );
-
-
-        const dados =
-            await resposta.json();
-
-
-        if (!resposta.ok) {
-
-            throw new Error(
-                dados.erro ||
-                "Erro ao atualizar notificação."
-            );
-
+          headers: {
+            Authorization:
+              `Bearer ${token}`
+          }
         }
+      );
 
 
-        return true;
+    const dados =
+      await resposta.json();
 
 
-    } catch (error) {
+    if (!resposta.ok) {
 
-        console.error(
-            "ERRO AO MARCAR NOTIFICAÇÃO:",
-            error
-        );
-
-
-        return false;
+      throw new Error(
+        dados.erro ||
+        "Erro ao atualizar notificação."
+      );
 
     }
+
+
+    return true;
+
+
+  } catch (error) {
+
+    console.error(
+      "ERRO AO MARCAR NOTIFICAÇÃO:",
+      error
+    );
+
+
+    return false;
+
+  }
 
 }
 
@@ -3940,29 +3949,29 @@ async function marcarNotificacaoComoLida(
 ========================================================= */
 
 async function abrirNotificacao(
-    notificacao
+  notificacao
 ) {
 
-    if (!notificacao.lida) {
+  if (!notificacao.lida) {
 
-        await marcarNotificacaoComoLida(
-            notificacao.id
-        );
+    await marcarNotificacaoComoLida(
+      notificacao.id
+    );
 
-    }
-
-
-    if (notificacao.url) {
-
-        window.location.href =
-            notificacao.url;
-
-        return;
-
-    }
+  }
 
 
-    await carregarNotificacoes();
+  if (notificacao.url) {
+
+    window.location.href =
+      notificacao.url;
+
+    return;
+
+  }
+
+
+  await carregarNotificacoes();
 
 }
 
@@ -3971,155 +3980,149 @@ async function abrirNotificacao(
    RENDERIZAR NOTIFICAÇÕES
 ========================================================= */
 
-function renderizarNotificacoes(
-    notificacoes
-) {
+/* =========================================================
+   RENDERIZAR NOTIFICAÇÕES COM CARREGAR MAIS
+========================================================= */
 
-    if (!listaNotificacoes) {
-        return;
-    }
+function renderizarNotificacoes(notificacoes) {
 
+  if (!listaNotificacoes) {
+    return;
+  }
 
-    listaNotificacoes.innerHTML =
-        "";
+  listaNotificacoes.innerHTML = "";
 
+  atualizarContadorNotificacoes(notificacoes);
 
-    atualizarContadorNotificacoes(
-        notificacoes
-    );
+  if (notificacoes.length === 0) {
 
-
-    if (
-        notificacoes.length === 0
-    ) {
-
-        listaNotificacoes.innerHTML =
-            `
+    listaNotificacoes.innerHTML = `
             <div class="notificacoes-vazio">
-
                 <i data-lucide="bell-off"></i>
 
                 <div>
                     Você ainda não recebeu notificações.
                 </div>
-
             </div>
-            `;
-
-
-        if (window.lucide) {
-            lucide.createIcons();
-        }
-
-
-        return;
-
-    }
-
-
-    notificacoes.forEach(
-        notificacao => {
-
-            const item =
-                document.createElement(
-                    "div"
-                );
-
-
-            item.className =
-                `notificacao-item ${
-                    notificacao.lida
-                        ? "lida"
-                        : "nao-lida"
-                }`;
-
-
-            item.innerHTML =
-                `
-                <div class="notificacao-item-icone">
-                    <i data-lucide="book-open"></i>
-                </div>
-
-                <div class="notificacao-item-conteudo">
-
-                    <p class="notificacao-item-titulo">
-                        ${escaparHtmlNotificacao(
-                            notificacao.titulo
-                        )}
-                    </p>
-
-                    <p class="notificacao-item-mensagem">
-                        ${escaparHtmlNotificacao(
-                            notificacao.mensagem
-                        )}
-                    </p>
-
-                    <span class="notificacao-item-data">
-                        ${formatarDataNotificacao(
-                            notificacao.criado_em
-                        )}
-                    </span>
-
-                </div>
-
-                ${
-                    notificacao.url
-                        ? `
-                            <div class="notificacao-item-seta">
-                                <i data-lucide="chevron-right"></i>
-                            </div>
-                          `
-                        : ""
-                }
-                `;
-
-
-            item.addEventListener(
-                "click",
-                () => {
-
-                    abrirNotificacao(
-                        notificacao
-                    );
-
-                }
-            );
-
-
-            listaNotificacoes.appendChild(
-                item
-            );
-
-        }
-    );
-
+        `;
 
     if (window.lucide) {
-        lucide.createIcons();
+      lucide.createIcons();
     }
 
-}
+    return;
+  }
 
+  const notificacoesVisiveis =
+    notificacoes.slice(
+      0,
+      quantidadeNotificacoesVisiveis
+    );
+
+  notificacoesVisiveis.forEach(notificacao => {
+
+    const item = document.createElement("div");
+
+    item.className = `notificacao-item ${notificacao.lida ? "lida" : "nao-lida"
+      }`;
+
+    item.innerHTML = `
+            <div class="notificacao-item-icone">
+                <i data-lucide="book-open"></i>
+            </div>
+
+            <div class="notificacao-item-conteudo">
+
+                <p class="notificacao-item-titulo">
+                    ${escaparHtmlNotificacao(notificacao.titulo)}
+                </p>
+
+                <p class="notificacao-item-mensagem">
+                    ${escaparHtmlNotificacao(notificacao.mensagem)}
+                </p>
+
+                <span class="notificacao-item-data">
+                    ${formatarDataNotificacao(notificacao.criado_em)}
+                </span>
+
+            </div>
+
+            ${notificacao.url
+        ? `
+                        <div class="notificacao-item-seta">
+                            <i data-lucide="chevron-right"></i>
+                        </div>
+                    `
+        : ""
+      }
+        `;
+
+    item.addEventListener("click", () => {
+      abrirNotificacao(notificacao);
+    });
+
+    listaNotificacoes.appendChild(item);
+  });
+
+  /* =====================================
+     BOTÃO CARREGAR MAIS
+  ===================================== */
+
+  if (
+    quantidadeNotificacoesVisiveis <
+    notificacoes.length
+  ) {
+
+    const container = document.createElement("div");
+    container.className = "notificacoes-carregar-mais";
+
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.className = "btn-carregar-notificacoes";
+
+    const restantes =
+      notificacoes.length -
+      quantidadeNotificacoesVisiveis;
+
+    botao.textContent =
+      `Carregar mais (${restantes} restantes)`;
+
+    botao.addEventListener("click", () => {
+
+      quantidadeNotificacoesVisiveis +=
+        QUANTIDADE_CARREGAR_MAIS;
+
+      renderizarNotificacoes(notificacoes);
+    });
+
+    container.appendChild(botao);
+    listaNotificacoes.appendChild(container);
+  }
+
+  if (window.lucide) {
+    lucide.createIcons();
+  }
+}
 
 /* =========================================================
    ESCAPAR HTML
 ========================================================= */
 
 function escaparHtmlNotificacao(
-    valor
+  valor
 ) {
 
-    const elemento =
-        document.createElement(
-            "div"
-        );
+  const elemento =
+    document.createElement(
+      "div"
+    );
 
 
-    elemento.textContent =
-        valor || "";
+  elemento.textContent =
+    valor || "";
 
 
-    return elemento.innerHTML;
+  return elemento.innerHTML;
 
 }
 
@@ -4130,58 +4133,58 @@ function escaparHtmlNotificacao(
 
 async function carregarNotificacoes() {
 
-    if (!listaNotificacoes) {
-        return;
+  if (!listaNotificacoes) {
+    return;
+  }
+
+
+  try {
+
+    const resposta =
+      await fetch(
+        "/notificacoes",
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`
+          }
+        }
+      );
+
+
+    const dados =
+      await resposta.json();
+
+
+    if (!resposta.ok) {
+
+      throw new Error(
+        dados.erro ||
+        "Erro ao carregar notificações."
+      );
+
     }
 
 
-    try {
-
-        const resposta =
-            await fetch(
-                "/notificacoes",
-                {
-                    headers: {
-                        Authorization:
-                            `Bearer ${token}`
-                    }
-                }
-            );
+    renderizarNotificacoes(
+      dados
+    );
 
 
-        const dados =
-            await resposta.json();
+  } catch (error) {
+
+    console.error(
+      "ERRO AO CARREGAR NOTIFICAÇÕES:",
+      error
+    );
 
 
-        if (!resposta.ok) {
-
-            throw new Error(
-                dados.erro ||
-                "Erro ao carregar notificações."
-            );
-
-        }
+    contadorNotificacoes.textContent =
+      "Não foi possível carregar";
 
 
-        renderizarNotificacoes(
-            dados
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "ERRO AO CARREGAR NOTIFICAÇÕES:",
-            error
-        );
-
-
-        contadorNotificacoes.textContent =
-            "Não foi possível carregar";
-
-
-        listaNotificacoes.innerHTML =
-            `
+    listaNotificacoes.innerHTML =
+      `
             <div class="notificacoes-erro">
 
                 <i data-lucide="circle-alert"></i>
@@ -4194,11 +4197,11 @@ async function carregarNotificacoes() {
             `;
 
 
-        if (window.lucide) {
-            lucide.createIcons();
-        }
-
+    if (window.lucide) {
+      lucide.createIcons();
     }
+
+  }
 
 }
 
@@ -4209,77 +4212,77 @@ async function carregarNotificacoes() {
 
 if (btnMarcarTodasLidas) {
 
-    btnMarcarTodasLidas.addEventListener(
-        "click",
-        async () => {
+  btnMarcarTodasLidas.addEventListener(
+    "click",
+    async () => {
 
-            try {
+      try {
 
-                btnMarcarTodasLidas.disabled =
-                    true;
-
-
-                const resposta =
-                    await fetch(
-                        "/notificacoes/marcar-todas/lidas",
-                        {
-                            method: "PATCH",
-
-                            headers: {
-                                Authorization:
-                                    `Bearer ${token}`
-                            }
-                        }
-                    );
+        btnMarcarTodasLidas.disabled =
+          true;
 
 
-                const dados =
-                    await resposta.json();
+        const resposta =
+          await fetch(
+            "/notificacoes/marcar-todas/lidas",
+            {
+              method: "PATCH",
 
-
-                if (!resposta.ok) {
-
-                    throw new Error(
-                        dados.erro ||
-                        "Erro ao atualizar notificações."
-                    );
-
-                }
-
-
-                await carregarNotificacoes();
-
-
-                mostrarToast(
-                    "Todas as notificações foram marcadas como lidas.",
-                    "success"
-                );
-
-
-            } catch (error) {
-
-                console.error(
-                    "ERRO AO MARCAR TODAS COMO LIDAS:",
-                    error
-                );
-
-
-                mostrarToast(
-                    error.message ||
-                    "Não foi possível atualizar as notificações.",
-                    "error"
-                );
-
-
-            } finally {
-
-                btnMarcarTodasLidas.disabled =
-                    false;
-
+              headers: {
+                Authorization:
+                  `Bearer ${token}`
+              }
             }
+          );
+
+
+        const dados =
+          await resposta.json();
+
+
+        if (!resposta.ok) {
+
+          throw new Error(
+            dados.erro ||
+            "Erro ao atualizar notificações."
+          );
 
         }
-    );
+
+
+        await carregarNotificacoes();
+
+
+        mostrarToast(
+          "Todas as notificações foram marcadas como lidas.",
+          "success"
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "ERRO AO MARCAR TODAS COMO LIDAS:",
+          error
+        );
+
+
+        mostrarToast(
+          error.message ||
+          "Não foi possível atualizar as notificações.",
+          "error"
+        );
+
+
+      } finally {
+
+        btnMarcarTodasLidas.disabled =
+          false;
+
+      }
+
+    }
+  );
 
 }
 

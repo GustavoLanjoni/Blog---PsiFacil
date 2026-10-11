@@ -4163,3 +4163,475 @@ body.modal-excluir-aberto {
     }
 
 }
+
+
+/* ==========================================
+   PSIFÁCIL — HISTÓRICO DE LEITURA
+   Configurações > Preferências
+========================================== */
+
+/* Cartão do histórico */
+
+#historicoLeituraCard {
+  margin-top: 24px;
+  min-width: 0;
+}
+
+/* Lista de artigos */
+
+#listaHistoricoLeitura {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  min-width: 0;
+}
+
+#listaHistoricoLeitura > .preferencia-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+#listaHistoricoLeitura > .preferencia-item:last-child {
+  border-bottom: none;
+}
+
+/* Informações do artigo */
+
+#listaHistoricoLeitura .preferencia-info {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+#listaHistoricoLeitura .preferencia-info > div {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  width: 100%;
+  min-width: 0;
+}
+
+#listaHistoricoLeitura strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+#listaHistoricoLeitura .preferencia-info span {
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.75;
+}
+
+/* Barra de progresso */
+
+#listaHistoricoLeitura progress {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  height: 8px;
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  appearance: none;
+  -webkit-appearance: none;
+  background: #e5e7eb;
+}
+
+#listaHistoricoLeitura progress::-webkit-progress-bar {
+  background: #e5e7eb;
+  border-radius: 20px;
+}
+
+#listaHistoricoLeitura progress::-webkit-progress-value {
+  background: #16a34a;
+  border-radius: 20px;
+}
+
+#listaHistoricoLeitura progress::-moz-progress-bar {
+  background: #16a34a;
+  border-radius: 20px;
+}
+
+/* Botões continuar e remover */
+
+#listaHistoricoLeitura .form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+}
+
+#listaHistoricoLeitura .btn-salvar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-height: 40px;
+  padding: 10px 16px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: normal;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+#listaHistoricoLeitura .btn-salvar:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+#listaHistoricoLeitura .btn-salvar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Botão remover */
+
+#listaHistoricoLeitura button.btn-salvar {
+  background: transparent;
+  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.25);
+}
+
+#listaHistoricoLeitura button.btn-salvar:hover {
+  background: rgba(220, 38, 38, 0.06);
+}
+
+/* Limpar histórico */
+
+#historicoAcoes {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+#historicoAcoes[hidden] {
+  display: none !important;
+}
+
+#btnLimparHistorico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: auto;
+  background: transparent;
+  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+#btnLimparHistorico:hover {
+  background: rgba(220, 38, 38, 0.06);
+}
+
+/* Mensagens de estado */
+
+#listaHistoricoLeitura > p {
+  margin: 0;
+  padding: 22px 0;
+  font-size: 14px;
+  line-height: 1.7;
+  opacity: 0.75;
+  overflow-wrap: anywhere;
+}
+
+#mensagemHistorico {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+#mensagemHistorico:empty {
+  display: none;
+}
+
+/* Acessibilidade */
+
+#listaHistoricoLeitura a:focus-visible,
+#listaHistoricoLeitura button:focus-visible,
+#btnLimparHistorico:focus-visible {
+  outline: 2px solid #16a34a;
+  outline-offset: 3px;
+}
+
+/* ==========================================
+   RESPONSIVIDADE
+========================================== */
+
+@media (max-width: 768px) {
+  #historicoLeituraCard {
+    margin-top: 18px;
+  }
+
+  #listaHistoricoLeitura > .preferencia-item {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 15px;
+    padding: 18px 0;
+  }
+
+  #listaHistoricoLeitura .preferencia-info {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  #listaHistoricoLeitura progress {
+    max-width: 100%;
+  }
+
+  #listaHistoricoLeitura .form-actions {
+    width: 100%;
+  }
+
+  #listaHistoricoLeitura .form-actions .btn-salvar {
+    flex: 1 1 auto;
+  }
+
+  #historicoAcoes {
+    justify-content: stretch;
+  }
+
+  #btnLimparHistorico {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  #listaHistoricoLeitura strong {
+    font-size: 14px;
+  }
+
+  #listaHistoricoLeitura .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #listaHistoricoLeitura .form-actions .btn-salvar {
+    width: 100%;
+  }
+}
+
+
+
+/* =====================================================
+   PSIFÁCIL — MODAL DE CONFIRMAÇÃO DO HISTÓRICO
+   Segue a identidade visual do perfil
+===================================================== */
+
+.historico-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(42, 34, 31, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.historico-modal {
+    width: 100%;
+    max-width: 440px;
+
+    padding: 28px;
+
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+
+    box-shadow: 0 24px 70px rgba(47, 37, 34, 0.22);
+
+    animation: historicoModalEntrada 0.2s ease;
+}
+
+.historico-modal-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 48px;
+    height: 48px;
+    margin-bottom: 18px;
+
+    border-radius: 14px;
+
+    background: var(--danger-bg);
+    color: var(--danger);
+}
+
+.historico-modal-icon svg {
+    width: 23px;
+    height: 23px;
+}
+
+.historico-modal h2 {
+    margin-bottom: 10px;
+
+    font-family: "Manrope", sans-serif;
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.35;
+
+    color: var(--brown-dark);
+}
+
+.historico-modal p {
+    margin-bottom: 26px;
+
+    font-size: 13px;
+    line-height: 1.7;
+
+    color: var(--text-soft);
+}
+
+.historico-modal-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.historico-modal-acoes button {
+    min-height: 44px;
+    padding: 0 18px;
+
+    border-radius: 11px;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.historico-modal-cancelar {
+    background: var(--cream);
+    color: var(--brown-dark);
+}
+
+.historico-modal-cancelar:hover {
+    background: var(--cream-dark);
+}
+
+.historico-modal-confirmar {
+    background: var(--danger);
+    color: var(--white);
+}
+
+.historico-modal-confirmar:hover {
+    background: #9d4141;
+}
+
+.historico-modal-acoes button:focus-visible {
+    outline: 3px solid rgba(122, 92, 88, 0.35);
+    outline-offset: 3px;
+}
+
+@keyframes historicoModalEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 600px) {
+    .historico-modal {
+        padding: 23px 20px;
+        border-radius: 18px;
+    }
+
+    .historico-modal h2 {
+        font-size: 17px;
+    }
+
+    .historico-modal-acoes {
+        flex-direction: column-reverse;
+    }
+
+    .historico-modal-acoes button {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .historico-modal {
+        animation: none;
+    }
+}
+
+
+/* =====================================================
+   PSIFÁCIL — CARREGAR MAIS NOTIFICAÇÕES
+===================================================== */
+
+.notificacoes-carregar-mais {
+    display: flex;
+    justify-content: center;
+    padding: 20px 12px 8px;
+}
+
+.btn-carregar-notificacoes {
+    width: 100%;
+    max-width: 280px;
+    padding: 12px 20px;
+
+    border: 1px solid #e5d7d0;
+    border-radius: 10px;
+
+    background: #ffffff;
+    color: #795e59;
+
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-carregar-notificacoes:hover {
+    background: #f7f1ec;
+    border-color: #cdb8ae;
+}
+
+.btn-carregar-notificacoes:focus-visible {
+    outline: 2px solid #795e59;
+    outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+    .notificacoes-carregar-mais {
+        padding: 16px 0 4px;
+    }
+
+    .btn-carregar-notificacoes {
+        max-width: 100%;
+    }
+}
