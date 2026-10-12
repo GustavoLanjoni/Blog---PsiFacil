@@ -2471,3 +2471,143 @@ a {
   }
 
 }
+
+
+
+/* =====================================================
+   PSIFÁCIL — AVISO PERMANENTE DE SAÚDE MENTAL
+   Visual clean, sofisticado e acolhedor
+===================================================== */
+
+.aviso-saude-mental {
+    position: relative;
+
+    margin: 42px 0 32px;
+    padding: 30px 34px;
+
+    background: #f8f5f1;
+
+    border: 1px solid #e9e0d8;
+    border-left: 4px solid #b58a70;
+
+    border-radius: 16px;
+
+    box-shadow: 0 8px 28px rgba(67, 47, 35, 0.035);
+
+    color: #51443d;
+}
+
+
+/* TÍTULO */
+
+.aviso-saude-mental h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin: 0 0 20px;
+    padding: 0 0 16px;
+
+    border-bottom: 1px solid #e9e0d8;
+
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1.4;
+
+    letter-spacing: -0.4px;
+
+    color: #44352f;
+}
+
+
+/* PARÁGRAFOS */
+
+.aviso-saude-mental p {
+    margin: 0 0 15px;
+
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.85;
+
+    color: #51443d;
+}
+
+
+/* DESTAQUES IMPORTANTES */
+
+.aviso-saude-mental strong {
+    font-weight: 650;
+    color: #44352f;
+}
+
+
+/* ÚLTIMA MENSAGEM */
+
+.aviso-saude-mental p:last-child {
+    margin: 22px 0 0;
+    padding-top: 17px;
+
+    border-top: 1px solid #e9e0d8;
+
+    font-weight: 600;
+    color: #8b634e;
+}
+
+.aviso-saude-mental p:last-child strong {
+    color: #8b634e;
+}
+
+
+/* =====================================================
+   RESPONSIVIDADE — TABLETS
+===================================================== */
+
+@media (max-width: 768px) {
+
+    .aviso-saude-mental {
+        margin: 32px 0 26px;
+        padding: 25px 24px;
+        border-radius: 14px;
+    }
+
+    .aviso-saude-mental h2 {
+        font-size: 19px;
+    }
+
+    .aviso-saude-mental p {
+        font-size: 14.5px;
+        line-height: 1.8;
+    }
+}
+
+
+/* =====================================================
+   RESPONSIVIDADE — CELULARES
+===================================================== */
+
+@media (max-width: 480px) {
+
+    .aviso-saude-mental {
+        margin: 26px 0 24px;
+        padding: 22px 19px;
+
+        border-left-width: 3px;
+        border-radius: 12px;
+    }
+
+    .aviso-saude-mental h2 {
+        font-size: 18px;
+        line-height: 1.45;
+    }
+
+    .aviso-saude-mental p {
+        font-size: 14px;
+        line-height: 1.75;
+        margin-bottom: 14px;
+    }
+
+    .aviso-saude-mental p:last-child {
+        margin-top: 18px;
+        padding-top: 15px;
+    }
+}

@@ -458,77 +458,194 @@ if (btnConfirmarModal) {
    TINYMCE
 ========================================================= */
 
+
+/* =========================================================
+   TINYMCE - EDITORES DO PAINEL ADMINISTRATIVO
+========================================================= */
+
 if (window.tinymce) {
+
+    /* =====================================================
+       FONTES E CRÉDITOS
+    ===================================================== */
 
     tinymce.init({
 
-        selector:
-            "#resumo",
+        selector: "#fontes",
 
-        height:
-            190,
+        height: 300,
 
-        menubar:
-            false,
+        menubar: false,
 
-        branding:
-            false,
+        branding: false,
 
-        plugins:
-            "lists link wordcount",
+        plugins: "lists link table code wordcount",
 
         toolbar:
-            "bold italic underline | bullist numlist | link | removeformat",
+            "undo redo | blocks | " +
+            "bold italic underline strikethrough | " +
+            "bullist numlist | " +
+            "link unlink | " +
+            "alignleft aligncenter alignright | " +
+            "table | code | removeformat",
+
+        toolbar_mode: "wrap",
+
+        paste_as_text: false,
+
+        paste_data_images: false,
+
+        convert_urls: false,
+
+        link_default_target: "_blank",
 
         placeholder:
-            "Resumo que aparecerá no card do artigo",
-
-        setup:
-            (editor) => {
-
-                editor.on(
-                    "keyup change input setcontent",
-                    atualizarPreview
-                );
-
-            },
+            "Cole ou escreva aqui suas fontes, referências e créditos.",
 
         content_style: `
             body {
                 font-family: Inter, Arial, sans-serif;
                 font-size: 15px;
-                line-height: 1.6;
+                line-height: 1.7;
                 color: #2f2a28;
+                padding: 12px;
             }
 
             p {
-                margin: 0 0 10px;
+                margin: 0 0 12px;
+            }
+
+            h2, h3, h4 {
+                color: #2f2a28;
+                margin: 16px 0 10px;
+            }
+
+            a {
+                color: #286b58;
+                text-decoration: underline;
+            }
+
+            ul, ol {
+                margin: 12px 0 16px 24px;
+            }
+
+            blockquote {
+                border-left: 4px solid #7a5c58;
+                padding: 10px 14px;
+                background: #f8f4ef;
+                border-radius: 8px;
             }
         `
 
     });
 
 
+    /* =====================================================
+       RESUMO CURTO - EDITOR COMPLETO
+    ===================================================== */
+
     tinymce.init({
 
-        selector:
-            "#conteudo",
+        selector: "#resumo",
 
-        height:
-            540,
+        height: 280,
 
-        menubar:
-            false,
+        menubar: false,
 
-        branding:
-            false,
+        branding: false,
 
-        plugins:
-            "lists link table code wordcount",
+        plugins: "lists link table code wordcount",
 
         toolbar:
-            "undo redo | blocks | bold italic underline strikethrough | " +
-            "bullist numlist | blockquote link | alignleft aligncenter alignright | " +
+            "undo redo | blocks | " +
+            "bold italic underline strikethrough | " +
+            "bullist numlist | " +
+            "link unlink | " +
+            "alignleft aligncenter alignright | " +
+            "table | code | removeformat",
+
+        toolbar_mode: "wrap",
+
+        paste_as_text: false,
+
+        paste_data_images: false,
+
+        convert_urls: false,
+
+        link_default_target: "_blank",
+
+        placeholder:
+            "Escreva ou cole aqui o resumo do artigo.",
+
+        setup: (editor) => {
+
+            editor.on(
+                "keyup change input setcontent",
+                atualizarPreview
+            );
+
+        },
+
+        content_style: `
+            body {
+                font-family: Inter, Arial, sans-serif;
+                font-size: 15px;
+                line-height: 1.7;
+                color: #2f2a28;
+                padding: 12px;
+            }
+
+            p {
+                margin: 0 0 12px;
+            }
+
+            h2, h3, h4 {
+                color: #2f2a28;
+                margin: 16px 0 10px;
+            }
+
+            a {
+                color: #286b58;
+                text-decoration: underline;
+            }
+
+            ul, ol {
+                margin: 12px 0 16px 24px;
+            }
+
+            blockquote {
+                border-left: 4px solid #7a5c58;
+                padding: 10px 14px;
+                background: #f8f4ef;
+                border-radius: 8px;
+            }
+        `
+
+    });
+
+
+    /* =====================================================
+       CONTEÚDO COMPLETO
+       Mantido com suas configurações originais
+    ===================================================== */
+
+    tinymce.init({
+
+        selector: "#conteudo",
+
+        height: 540,
+
+        menubar: false,
+
+        branding: false,
+
+        plugins: "lists link table code wordcount",
+
+        toolbar:
+            "undo redo | blocks | " +
+            "bold italic underline strikethrough | " +
+            "bullist numlist | blockquote link | " +
+            "alignleft aligncenter alignright | " +
             "table | code | removeformat",
 
         placeholder:
@@ -571,6 +688,7 @@ if (window.tinymce) {
     });
 
 }
+
 
 
 /* =========================================================
@@ -938,9 +1056,10 @@ function limparFormularioPost() {
         imagemArquivo.value = "";
     }
 
-    if (fontes) {
-        fontes.value = "";
-    }
+    setarConteudoEditor(
+        "fontes",
+        ""
+    );
 
     if (statusPost) {
         statusPost.value = "publicado";
@@ -1061,9 +1180,9 @@ function montarDadosPost() {
             : "";
 
     const fontesValor =
-        fontes
-            ? fontes.value.trim()
-            : "";
+        limparHtmlVazio(
+            pegarConteudoEditor("fontes")
+        );
 
     const statusValor =
         statusPost
@@ -2253,12 +2372,12 @@ async function prepararEdicao(id) {
         }
 
 
-        if (fontes) {
 
-            fontes.value =
-                post.fontes || "";
+        setarConteudoEditor(
+            "fontes",
+            post.fontes || ""
+        );
 
-        }
 
 
         if (statusPost) {
