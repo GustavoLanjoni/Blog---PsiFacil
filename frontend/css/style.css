@@ -5432,3 +5432,17 @@ button {
     }
 
 }
+
+/* CORREÇÃO — CARD DA FRASE DO DIA */
+
+.hero-card {
+  height: auto;
+  min-height: 380px;
+  max-height: none;
+  overflow: visible;
+}
+
+.hero-card-content {
+  min-width: 0;
+  overflow-wrap: break-word;
+}

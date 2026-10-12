@@ -75,7 +75,7 @@ function formatarDataPublicacaoPost(data) {
 
   const mes =
     meses[
-      dataPost.getMonth()
+    dataPost.getMonth()
     ];
 
   const ano =
@@ -429,9 +429,9 @@ async function alternarPostSalvo(
             estavaSalvo
               ? undefined
               : JSON.stringify({
-                  post_id:
-                    Number(postId)
-                })
+                post_id:
+                  Number(postId)
+              })
         }
       );
 
@@ -483,7 +483,7 @@ async function alternarPostSalvo(
 
     const novoEstado =
       typeof dados.salvo ===
-      "boolean"
+        "boolean"
         ? dados.salvo
         : !estavaSalvo;
 
@@ -628,11 +628,14 @@ async function criarPostCard(post) {
       aria-label="Ler o artigo: ${titulo}"
     >
 
-      <img
-        src="${imagem}"
-        alt="${titulo}"
-        loading="lazy"
-      >
+<img
+  src="${imagem}"
+  alt="${titulo}"
+  loading="lazy"
+  decoding="async"
+  width="900"
+  height="600"
+>
 
     </a>
 
@@ -648,15 +651,14 @@ async function criarPostCard(post) {
           ${categoria}
         </span>
 
-        ${
-          dataPublicacao
-            ? `
+        ${dataPublicacao
+      ? `
               <span class="post-date">
                 ${dataPublicacao}
               </span>
             `
-            : ""
-        }
+      : ""
+    }
 
       </div>
 
@@ -721,16 +723,14 @@ async function criarPostCard(post) {
             type="button"
             class="post-save ${postSalvo ? "salvo" : ""}"
             data-post-id="${post.id}"
-            aria-label="${
-              postSalvo
-                ? "Remover artigo dos salvos"
-                : "Salvar artigo"
-            }"
-            title="${
-              postSalvo
-                ? "Remover dos salvos"
-                : "Salvar artigo"
-            }"
+            aria-label="${postSalvo
+      ? "Remover artigo dos salvos"
+      : "Salvar artigo"
+    }"
+            title="${postSalvo
+      ? "Remover dos salvos"
+      : "Salvar artigo"
+    }"
           >
 
             <i data-lucide="bookmark"></i>
