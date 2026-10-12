@@ -1016,11 +1016,15 @@
 
     <!-- LUCIDE -->
 
-    <script src="https://unpkg.com/lucide@latest"></script>
+  <script defer src="https://unpkg.com/lucide@latest"></script>
 
-    <script>
-        lucide.createIcons();
-    </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    });
+</script>
 
 
     <!-- JAVASCRIPT PRINCIPAL -->
