@@ -5444,3 +5444,359 @@ button {
   min-width: 0;
   overflow-wrap: break-word;
 }
+
+
+/* =========================================
+   MEU MOMENTO PSIFÁCIL
+========================================= */
+
+.momento-section {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 75px 0 25px;
+}
+
+.momento-card {
+  padding: clamp(24px, 5vw, 56px);
+  background: linear-gradient(135deg, #fffdfb, #f1e6df);
+  border: 1px solid #e5ddd6;
+  border-radius: 30px;
+  box-shadow: 0 18px 45px rgba(63, 47, 42, .07);
+}
+
+.momento-intro {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 34px;
+}
+
+.momento-etiqueta {
+  display: inline-block;
+  margin-bottom: 15px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #7a5c58;
+}
+
+.momento-intro h2 {
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(27px, 4vw, 40px);
+  line-height: 1.2;
+  letter-spacing: -1px;
+  color: #332a27;
+  margin-bottom: 14px;
+}
+
+.momento-intro p,
+.momento-aviso {
+  color: #6f6864;
+  line-height: 1.7;
+}
+
+.momento-pergunta {
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: #332a27;
+}
+
+.momento-emocoes {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.momento-emocoes button,
+.momento-necessidades button {
+  border: 1px solid #e5ddd6;
+  background: #fff;
+  color: #332a27;
+  border-radius: 18px;
+  transition: border-color .2s, background .2s, transform .2s;
+}
+
+.momento-emocoes button {
+  min-height: 112px;
+  padding: 16px 8px;
+  font-size: 30px;
+}
+
+.momento-emocoes button span {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+.momento-emocoes button:hover,
+.momento-necessidades button:hover {
+  transform: translateY(-2px);
+  border-color: #a8867e;
+}
+
+.momento-emocoes button.ativo,
+.momento-necessidades button.ativo {
+  background: #eee0d8;
+  border: 2px solid #7a5c58;
+}
+
+.momento-segunda-pergunta {
+  margin-top: 35px;
+}
+
+.momento-necessidades {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.momento-necessidades button {
+  min-height: 65px;
+  padding: 14px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.momento-enviar,
+.momento-reiniciar {
+  display: block;
+  margin: 30px auto 0;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 999px;
+  background: #7a5c58;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.momento-enviar:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.momento-resultado {
+  text-align: center;
+}
+
+.momento-resultado[hidden] {
+  display: none;
+}
+
+.momento-resultado h3 {
+  color: #332a27;
+  font-size: 23px;
+  margin-bottom: 12px;
+}
+
+.momento-resultado > p {
+  color: #6f6864;
+  margin-bottom: 22px;
+}
+
+.momento-artigos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+  text-align: left;
+}
+
+.momento-artigo {
+  display: block;
+  padding: 22px;
+  background: #fff;
+  border: 1px solid #e5ddd6;
+  border-radius: 18px;
+  text-decoration: none;
+  color: #332a27;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.momento-artigo:hover {
+  border-color: #a8867e;
+}
+
+.momento-artigo small {
+  display: block;
+  margin-top: 8px;
+  color: #7a5c58;
+  font-weight: 500;
+}
+
+.momento-aviso {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 11px;
+}
+
+@media (max-width: 680px) {
+  .momento-section {
+    width: calc(100% - 24px);
+    padding-top: 45px;
+  }
+
+  .momento-card {
+    border-radius: 22px;
+  }
+
+  .momento-emocoes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .momento-emocoes button {
+    min-height: 100px;
+    font-size: 27px;
+  }
+
+  .momento-necessidades,
+  .momento-artigos {
+    grid-template-columns: 1fr;
+  }
+
+  .momento-enviar {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .momento-emocoes button,
+  .momento-necessidades button {
+    transition: none;
+  }
+}
+
+
+
+/* =========================================
+   MEU MOMENTO - CARDS DE RECOMENDAÇÃO
+========================================= */
+
+#momentoArtigos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+#momentoArtigos .momento-artigo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+
+  min-width: 0;
+  height: 100%;
+  padding: 24px;
+
+  background: #fff;
+  border: 1px solid #e8dcd4;
+  border-radius: 20px;
+
+  color: #332a27;
+  text-decoration: none;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+#momentoArtigos .momento-artigo:hover {
+  transform: translateY(-4px);
+  border-color: #b99b90;
+  box-shadow: 0 12px 28px rgba(51, 42, 39, 0.08);
+}
+
+.momento-artigo-categoria {
+  display: inline-block;
+  padding: 6px 11px;
+
+  border-radius: 999px;
+  background: #f5eee9;
+  color: #7a5c58;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.momento-artigo-titulo {
+  display: block;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: #332a27;
+}
+
+.momento-artigo-descricao {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+
+  color: #756760;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.momento-artigo-acao {
+  display: inline-flex;
+  align-items: center;
+
+  margin-top: auto;
+  padding-top: 8px;
+
+  color: #7a5c58;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+#momentoArtigos .momento-artigo:hover
+.momento-artigo-acao {
+  color: #503b37;
+}
+
+#momentoArtigos .momento-artigo:focus-visible {
+  outline: 3px solid #a77d70;
+  outline-offset: 3px;
+}
+
+/* TABLETS */
+@media (max-width: 900px) {
+  #momentoArtigos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* CELULARES */
+@media (max-width: 680px) {
+  #momentoArtigos {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  #momentoArtigos .momento-artigo {
+    padding: 20px;
+    border-radius: 17px;
+  }
+
+  .momento-artigo-titulo {
+    font-size: 16px;
+  }
+}
+
+/* ACESSIBILIDADE */
+@media (prefers-reduced-motion: reduce) {
+  #momentoArtigos .momento-artigo {
+    transition: none;
+  }
+
+  #momentoArtigos .momento-artigo:hover {
+    transform: none;
+  }
+}
+

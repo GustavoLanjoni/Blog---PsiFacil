@@ -370,6 +370,76 @@
              CATEGORIAS
         ================================================== -->
 
+
+        <!-- MEU MOMENTO PSIFÁCIL -->
+        <section class="momento-section" id="meu-momento">
+            <div class="momento-card">
+
+                <div class="momento-intro">
+                    <span class="momento-etiqueta">💙 UM ESPAÇO PARA VOCÊ</span>
+                    <h2>Como você está se sentindo hoje?</h2>
+                    <p>
+                        Às vezes, tudo o que precisamos é de um momento
+                        para entender melhor nossas emoções.
+                    </p>
+                </div>
+
+                <div id="momentoPerguntas">
+                    <p class="momento-pergunta">
+                        Escolha o que mais combina com seu momento:
+                    </p>
+
+                    <div class="momento-emocoes">
+                        <button type="button" data-humor="bem">😊 <span>Bem</span></button>
+                        <button type="button" data-humor="ansioso">😰 <span>Ansioso(a)</span></button>
+                        <button type="button" data-humor="triste">😔 <span>Triste</span></button>
+                        <button type="button" data-humor="cansado">😴 <span>Cansado(a)</span></button>
+                        <button type="button" data-humor="confuso">😕 <span>Confuso(a)</span></button>
+                    </div>
+
+                    <div class="momento-segunda-pergunta">
+                        <p class="momento-pergunta">
+                            O que você gostaria de encontrar agora?
+                        </p>
+
+                        <div class="momento-necessidades">
+                            <button type="button" data-necessidade="entender">
+                                🧠 Entender meus sentimentos
+                            </button>
+
+                            <button type="button" data-necessidade="acolher">
+                                💙 Uma reflexão acolhedora
+                            </button>
+
+                            <button type="button" data-necessidade="praticar">
+                                🌱 Algo útil para meu dia
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="button" id="momentoEnviar" class="momento-enviar" disabled>
+                        Encontrar minhas leituras →
+                    </button>
+                </div>
+
+                <div id="momentoResultado" class="momento-resultado" hidden>
+                    <h3>💙 Separamos algumas leituras para você</h3>
+                    <p id="momentoMensagem"></p>
+                    <div id="momentoArtigos" class="momento-artigos"></div>
+
+                    <button type="button" id="momentoReiniciar" class="momento-reiniciar">
+                        Responder novamente
+                    </button>
+                </div>
+
+                <p class="momento-aviso">
+                    Esta experiência é educativa e não representa
+                    avaliação ou diagnóstico psicológico.
+                </p>
+
+            </div>
+        </section>
+
         <section class="categorias-section" id="categorias">
 
             <div class="section-heading">
@@ -1016,15 +1086,15 @@
 
     <!-- LUCIDE -->
 
-  <script defer src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://unpkg.com/lucide@latest"></script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        if (window.lucide) {
-            lucide.createIcons();
-        }
-    });
-</script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
 
 
     <!-- JAVASCRIPT PRINCIPAL -->
@@ -1032,6 +1102,8 @@
     <script src="js/main.js"></script>
 
     <script src="js/scripts.js"></script>
+
+    <script defer src="js/momento.js"></script>
 
 
 </body>
