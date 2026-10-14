@@ -95,47 +95,20 @@ const limiteLogin = rateLimit({
    IMPORTAÇÃO DAS ROTAS
 ========================================= */
 
-const postsRoutes =
-  require("./routes/posts");
-
-const leadsRoutes =
-  require("./routes/leads");
-
-const authRoutes =
-  require("./routes/auth");
-
-const uploadRoutes =
-  require("./routes/upload");
-
-const interacoesRoutes =
-  require("./routes/interacoes");
-
-const usuariosRoutes =
-  require("./routes/usuarios");
-
-const perfilUserRoutes =
-  require("./routes/perfilUser");
-
-const postsSalvosRoutes =
-  require("./routes/postsSalvos");
-
-const frasesRoutes =
-  require("./routes/frases");
-
-const preferenciasRoutes =
-  require("./routes/preferencias");
-
-const pushRoutes =
-  require("./routes/push");
-
-const notificacoesRoutes =
-  require("./routes/notificacoes");
-
-const novidadesRoutes =
-  require("./routes/novidades");
-
-const parceriasRouter =
-  require("./routes/parcerias");
+const postsRoutes = require("./routes/posts");
+const leadsRoutes = require("./routes/leads");
+const authRoutes = require("./routes/auth");
+const uploadRoutes = require("./routes/upload");
+const interacoesRoutes = require("./routes/interacoes");
+const usuariosRoutes = require("./routes/usuarios");
+const perfilUserRoutes = require("./routes/perfilUser");
+const postsSalvosRoutes = require("./routes/postsSalvos");
+const frasesRoutes = require("./routes/frases");
+const preferenciasRoutes = require("./routes/preferencias");
+const pushRoutes = require("./routes/push");
+const notificacoesRoutes = require("./routes/notificacoes");
+const novidadesRoutes = require("./routes/novidades");
+const parceriasRouter = require("./routes/parcerias");
 
 /* =========================================
    NOVA ROTA: HISTÓRICO DE LEITURA
@@ -152,9 +125,7 @@ app.get(
   "/post.html",
   async (req, res, next) => {
     try {
-      const id = String(
-        req.query.id || ""
-      ).trim();
+      const id = String(req.query.id || "").trim();
 
       if (!id) {
         return res.redirect(301, "/");
@@ -204,15 +175,10 @@ app.get(
       }
 
       const post = resultado.rows[0];
-
-      const slug = String(
-        post.slug || ""
-      ).trim();
+      const slug = String(post.slug || "").trim();
 
       if (!slug) {
-        console.error(
-          `POST ${id} NÃO POSSUI SLUG.`
-        );
+        console.error(`POST ${id} NÃO POSSUI SLUG.`);
 
         return res
           .status(500)
@@ -225,10 +191,7 @@ app.get(
       const novaUrl =
         `/artigos/${encodeURIComponent(slug)}`;
 
-      return res.redirect(
-        301,
-        novaUrl
-      );
+      return res.redirect(301, novaUrl);
     } catch (error) {
       console.error(
         "ERRO AO REDIRECIONAR URL ANTIGA:",
@@ -247,10 +210,7 @@ app.get(
 app.use(
   "/uploads",
   express.static(
-    path.join(
-      __dirname,
-      "uploads"
-    ),
+    path.join(__dirname, "uploads"),
     {
       maxAge: "7d",
       etag: true,
@@ -265,10 +225,7 @@ app.use(
 
 app.use(
   express.static(
-    path.join(
-      __dirname,
-      "../frontend"
-    ),
+    path.join(__dirname, "../frontend"),
     {
       etag: true,
       lastModified: true
@@ -280,106 +237,38 @@ app.use(
    LIMITES DE AUTENTICAÇÃO
 ========================================= */
 
-app.use(
-  "/auth/login",
-  limiteLogin
-);
-
-app.use(
-  "/usuarios/login",
-  limiteLogin
-);
-
-app.use(
-  "/usuarios/cadastro",
-  limiteLogin
-);
+app.use("/auth/login", limiteLogin);
+app.use("/usuarios/login", limiteLogin);
+app.use("/usuarios/cadastro", limiteLogin);
 
 /* =========================================
    ROTAS DA API
 ========================================= */
 
-app.use(
-  "/posts",
-  postsRoutes
-);
-
-app.use(
-  "/leads",
-  leadsRoutes
-);
-
-app.use(
-  "/auth",
-  authRoutes
-);
-
-app.use(
-  "/upload",
-  uploadRoutes
-);
-
-app.use(
-  "/interacoes",
-  interacoesRoutes
-);
-
-app.use(
-  "/usuarios",
-  usuariosRoutes
-);
-
-app.use(
-  "/perfil",
-  perfilUserRoutes
-);
-
-app.use(
-  "/salvos",
-  postsSalvosRoutes
-);
-
-app.use(
-  "/frases",
-  frasesRoutes
-);
-
-app.use(
-  "/preferencias",
-  preferenciasRoutes
-);
-
-app.use(
-  "/push",
-  pushRoutes
-);
-
-app.use(
-  "/notificacoes",
-  notificacoesRoutes
-);
-
-app.use(
-  "/novidades",
-  novidadesRoutes
-);
-
-app.use(
-  "/parcerias",
-  parceriasRouter
-);
+app.use("/posts", postsRoutes);
+app.use("/leads", leadsRoutes);
+app.use("/auth", authRoutes);
+app.use("/upload", uploadRoutes);
+app.use("/interacoes", interacoesRoutes);
+app.use("/usuarios", usuariosRoutes);
+app.use("/perfil", perfilUserRoutes);
+app.use("/salvos", postsSalvosRoutes);
+app.use("/frases", frasesRoutes);
+app.use("/preferencias", preferenciasRoutes);
+app.use("/push", pushRoutes);
+app.use("/notificacoes", notificacoesRoutes);
+app.use("/novidades", novidadesRoutes);
+app.use("/parcerias", parceriasRouter);
 
 /* =========================================
    NOVA API: HISTÓRICO DE LEITURA
 ========================================= */
 
-app.use(
-  "/historico",
-  historicoLeituraRoutes
-);
+app.use("/historico", historicoLeituraRoutes);
 
 /* =========================================
    SITEMAP.XML
+   SEO: DATA DA ÚLTIMA ATUALIZAÇÃO
 ========================================= */
 
 app.get(
@@ -390,7 +279,8 @@ app.get(
         SELECT
           id,
           slug,
-          criado_em
+          criado_em,
+          atualizado_em
         FROM posts
         WHERE status = 'publicado'
           AND slug IS NOT NULL
@@ -416,11 +306,7 @@ app.get(
 
         const objetoData = new Date(data);
 
-        if (
-          Number.isNaN(
-            objetoData.getTime()
-          )
-        ) {
+        if (Number.isNaN(objetoData.getTime())) {
           return null;
         }
 
@@ -429,47 +315,39 @@ app.get(
 
       const paginasFixas = [
         {
-          loc:
-            "https://psifacilblog.com.br/"
+          loc: "https://psifacilblog.com.br/"
         },
         {
-          loc:
-            "https://psifacilblog.com.br/conteudo.html"
+          loc: "https://psifacilblog.com.br/conteudo.html"
         },
         {
-          loc:
-            "https://psifacilblog.com.br/ebooks.html"
+          loc: "https://psifacilblog.com.br/ebooks.html"
         },
         {
-          loc:
-            "https://psifacilblog.com.br/escuta.html"
+          loc: "https://psifacilblog.com.br/escuta.html"
         },
         {
-          loc:
-            "https://psifacilblog.com.br/links"
+          loc: "https://psifacilblog.com.br/links"
         }
       ];
 
-      const urlsPosts = posts.map(
-        (post) => {
-          const slug = String(
-            post.slug
-          ).trim();
+      const urlsPosts = posts.map((post) => {
+        const slug = String(post.slug).trim();
 
-          const url =
-            `https://psifacilblog.com.br/artigos/${encodeURIComponent(slug)}`;
+        const url =
+          `https://psifacilblog.com.br/artigos/${encodeURIComponent(slug)}`;
 
-          const lastmod =
-            formatarDataSitemap(
-              post.criado_em
-            );
+        // Prioriza a última atualização do artigo.
+        // Se não existir, utiliza a data de criação.
+        const lastmod = formatarDataSitemap(
+          post.atualizado_em || post.criado_em
+        );
 
-          return {
-            loc: url,
-            lastmod
-          };
-        }
-      );
+        return {
+          loc: url,
+          lastmod
+        };
+      });
 
       const todasUrls = [
         ...paginasFixas,
@@ -478,9 +356,7 @@ app.get(
 
       const urlsXml = todasUrls
         .map((item) => {
-          const loc = escaparXml(
-            item.loc
-          );
+          const loc = escaparXml(item.loc);
 
           const lastmod = item.lastmod
             ? `
@@ -518,9 +394,7 @@ ${urlsXml}
       return res
         .status(500)
         .type("text/plain")
-        .send(
-          "Erro ao gerar sitemap."
-        );
+        .send("Erro ao gerar sitemap.");
     }
   }
 );
@@ -603,7 +477,6 @@ app.get(
       }
 
       const post = resultado.rows[0];
-
       const html = renderPost(post);
 
       res.set({
@@ -626,9 +499,7 @@ app.get(
       return res
         .status(500)
         .type("text/plain")
-        .send(
-          "Erro ao carregar artigo."
-        );
+        .send("Erro ao carregar artigo.");
     }
   }
 );
@@ -674,8 +545,7 @@ app.use(
     return res
       .status(404)
       .json({
-        erro:
-          "Rota não encontrada."
+        erro: "Rota não encontrada."
       });
   }
 );
@@ -698,8 +568,7 @@ app.use(
     return res
       .status(500)
       .json({
-        erro:
-          "Erro interno do servidor."
+        erro: "Erro interno do servidor."
       });
   }
 );
@@ -708,8 +577,7 @@ app.use(
    INICIAR SERVIDOR
 ========================================= */
 
-const PORT =
-  process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(
   PORT,

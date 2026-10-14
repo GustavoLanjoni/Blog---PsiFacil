@@ -62,6 +62,7 @@ function limparHtml(valor = "") {
         .trim();
 }
 
+
 function criarDescricao(post) {
     const resumo = limparHtml(post.resumo || "");
     const conteudo = limparHtml(post.conteudo || "");
@@ -71,8 +72,20 @@ function criarDescricao(post) {
         conteudo ||
         "Conteúdo informativo sobre psicologia e bem-estar no PsiFácil.";
 
-    return descricao.slice(0, 160);
+    if (descricao.length <= 160) {
+        return descricao;
+    }
+
+    const trecho = descricao.slice(0, 157);
+    const ultimoEspaco = trecho.lastIndexOf(" ");
+
+    return (
+        ultimoEspaco > 100
+            ? trecho.slice(0, ultimoEspaco)
+            : trecho
+    ).trimEnd() + "...";
 }
+
 
 function calcularTempoLeitura(conteudo = "") {
     const texto = limparHtml(conteudo);
@@ -101,22 +114,37 @@ function formatarData(data) {
     });
 }
 
+
 function normalizarImagem(imagem = "") {
-    const valor = String(imagem).trim();
+    const valor = String(imagem || "").trim();
 
     if (!valor) {
         return "";
     }
 
-    if (
-        /^https?:\/\//i.test(valor) ||
-        (valor.startsWith("/") && !valor.startsWith("//"))
-    ) {
-        return valor;
-    }
+    try {
+        const url = new URL(
+            valor,
+            "https://psifacilblog.com.br"
+        );
 
-    return "";
+        if (
+            !["http:", "https:"].includes(url.protocol) ||
+            valor.startsWith("//") ||
+            (
+                !/^https?:\/\//i.test(valor) &&
+                !valor.startsWith("/")
+            )
+        ) {
+            return "";
+        }
+
+        return url.href;
+    } catch (error) {
+        return "";
+    }
 }
+
 
 /* =====================================================
    FONTES E CRÉDITOS FORMATADOS
