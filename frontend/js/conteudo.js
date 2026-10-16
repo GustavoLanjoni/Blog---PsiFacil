@@ -214,10 +214,9 @@ function formatarData(data) {
             "pt-BR",
             {
                 day: "2-digit",
-
                 month: "short",
-
-                year: "numeric"
+                year: "numeric",
+                timeZone: "America/Sao_Paulo"
             }
         )
         .replace(".", "");
@@ -352,6 +351,7 @@ function criarCardPost(post) {
 
     const data =
         formatarData(
+            post.publicado_em ||
             post.criado_em ||
             post.created_at
         );

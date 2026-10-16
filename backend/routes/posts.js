@@ -451,7 +451,7 @@ router.get(
             SELECT *
             FROM posts
             WHERE status = 'publicado'
-            ORDER BY id DESC
+            ORDER BY COALESCE(publicado_em, criado_em) DESC, id DESC
           `
         );
 
