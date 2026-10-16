@@ -135,18 +135,17 @@ app.get(
         return res.redirect(301, "/");
       }
 
-      const resultado = await db.query(
-        `
-        SELECT
-          id,
-          slug
-        FROM posts
-        WHERE id = $1
-          AND status = 'publicado'
-        LIMIT 1
-        `,
-        [id]
-      );
+      const resultado = await db.query(`
+    SELECT
+        id,
+        slug,
+        criado_em
+    FROM posts
+    WHERE status = 'publicado'
+      AND slug IS NOT NULL
+      AND TRIM(slug) <> ''
+    ORDER BY criado_em DESC
+`);
 
       if (resultado.rows.length === 0) {
         return res
@@ -340,7 +339,7 @@ app.get(
         // Prioriza a última atualização do artigo.
         // Se não existir, utiliza a data de criação.
         const lastmod = formatarDataSitemap(
-          post.atualizado_em || post.criado_em
+          post.criado_em
         );
 
         return {
