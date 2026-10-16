@@ -125,7 +125,9 @@ app.get(
   "/post.html",
   async (req, res, next) => {
     try {
-      const id = String(req.query.id || "").trim();
+      const id = String(
+        req.query.id || ""
+      ).trim();
 
       if (!id) {
         return res.redirect(301, "/");
@@ -135,17 +137,20 @@ app.get(
         return res.redirect(301, "/");
       }
 
-      const resultado = await db.query(`
-    SELECT
-        id,
-        slug,
-        criado_em
-    FROM posts
-    WHERE status = 'publicado'
-      AND slug IS NOT NULL
-      AND TRIM(slug) <> ''
-    ORDER BY criado_em DESC
-`);
+      // Busca somente o artigo solicitado.
+      // Não alterar esta consulta para listar posts.
+      const resultado = await db.query(
+        `
+        SELECT
+          id,
+          slug
+        FROM posts
+        WHERE id = $1
+          AND status = 'publicado'
+        LIMIT 1
+        `,
+        [id]
+      );
 
       if (resultado.rows.length === 0) {
         return res
@@ -174,10 +179,15 @@ app.get(
       }
 
       const post = resultado.rows[0];
-      const slug = String(post.slug || "").trim();
+
+      const slug = String(
+        post.slug || ""
+      ).trim();
 
       if (!slug) {
-        console.error(`POST ${id} NÃO POSSUI SLUG.`);
+        console.error(
+          `POST ${id} NÃO POSSUI SLUG.`
+        );
 
         return res
           .status(500)
@@ -190,7 +200,10 @@ app.get(
       const novaUrl =
         `/artigos/${encodeURIComponent(slug)}`;
 
-      return res.redirect(301, novaUrl);
+      return res.redirect(
+        301,
+        novaUrl
+      );
     } catch (error) {
       console.error(
         "ERRO AO REDIRECIONAR URL ANTIGA:",
@@ -209,7 +222,10 @@ app.get(
 app.use(
   "/uploads",
   express.static(
-    path.join(__dirname, "uploads"),
+    path.join(
+      __dirname,
+      "uploads"
+    ),
     {
       maxAge: "7d",
       etag: true,
@@ -224,7 +240,10 @@ app.use(
 
 app.use(
   express.static(
-    path.join(__dirname, "../frontend"),
+    path.join(
+      __dirname,
+      "../frontend"
+    ),
     {
       etag: true,
       lastModified: true
@@ -236,50 +255,126 @@ app.use(
    LIMITES DE AUTENTICAÇÃO
 ========================================= */
 
-app.use("/auth/login", limiteLogin);
-app.use("/usuarios/login", limiteLogin);
-app.use("/usuarios/cadastro", limiteLogin);
+app.use(
+  "/auth/login",
+  limiteLogin
+);
+
+app.use(
+  "/usuarios/login",
+  limiteLogin
+);
+
+app.use(
+  "/usuarios/cadastro",
+  limiteLogin
+);
 
 /* =========================================
    ROTAS DA API
 ========================================= */
 
-app.use("/posts", postsRoutes);
-app.use("/leads", leadsRoutes);
-app.use("/auth", authRoutes);
-app.use("/upload", uploadRoutes);
-app.use("/interacoes", interacoesRoutes);
-app.use("/usuarios", usuariosRoutes);
-app.use("/perfil", perfilUserRoutes);
-app.use("/salvos", postsSalvosRoutes);
-app.use("/frases", frasesRoutes);
-app.use("/preferencias", preferenciasRoutes);
-app.use("/push", pushRoutes);
-app.use("/notificacoes", notificacoesRoutes);
-app.use("/novidades", novidadesRoutes);
-app.use("/parcerias", parceriasRouter);
+app.use(
+  "/posts",
+  postsRoutes
+);
+
+app.use(
+  "/leads",
+  leadsRoutes
+);
+
+app.use(
+  "/auth",
+  authRoutes
+);
+
+app.use(
+  "/upload",
+  uploadRoutes
+);
+
+app.use(
+  "/interacoes",
+  interacoesRoutes
+);
+
+app.use(
+  "/usuarios",
+  usuariosRoutes
+);
+
+app.use(
+  "/perfil",
+  perfilUserRoutes
+);
+
+app.use(
+  "/salvos",
+  postsSalvosRoutes
+);
+
+app.use(
+  "/frases",
+  frasesRoutes
+);
+
+app.use(
+  "/preferencias",
+  preferenciasRoutes
+);
+
+app.use(
+  "/push",
+  pushRoutes
+);
+
+app.use(
+  "/notificacoes",
+  notificacoesRoutes
+);
+
+app.use(
+  "/novidades",
+  novidadesRoutes
+);
+
+app.use(
+  "/parcerias",
+  parceriasRouter
+);
 
 /* =========================================
    NOVA API: HISTÓRICO DE LEITURA
 ========================================= */
 
-app.use("/historico", historicoLeituraRoutes);
+app.use(
+  "/historico",
+  historicoLeituraRoutes
+);
 
 /* =========================================
    SITEMAP.XML
-   SEO: DATA DA ÚLTIMA ATUALIZAÇÃO
+   SEO DOS ARTIGOS PUBLICADOS
 ========================================= */
 
 app.get(
   "/sitemap.xml",
   async (req, res) => {
     try {
+
+      // CORREÇÃO:
+      // A tabela posts não possui
+      // a coluna atualizado_em.
+      //
+      // Por isso utilizamos criado_em,
+      // que já existe no banco.
+
       const resultado = await db.query(`
         SELECT
           id,
           slug,
-          criado_em,
-          atualizado_em
+          criado_em
         FROM posts
         WHERE status = 'publicado'
           AND slug IS NOT NULL
@@ -305,7 +400,11 @@ app.get(
 
         const objetoData = new Date(data);
 
-        if (Number.isNaN(objetoData.getTime())) {
+        if (
+          Number.isNaN(
+            objetoData.getTime()
+          )
+        ) {
           return null;
         }
 
@@ -314,39 +413,51 @@ app.get(
 
       const paginasFixas = [
         {
-          loc: "https://psifacilblog.com.br/"
+          loc:
+            "https://psifacilblog.com.br/"
         },
         {
-          loc: "https://psifacilblog.com.br/conteudo.html"
+          loc:
+            "https://psifacilblog.com.br/conteudo.html"
         },
         {
-          loc: "https://psifacilblog.com.br/ebooks.html"
+          loc:
+            "https://psifacilblog.com.br/ebooks.html"
         },
         {
-          loc: "https://psifacilblog.com.br/escuta.html"
+          loc:
+            "https://psifacilblog.com.br/escuta.html"
         },
         {
-          loc: "https://psifacilblog.com.br/links"
+          loc:
+            "https://psifacilblog.com.br/links"
         }
       ];
 
-      const urlsPosts = posts.map((post) => {
-        const slug = String(post.slug).trim();
+      const urlsPosts = posts.map(
+        (post) => {
+          const slug = String(
+            post.slug
+          ).trim();
 
-        const url =
-          `https://psifacilblog.com.br/artigos/${encodeURIComponent(slug)}`;
+          const url =
+            `https://psifacilblog.com.br/artigos/${encodeURIComponent(slug)}`;
 
-        // Prioriza a última atualização do artigo.
-        // Se não existir, utiliza a data de criação.
-        const lastmod = formatarDataSitemap(
-          post.criado_em
-        );
+          // CORREÇÃO:
+          // Usa somente a data existente
+          // na tabela posts.
 
-        return {
-          loc: url,
-          lastmod
-        };
-      });
+          const lastmod =
+            formatarDataSitemap(
+              post.criado_em
+            );
+
+          return {
+            loc: url,
+            lastmod
+          };
+        }
+      );
 
       const todasUrls = [
         ...paginasFixas,
@@ -355,7 +466,9 @@ app.get(
 
       const urlsXml = todasUrls
         .map((item) => {
-          const loc = escaparXml(item.loc);
+          const loc = escaparXml(
+            item.loc
+          );
 
           const lastmod = item.lastmod
             ? `
@@ -384,6 +497,7 @@ ${urlsXml}
       });
 
       return res.send(sitemap);
+
     } catch (error) {
       console.error(
         "ERRO AO GERAR SITEMAP:",
@@ -393,7 +507,9 @@ ${urlsXml}
       return res
         .status(500)
         .type("text/plain")
-        .send("Erro ao gerar sitemap.");
+        .send(
+          "Erro ao gerar sitemap."
+        );
     }
   }
 );
@@ -476,6 +592,7 @@ app.get(
       }
 
       const post = resultado.rows[0];
+
       const html = renderPost(post);
 
       res.set({
@@ -489,6 +606,7 @@ app.get(
       return res
         .status(200)
         .send(html);
+
     } catch (error) {
       console.error(
         "ERRO AO RENDERIZAR ARTIGO:",
@@ -498,7 +616,9 @@ app.get(
       return res
         .status(500)
         .type("text/plain")
-        .send("Erro ao carregar artigo.");
+        .send(
+          "Erro ao carregar artigo."
+        );
     }
   }
 );
@@ -544,7 +664,8 @@ app.use(
     return res
       .status(404)
       .json({
-        erro: "Rota não encontrada."
+        erro:
+          "Rota não encontrada."
       });
   }
 );
@@ -567,7 +688,8 @@ app.use(
     return res
       .status(500)
       .json({
-        erro: "Erro interno do servidor."
+        erro:
+          "Erro interno do servidor."
       });
   }
 );
@@ -576,7 +698,8 @@ app.use(
    INICIAR SERVIDOR
 ========================================= */
 
-const PORT = process.env.PORT || 3000;
+const PORT =
+  process.env.PORT || 3000;
 
 app.listen(
   PORT,
