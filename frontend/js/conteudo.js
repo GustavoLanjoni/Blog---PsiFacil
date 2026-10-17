@@ -1,8 +1,10 @@
-/* =========================================================
-   PSIFÁCIL
-   PÁGINA DE CONTEÚDOS
-========================================================= */
 
+/* =========================================================
+   PSIFÁCIL - PÁGINA DE CONTEÚDOS
+
+   Filtros principais + Mais categorias
+   Pesquisa, curtidas, salvos e cards
+========================================================= */
 
 /* =========================================================
    CONFIGURAÇÕES
@@ -11,400 +13,215 @@
 const apiPosts = "/posts";
 const apiInteracoes = "/interacoes";
 
-const tokenUsuario =
-    localStorage.getItem("tokenUsuario");
+const tokenUsuario = localStorage.getItem("tokenUsuario");
 
 const imagemPadrao =
     "https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=900&q=80";
 
-
 /* =========================================================
-   ELEMENTOS
+   ELEMENTOS DA PÁGINA
 ========================================================= */
 
-const todosPosts =
-    document.getElementById("todosPosts");
-
-const pesquisaConteudos =
-    document.getElementById("pesquisaConteudos");
-
-const limparPesquisa =
-    document.getElementById("limparPesquisa");
-
-const categoriasConteudos =
-    document.getElementById("categoriasConteudos");
-
-const quantidadeConteudos =
-    document.getElementById("quantidadeConteudos");
-
-const textoQuantidadeConteudos =
-    document.getElementById("textoQuantidadeConteudos");
-
-const tituloResultados =
-    document.getElementById("tituloResultados");
-
-const conteudosLoading =
-    document.getElementById("conteudosLoading");
-
-const conteudosVazio =
-    document.getElementById("conteudosVazio");
-
-const limparFiltros =
-    document.getElementById("limparFiltros");
-
-const anoAtual =
-    document.getElementById("anoAtual");
-
+const todosPosts = document.getElementById("todosPosts");
+const pesquisaConteudos = document.getElementById("pesquisaConteudos");
+const limparPesquisa = document.getElementById("limparPesquisa");
+const categoriasConteudos = document.getElementById("categoriasConteudos");
+const quantidadeConteudos = document.getElementById("quantidadeConteudos");
+const textoQuantidadeConteudos = document.getElementById("textoQuantidadeConteudos");
+const tituloResultados = document.getElementById("tituloResultados");
+const conteudosLoading = document.getElementById("conteudosLoading");
+const conteudosVazio = document.getElementById("conteudosVazio");
+const limparFiltros = document.getElementById("limparFiltros");
+const anoAtual = document.getElementById("anoAtual");
 
 /* =========================================================
    ESTADO
 ========================================================= */
 
 let posts = [];
-
 let categoriaSelecionada = "Todos";
-
 let termoPesquisa = "";
-
+let temporizadorPesquisa = null;
+let painelCategoriasAberto = false;
 
 /* =========================================================
-   ESCAPAR HTML
+   TEMAS PRINCIPAIS
+
+   As categorias específicas permanecem no banco.
+   Estes temas servem para agrupar a navegação.
+========================================================= */
+
+const temasPaginaInicial = [
+    "Ansiedade",
+    "Autoestima",
+    "Relacionamentos",
+    "Autoconhecimento",
+    "Saúde Mental"
+];
+
+/* =========================================================
+   FUNÇÕES UTILITÁRIAS
 ========================================================= */
 
 function escaparHtml(texto = "") {
-
     return String(texto)
-
         .replace(/&/g, "&amp;")
-
         .replace(/</g, "&lt;")
-
         .replace(/>/g, "&gt;")
-
         .replace(/"/g, "&quot;")
-
         .replace(/'/g, "&#039;");
-
 }
 
-
-/* =========================================================
-   LIMPAR HTML DO TEXTO
-
-   Exemplo:
-
-   <p><strong>Ansiedade</strong></p>
-
-   vira:
-
-   Ansiedade
-========================================================= */
-
 function limparTexto(texto = "") {
+    const div = document.createElement("div");
 
-    const div =
-        document.createElement("div");
-
-    div.innerHTML =
-        String(texto || "");
+    div.innerHTML = String(texto || "");
 
     return (
-
         div.textContent ||
-
         div.innerText ||
-
         ""
-
     )
         .replace(/\s+/g, " ")
         .trim();
-
 }
 
-
-/* =========================================================
-   LIMITAR TEXTO
-========================================================= */
-
-function limitarTexto(
-    texto,
-    limite = 150
-) {
-
-    const textoLimpo =
-        limparTexto(texto);
+function limitarTexto(texto, limite = 150) {
+    const textoLimpo = limparTexto(texto);
 
     if (!textoLimpo) {
-
         return "Clique para ler este conteúdo completo.";
-
     }
 
-    if (
-        textoLimpo.length <= limite
-    ) {
-
+    if (textoLimpo.length <= limite) {
         return textoLimpo;
-
     }
 
-    return (
-        textoLimpo
-            .substring(
-                0,
-                limite
-            )
-            .trim() +
-        "..."
-    );
-
+    return textoLimpo.substring(0, limite).trim() + "...";
 }
-
-
-/* =========================================================
-   NORMALIZAR TEXTO
-========================================================= */
 
 function normalizarTexto(valor) {
-
     return String(valor || "")
-
         .normalize("NFD")
-
-        .replace(
-            /[\u0300-\u036f]/g,
-            ""
-        )
-
+        .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase()
-
         .trim();
-
 }
 
-
 /* =========================================================
-   FORMATAR DATA
+   DATAS E TEMPO DE LEITURA
 ========================================================= */
 
 function formatarData(data) {
+    if (!data) return "";
 
-    if (!data) {
+    const objetoData = new Date(data);
 
+    if (Number.isNaN(objetoData.getTime())) {
         return "";
-
     }
 
-    const objetoData =
-        new Date(data);
-
-    if (
-        Number.isNaN(
-            objetoData.getTime()
-        )
-    ) {
-
-        return "";
-
-    }
-
-    return objetoData
-        .toLocaleDateString(
-            "pt-BR",
-            {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-                timeZone: "America/Sao_Paulo"
-            }
-        )
-        .replace(".", "");
-
+    return objetoData.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        timeZone: "America/Sao_Paulo"
+    }).replace(".", "");
 }
-
-
-/* =========================================================
-   TEMPO DE LEITURA
-
-   Mesmo cálculo usado na página do artigo:
-   aproximadamente 200 palavras por minuto.
-========================================================= */
 
 function calcularTempoLeitura(texto) {
+    const palavras = limparTexto(texto)
+        .split(/\s+/)
+        .filter(Boolean)
+        .length;
 
-    const textoLimpo =
-        limparTexto(texto);
-
-    const palavras =
-        textoLimpo
-            .split(/\s+/)
-            .filter(Boolean)
-            .length;
-
-    return (
-        Math.ceil(
-            palavras / 200
-        ) || 1
-    );
-
+    return Math.ceil(palavras / 200) || 1;
 }
-
 
 /* =========================================================
    URL DO ARTIGO
 ========================================================= */
 
 function obterUrlArtigo(post) {
-
     if (post.slug) {
-
-        return (
-            `/artigos/${encodeURIComponent(
-                post.slug
-            )}`
-        );
-
+        return `/artigos/${encodeURIComponent(post.slug)}`;
     }
 
-    return (
-        `/post.html?id=${encodeURIComponent(
-            post.id
-        )}`
-    );
-
+    return `/post.html?id=${encodeURIComponent(post.id)}`;
 }
 
-
 /* =========================================================
-   VERIFICAR CURTIDA LOCAL
+   CURTIDA LOCAL
 ========================================================= */
 
 function artigoFoiCurtido(id) {
-
-    if (!id) {
-
-        return false;
-
-    }
+    if (!id) return false;
 
     return Boolean(
-
-        localStorage.getItem(
-            `curtiu_post_${id}`
-        )
-
+        localStorage.getItem(`curtiu_post_${id}`)
     );
-
 }
 
-
 /* =========================================================
-   CRIAR CARD
+   CRIAR CARD DO ARTIGO
 ========================================================= */
 
 function criarCardPost(post) {
+    const id = post.id;
 
-    const id =
-        post.id;
+    const titulo = escaparHtml(
+        limparTexto(post.titulo || "Conteúdo PsiFácil")
+    );
 
-    const titulo =
-        escaparHtml(
-            limparTexto(
-                post.titulo ||
-                "Conteúdo PsiFácil"
-            )
-        );
+    const categoria = escaparHtml(
+        limparTexto(post.categoria || "Conteúdo")
+    );
 
-    const categoria =
-        escaparHtml(
-            limparTexto(
-                post.categoria ||
-                "Conteúdo"
-            )
-        );
+    const resumo = escaparHtml(
+        limitarTexto(
+            post.resumo || post.conteudo || "",
+            155
+        )
+    );
 
-    /*
-    ---------------------------------------------------------
-    CORREÇÃO DO PROBLEMA DAS TAGS HTML
-    ---------------------------------------------------------
-    */
+    const imagem = escaparHtml(
+        post.imagem || imagemPadrao
+    );
 
-    const resumo =
-        escaparHtml(
-            limitarTexto(
-                post.resumo ||
-                post.conteudo ||
-                "",
-                155
-            )
-        );
+    const url = escaparHtml(obterUrlArtigo(post));
 
-    const imagem =
-        escaparHtml(
-            post.imagem ||
-            imagemPadrao
-        );
+    const data = formatarData(
+        post.publicado_em ||
+        post.criado_em ||
+        post.created_at
+    );
 
-    const url =
-        obterUrlArtigo(post);
+    const tempoLeitura = calcularTempoLeitura(
+        post.conteudo || post.resumo || ""
+    );
 
-    const data =
-        formatarData(
-            post.publicado_em ||
-            post.criado_em ||
-            post.created_at
-        );
-
-    const tempoLeitura =
-        calcularTempoLeitura(
-            post.conteudo ||
-            post.resumo ||
-            ""
-        );
-
-    const curtido =
-        artigoFoiCurtido(id);
-
+    const curtido = artigoFoiCurtido(id);
 
     return `
-
         <article
             class="post-card"
             data-post-id="${escaparHtml(id)}"
         >
-
-
-            <!-- =============================================
-                 IMAGEM
-            ============================================== -->
 
             <a
                 href="${url}"
                 class="post-card-image"
                 aria-label="Ler ${titulo}"
             >
-
                 <img
                     src="${imagem}"
                     alt="${titulo}"
                     loading="lazy"
                     decoding="async"
                 >
-
             </a>
 
-
-            <!-- =============================================
-                 CONTEÚDO
-            ============================================== -->
-
             <div class="post-content">
-
-
-                <!-- =========================================
-                     CATEGORIA + DATA
-                ========================================== -->
 
                 <div class="post-top-meta">
 
@@ -412,116 +229,55 @@ function criarCardPost(post) {
                         ${categoria}
                     </span>
 
-                    ${data
-            ? `
-                                <span class="post-date">
-                                    ${escaparHtml(data)}
-                                </span>
-                            `
-            : ""
-        }
+                    ${data ? `
+                        <span class="post-date">
+                            ${escaparHtml(data)}
+                        </span>
+                    ` : ""}
 
                 </div>
 
-
-                <!-- =========================================
-                     TÍTULO
-                ========================================== -->
-
                 <h3>
-
                     <a href="${url}">
-
                         ${titulo}
-
                     </a>
-
                 </h3>
 
-
-                <!-- =========================================
-                     RESUMO
-                ========================================== -->
-
                 <p class="post-resumo">
-
                     ${resumo}
-
                 </p>
 
-
-                <!-- =========================================
-                     TEMPO DE LEITURA
-                ========================================== -->
-
                 <div class="post-reading">
-
                     <i data-lucide="clock-3"></i>
 
                     <span>
-
-                        ${tempoLeitura}
-                        min de leitura
-
+                        ${tempoLeitura} min de leitura
                     </span>
-
                 </div>
-
-
-                <!-- =========================================
-                     RODAPÉ DO CARD
-                ========================================== -->
 
                 <div class="post-card-footer">
 
-
-                    <!-- LER ARTIGO -->
-
-                    <a
-                        href="${url}"
-                        class="read-more"
-                    >
-
+                    <a href="${url}" class="read-more">
                         Ler artigo
-
-                        <span aria-hidden="true">
-                            →
-                        </span>
-
+                        <span aria-hidden="true">→</span>
                     </a>
-
-
-                    <!-- AÇÕES -->
 
                     <div class="post-card-actions">
 
-
-                        <!-- CURTIR -->
-
                         <button
                             type="button"
-                            class="post-like ${curtido
-            ? "curtido"
-            : ""
-        }"
+                            class="post-like ${curtido ? "curtido" : ""}"
                             data-post-id="${escaparHtml(id)}"
                             aria-label="Curtir artigo"
                             title="Curtir artigo"
                         >
-
                             <i data-lucide="heart"></i>
 
                             <span
                                 class="post-like-count"
                                 data-curtidas-id="${escaparHtml(id)}"
-                            >
-                                0
-                            </span>
-
+                            >0</span>
                         </button>
-
-
-                        <!-- SALVAR -->
 
                         <button
                             type="button"
@@ -530,157 +286,445 @@ function criarCardPost(post) {
                             aria-label="Salvar artigo"
                             title="Salvar artigo"
                         >
-
                             <i data-lucide="bookmark"></i>
-
                         </button>
 
-
                     </div>
-
-
                 </div>
-
-
             </div>
-
-
         </article>
-
     `;
-
 }
 
-
 /* =========================================================
-   CATEGORIAS
+   TODAS AS CATEGORIAS ORIGINAIS
+
+   São obtidas automaticamente dos artigos da API.
+   Nenhuma categoria é excluída do Supabase.
 ========================================================= */
 
 function obterCategorias() {
+    const categorias = posts
+        .map(post => limparTexto(post.categoria || "Conteúdo"))
+        .filter(Boolean);
 
-    const categorias =
-        posts
+    const categoriasUnicas = new Map();
 
-            .map(
-                (post) =>
-                    limparTexto(
-                        post.categoria ||
-                        "Conteúdo"
-                    )
-            )
+    categorias.forEach(categoria => {
+        const chave = normalizarTexto(categoria);
 
-            .filter(Boolean);
+        if (!categoriasUnicas.has(chave)) {
+            categoriasUnicas.set(chave, categoria);
+        }
+    });
 
-
-    const categoriasUnicas =
-        [
-            ...new Set(
-                categorias
-            )
-        ];
-
-
-    categoriasUnicas.sort(
-
-        (a, b) =>
-            a.localeCompare(
-                b,
-                "pt-BR"
-            )
-
-    );
-
-
-    return categoriasUnicas;
-
+    return [...categoriasUnicas.values()]
+        .sort((a, b) => a.localeCompare(b, "pt-BR"));
 }
 
+/* =========================================================
+   CLASSIFICAR TEMA PRINCIPAL
+
+   Utilizado para os filtros gerais.
+
+   Os filtros específicos utilizam a categoria
+   original, sem alterar os dados dos artigos.
+========================================================= */
+
+function obterTemaPrincipal(post) {
+    const categoria = normalizarTexto(
+        limparTexto(post.categoria || "")
+    );
+
+    const titulo = normalizarTexto(
+        limparTexto(post.titulo || "")
+    );
+
+    if (
+        categoria.includes("ansiedade") ||
+        categoria.includes("estresse")
+    ) {
+        return "Ansiedade";
+    }
+
+    if (
+        categoria.includes("autoestima") ||
+        categoria.includes("autocuidado")
+    ) {
+        return "Autoestima";
+    }
+
+    if (categoria.includes("relacionamento")) {
+        return "Relacionamentos";
+    }
+
+    if (categoria.includes("autoconhecimento")) {
+        return "Autoconhecimento";
+    }
+
+    if (
+        titulo.includes("ansiedade") ||
+        titulo.includes("panico") ||
+        titulo.includes("estresse")
+    ) {
+        return "Ansiedade";
+    }
+
+    if (
+        titulo.includes("autoestima") ||
+        titulo.includes("autocuidado") ||
+        titulo.includes("autoconfianca")
+    ) {
+        return "Autoestima";
+    }
+
+    if (
+        titulo.includes("relacionamento") ||
+        titulo.includes("dependencia emocional") ||
+        titulo.includes("solidao")
+    ) {
+        return "Relacionamentos";
+    }
+
+    if (
+        titulo.includes("autoconhecimento") ||
+        titulo.includes("perfeccionismo") ||
+        titulo.includes("procrastinacao")
+    ) {
+        return "Autoconhecimento";
+    }
+
+    if (
+        categoria.includes("comportamento") ||
+        categoria.includes("emocoes")
+    ) {
+        return "Autoconhecimento";
+    }
+
+    return "Saúde Mental";
+}
 
 /* =========================================================
-   RENDERIZAR CATEGORIAS
+   LER CATEGORIA DA URL
+
+   Exemplos:
+
+   conteudo.html?categoria=ansiedade
+   conteudo.html?categoria=autoestima
+   conteudo.html?categoria=relacionamentos
+
+   Categorias específicas também são aceitas.
+========================================================= */
+
+function obterCategoriaDaUrl() {
+    const parametros = new URLSearchParams(
+        window.location.search
+    );
+
+    const valor = parametros.get("categoria");
+
+    if (!valor) return "Todos";
+
+    const categoriaUrl = normalizarTexto(valor)
+        .replace(/-/g, " ");
+
+    const tema = temasPaginaInicial.find(
+        item => normalizarTexto(item) === categoriaUrl
+    );
+
+    if (tema) {
+        return `tema:${tema}`;
+    }
+
+    const categoriaExata = obterCategorias().find(
+        categoria =>
+            normalizarTexto(categoria) === categoriaUrl
+    );
+
+    return categoriaExata || "Todos";
+}
+
+/* =========================================================
+   ATUALIZAR URL DO FILTRO
+========================================================= */
+
+function atualizarUrlCategoria() {
+    const url = new URL(window.location.href);
+
+    if (categoriaSelecionada === "Todos") {
+        url.searchParams.delete("categoria");
+    } else {
+        const valor = categoriaSelecionada.startsWith("tema:")
+            ? categoriaSelecionada.slice(5)
+            : categoriaSelecionada;
+
+        url.searchParams.set(
+            "categoria",
+            normalizarTexto(valor).replace(/\s+/g, "-")
+        );
+    }
+
+    window.history.replaceState({}, "", url);
+}
+
+/* =========================================================
+   SELECIONAR CATEGORIA
+
+   Funciona para temas principais e específicos.
+========================================================= */
+
+function selecionarCategoria(categoria) {
+    categoriaSelecionada = categoria;
+
+    painelCategoriasAberto = false;
+
+    atualizarUrlCategoria();
+    renderizarCategorias();
+    aplicarFiltros();
+}
+
+/* =========================================================
+   CRIAR BOTÃO DE CATEGORIA
+========================================================= */
+
+function criarBotaoCategoria(nome, valor) {
+    const ativo = categoriaSelecionada === valor;
+
+    return `
+        <button
+            type="button"
+            class="psifacil-categoria-btn ${ativo ? "ativo" : ""}"
+            data-categoria="${escaparHtml(valor)}"
+            aria-pressed="${ativo}"
+        >
+            ${escaparHtml(nome)}
+        </button>
+    `;
+}
+
+/* =========================================================
+   RENDERIZAR FILTROS
+
+   DESKTOP:
+   Temas principais e botão Mais categorias.
+
+   CELULAR:
+   Faixa horizontal deslizante.
+
+   CATEGORIAS EXTRAS:
+   Painel expansível com categorias originais.
 ========================================================= */
 
 function renderizarCategorias() {
+    if (!categoriasConteudos) return;
 
-    if (!categoriasConteudos) {
+    const categorias = obterCategorias();
 
-        return;
+    /*
+       As categorias com nome exatamente igual
+       aos temas principais não precisam aparecer
+       duas vezes.
 
-    }
+       Categorias compostas continuam disponíveis.
+    */
 
+    const categoriasExtras = categorias.filter(categoria => {
+        return !temasPaginaInicial.some(
+            tema =>
+                normalizarTexto(tema) ===
+                normalizarTexto(categoria)
+        );
+    });
 
-    const categorias = [
+    const categoriaExtraSelecionada =
+        categoriaSelecionada !== "Todos" &&
+        !categoriaSelecionada.startsWith("tema:");
 
-        "Todos",
+    const botoesPrincipais = [
+        criarBotaoCategoria("Todos", "Todos"),
 
-        ...obterCategorias()
+        ...temasPaginaInicial.map(tema =>
+            criarBotaoCategoria(tema, `tema:${tema}`)
+        )
+    ].join("");
 
-    ];
+    const botoesExtras = categoriasExtras
+        .map(categoria =>
+            criarBotaoCategoria(categoria, categoria)
+        )
+        .join("");
 
+    categoriasConteudos.innerHTML = `
 
-    categoriasConteudos.innerHTML =
-        categorias
+        <div class="psifacil-filtros">
 
-            .map(
-                (categoria) => {
+            <!-- CATEGORIAS PRINCIPAIS -->
 
-                    const ativo =
-                        categoria ===
-                        categoriaSelecionada;
+            <div class="psifacil-filtros-linha">
 
-                    return `
+                ${botoesPrincipais}
 
-                        <button
-                            type="button"
-                            class="categoria-filtro ${ativo
-                            ? "categoria-filtro-ativo"
-                            : ""
-                        }"
-                            data-categoria="${escaparHtml(categoria)}"
-                        >
+                <button
+                    type="button"
+                    class="psifacil-mais-categorias"
+                    id="botaoMaisCategorias"
+                    aria-expanded="${painelCategoriasAberto}"
+                    aria-controls="painelCategoriasExtras"
+                >
+                    <span>Mais categorias</span>
 
-                            ${escaparHtml(categoria)}
+                    <span aria-hidden="true">
+                        ${painelCategoriasAberto ? "−" : "+"}
+                    </span>
+                </button>
 
-                        </button>
+            </div>
 
-                    `;
+            <!-- CATEGORIAS ESPECÍFICAS -->
 
-                }
-            )
+            <div
+                class="psifacil-categorias-extras"
+                id="painelCategoriasExtras"
+                ${painelCategoriasAberto ? "" : "hidden"}
+            >
 
-            .join("");
+                <div class="psifacil-extras-cabecalho">
 
+                    <strong>
+                        Explore outros assuntos
+                    </strong>
+
+                    <button
+                        type="button"
+                        class="psifacil-fechar-extras"
+                        id="fecharCategoriasExtras"
+                        aria-label="Fechar categorias"
+                        title="Fechar categorias"
+                    >
+                        &times;
+                    </button>
+
+                </div>
+
+                <div class="psifacil-extras-lista">
+
+                    ${botoesExtras || `
+                        <p>
+                            Nenhuma categoria adicional disponível.
+                        </p>
+                    `}
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+    /*
+       MOSTRAR CATEGORIA ESPECÍFICA SELECIONADA
+
+       Isso evita que o usuário perca a referência
+       do filtro após fechar o painel.
+    */
+
+    const painel = document.getElementById(
+        "painelCategoriasExtras"
+    );
+
+    const botaoMais = document.getElementById(
+        "botaoMaisCategorias"
+    );
+
+    /*
+       BOTÕES DE CATEGORIA
+    */
 
     categoriasConteudos
-        .querySelectorAll(
-            ".categoria-filtro"
-        )
-        .forEach(
-            (botao) => {
+        .querySelectorAll(".psifacil-categoria-btn")
+        .forEach(botao => {
+            botao.addEventListener("click", () => {
+                selecionarCategoria(
+                    botao.dataset.categoria
+                );
+            });
+        });
 
-                botao.addEventListener(
-                    "click",
-                    () => {
+    /*
+       ABRIR / FECHAR MAIS CATEGORIAS
+    */
 
-                        categoriaSelecionada =
-                            botao.dataset.categoria;
+    if (botaoMais) {
+        botaoMais.addEventListener("click", () => {
+            painelCategoriasAberto = !painelCategoriasAberto;
 
-                        renderizarCategorias();
+            if (painel) {
+                painel.hidden = !painelCategoriasAberto;
+            }
 
-                        aplicarFiltros();
+            botaoMais.setAttribute(
+                "aria-expanded",
+                String(painelCategoriasAberto)
+            );
 
-                    }
+            const indicador = botaoMais.querySelector(
+                "span:last-child"
+            );
+
+            if (indicador) {
+                indicador.textContent =
+                    painelCategoriasAberto ? "−" : "+";
+            }
+        });
+    }
+
+    /*
+       FECHAR PAINEL
+    */
+
+    const fecharExtras = document.getElementById(
+        "fecharCategoriasExtras"
+    );
+
+    if (fecharExtras) {
+        fecharExtras.addEventListener("click", () => {
+            painelCategoriasAberto = false;
+
+            if (painel) {
+                painel.hidden = true;
+            }
+
+            if (botaoMais) {
+                botaoMais.setAttribute(
+                    "aria-expanded",
+                    "false"
                 );
 
-            }
-        );
+                const indicador = botaoMais.querySelector(
+                    "span:last-child"
+                );
 
+                if (indicador) {
+                    indicador.textContent = "+";
+                }
+
+                botaoMais.focus();
+            }
+        });
+    }
+
+    /*
+       Se houver uma categoria específica selecionada,
+       o título dos resultados mostrará seu nome.
+    */
+
+    if (categoriaExtraSelecionada) {
+        atualizarTituloResultados();
+    }
 }
 
-
-
 /* =========================================================
-   PESQUISA INTELIGENTE DE ARTIGOS
+   PESQUISA E FILTRAGEM
 ========================================================= */
 
 function filtrarPosts() {
@@ -698,15 +742,38 @@ function filtrarPosts() {
                 limparTexto(post.categoria || "Conteúdo")
             );
 
-            // Filtrar pela categoria selecionada
-            if (
-                categoriaSelecionada !== "Todos" &&
-                categoria !== categoriaAtiva
-            ) {
+            let correspondeCategoria = true;
+
+            /*
+               FILTRO GERAL
+            */
+
+            if (categoriaSelecionada !== "Todos") {
+                if (
+                    categoriaSelecionada.startsWith("tema:")
+                ) {
+                    const tema = categoriaSelecionada.slice(5);
+
+                    correspondeCategoria =
+                        obterTemaPrincipal(post) === tema;
+                } else {
+                    /*
+                       FILTRO ESPECÍFICO
+                    */
+
+                    correspondeCategoria =
+                        categoria === categoriaAtiva;
+                }
+            }
+
+            if (!correspondeCategoria) {
                 return null;
             }
 
-            // Preparar os campos para pesquisa
+            /*
+               CAMPOS PESQUISÁVEIS
+            */
+
             const titulo = normalizarTexto(
                 limparTexto(post.titulo || "")
             );
@@ -719,15 +786,22 @@ function filtrarPosts() {
                 limparTexto(post.conteudo || "")
             );
 
+            const temaPrincipal = normalizarTexto(
+                obterTemaPrincipal(post)
+            );
+
             const textoCompleto = [
                 titulo,
                 resumo,
                 categoria,
+                temaPrincipal,
                 conteudo
             ].join(" ");
 
-            // Todas as palavras pesquisadas precisam existir
-            // Não importa a ordem em que foram digitadas
+            /*
+               TODAS AS PALAVRAS PRECISAM EXISTIR
+            */
+
             const correspondePesquisa = palavras.every(
                 palavra => textoCompleto.includes(palavra)
             );
@@ -736,7 +810,10 @@ function filtrarPosts() {
                 return null;
             }
 
-            // Pontuação para ordenar os melhores resultados
+            /*
+               RELEVÂNCIA
+            */
+
             const pontuacao = palavras.reduce(
                 (total, palavra) => {
                     if (titulo.includes(palavra)) {
@@ -780,964 +857,476 @@ function filtrarPosts() {
         .map(resultado => resultado.post);
 }
 
-
-
 /* =========================================================
    CONTADOR
 ========================================================= */
 
-function atualizarContador(
-    quantidade
-) {
-
+function atualizarContador(quantidade) {
     if (quantidadeConteudos) {
-
-        quantidadeConteudos.textContent =
-            quantidade;
-
+        quantidadeConteudos.textContent = quantidade;
     }
-
 
     if (textoQuantidadeConteudos) {
-
         textoQuantidadeConteudos.textContent =
-
             quantidade === 1
-
                 ? "artigo encontrado"
-
                 : "artigos encontrados";
-
     }
-
 }
-
 
 /* =========================================================
    TÍTULO DOS RESULTADOS
 ========================================================= */
 
 function atualizarTituloResultados() {
+    if (!tituloResultados) return;
 
-    if (!tituloResultados) {
-
+    if (categoriaSelecionada === "Todos") {
+        tituloResultados.textContent = "Todos os artigos";
         return;
-
     }
 
+    if (categoriaSelecionada.startsWith("tema:")) {
+        tituloResultados.textContent =
+            categoriaSelecionada.slice(5);
 
-    tituloResultados.textContent =
+        return;
+    }
 
-        categoriaSelecionada ===
-            "Todos"
-
-            ? "Todos os artigos"
-
-            : categoriaSelecionada;
-
+    tituloResultados.textContent = categoriaSelecionada;
 }
 
-
 /* =========================================================
-   RENDERIZAR POSTS
+   RENDERIZAR ARTIGOS
 ========================================================= */
 
-function renderizarPosts(
-    listaPosts
-) {
+function renderizarPosts(listaPosts) {
+    if (!todosPosts) return;
 
-    if (!todosPosts) {
+    todosPosts.innerHTML = "";
 
-        return;
-
-    }
-
-
-    todosPosts.innerHTML =
-        "";
-
-
-    if (
-        listaPosts.length === 0
-    ) {
-
+    if (listaPosts.length === 0) {
         if (conteudosVazio) {
-
-            conteudosVazio.hidden =
-                false;
-
+            conteudosVazio.hidden = false;
         }
 
         atualizarContador(0);
-
         return;
-
     }
-
 
     if (conteudosVazio) {
-
-        conteudosVazio.hidden =
-            true;
-
+        conteudosVazio.hidden = true;
     }
 
+    todosPosts.innerHTML = listaPosts
+        .map(criarCardPost)
+        .join("");
 
-    todosPosts.innerHTML =
-        listaPosts
-
-            .map(
-                criarCardPost
-            )
-
-            .join("");
-
-
-    atualizarContador(
-        listaPosts.length
-    );
-
-
-    /*
-    ---------------------------------------------------------
-    RECRIAR ÍCONES LUCIDE
-    ---------------------------------------------------------
-    */
+    atualizarContador(listaPosts.length);
 
     if (window.lucide) {
-
         window.lucide.createIcons();
-
     }
 
-
-    /*
-    ---------------------------------------------------------
-    CARREGAR ESTADO DAS INTERAÇÕES
-    ---------------------------------------------------------
-    */
-
-    carregarInteracoesCards(
-        listaPosts
-    );
-
+    carregarInteracoesCards(listaPosts);
 }
 
-
-
 /* =========================================================
-   APLICAR FILTROS E ATUALIZAR RESULTADOS
+   APLICAR FILTROS
 ========================================================= */
 
 function aplicarFiltros() {
-    // Cancela uma atualização pendente
-    clearTimeout(temporizadorPesquisa);
-
-    // Obtém os artigos que correspondem à pesquisa
     const postsFiltrados = filtrarPosts();
 
-    // Atualiza o título da biblioteca
     atualizarTituloResultados();
-
-    // Atualiza os cards e o contador
     renderizarPosts(postsFiltrados);
 }
 
-
 /* =========================================================
-   CURTIDAS
+   CARREGAR CURTIDAS
 ========================================================= */
 
-async function carregarCurtidasCard(
-    id
-) {
+async function carregarCurtidasCard(id) {
+    const contador = document.querySelector(
+        `[data-curtidas-id="${id}"]`
+    );
 
-    const contador =
-        document.querySelector(
-            `[data-curtidas-id="${id}"]`
-        );
-
-
-    if (!contador) {
-
-        return;
-
-    }
-
+    if (!contador) return;
 
     try {
+        const resposta = await fetch(
+            `${apiInteracoes}/curtidas/${id}`
+        );
 
-        const resposta =
-            await fetch(
-                `${apiInteracoes}/curtidas/${id}`
-            );
+        if (!resposta.ok) return;
 
+        const dados = await resposta.json();
 
-        if (!resposta.ok) {
+        contador.textContent = dados.total ?? 0;
 
-            return;
-
-        }
-
-
-        const dados =
-            await resposta.json();
-
-
-        contador.textContent =
-            dados.total ?? 0;
-
-    }
-
-    catch (error) {
-
+    } catch (error) {
         console.error(
             `Erro ao carregar curtidas do artigo ${id}:`,
             error
         );
-
     }
-
 }
-
 
 /* =========================================================
    CURTIR ARTIGO
 ========================================================= */
 
-async function curtirArtigo(
-    botao
-) {
+async function curtirArtigo(botao) {
+    const id = botao.dataset.postId;
 
-    const id =
-        botao.dataset.postId;
+    if (!id) return;
 
+    const chave = `curtiu_post_${id}`;
 
-    if (!id) {
-
+    if (localStorage.getItem(chave)) {
         return;
-
     }
 
-
-    const chave =
-        `curtiu_post_${id}`;
-
-
-    /*
-    ---------------------------------------------------------
-    JÁ CURTIU
-    ---------------------------------------------------------
-    */
-
-    if (
-        localStorage.getItem(
-            chave
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    botao.disabled =
-        true;
-
+    botao.disabled = true;
 
     try {
-
-        const resposta =
-            await fetch(
-                `${apiInteracoes}/curtidas`,
-                {
-
-                    method:
-                        "POST",
-
-                    headers: {
-
-                        "Content-Type":
-                            "application/json"
-
-                    },
-
-                    body:
-                        JSON.stringify({
-
-                            post_id:
-                                id
-
-                        })
-
-                }
-            );
-
+        const resposta = await fetch(
+            `${apiInteracoes}/curtidas`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    post_id: id
+                })
+            }
+        );
 
         if (!resposta.ok) {
-
             console.error(
                 "Não foi possível registrar a curtida."
             );
 
             return;
-
         }
 
+        localStorage.setItem(chave, "true");
 
-        localStorage.setItem(
-            chave,
-            "true"
-        );
+        botao.classList.add("curtido");
 
+        await carregarCurtidasCard(id);
 
-        botao.classList.add(
-            "curtido"
-        );
-
-
-        await carregarCurtidasCard(
-            id
-        );
-
-    }
-
-    catch (error) {
-
+    } catch (error) {
         console.error(
             "Erro ao curtir artigo:",
             error
         );
 
+    } finally {
+        botao.disabled = false;
     }
-
-    finally {
-
-        botao.disabled =
-            false;
-
-    }
-
 }
 
-
 /* =========================================================
-   ATUALIZAR VISUAL DO BOTÃO SALVAR
+   VISUAL DO BOTÃO SALVAR
 ========================================================= */
 
-function atualizarBotaoSalvarCard(
-    botao,
-    salvo
-) {
+function atualizarBotaoSalvarCard(botao, salvo) {
+    if (!botao) return;
 
-    if (!botao) {
+    botao.classList.toggle("salvo", salvo);
 
-        return;
-
-    }
-
-
-    botao.classList.toggle(
-        "salvo",
-        salvo
-    );
-
-
-    botao.innerHTML =
-
-        salvo
-
-            ? `
-                <i data-lucide="bookmark-check"></i>
-            `
-
-            : `
-                <i data-lucide="bookmark"></i>
-            `;
-
+    botao.innerHTML = salvo
+        ? '<i data-lucide="bookmark-check"></i>'
+        : '<i data-lucide="bookmark"></i>';
 
     botao.setAttribute(
         "aria-label",
-
         salvo
             ? "Remover artigo dos salvos"
             : "Salvar artigo"
     );
 
-
     botao.setAttribute(
         "title",
-
         salvo
             ? "Artigo salvo"
             : "Salvar artigo"
     );
 
-
     if (window.lucide) {
-
         window.lucide.createIcons();
-
     }
-
 }
 
-
 /* =========================================================
-   VERIFICAR SE ARTIGO ESTÁ SALVO
+   VERIFICAR ARTIGO SALVO
 ========================================================= */
 
-async function verificarSalvoCard(
-    id
-) {
+async function verificarSalvoCard(id) {
+    if (!tokenUsuario || !id) return;
 
-    if (
-        !tokenUsuario ||
-        !id
-    ) {
+    const botao = document.querySelector(
+        `.post-save[data-post-id="${id}"]`
+    );
 
-        return;
-
-    }
-
-
-    const botao =
-        document.querySelector(
-            `.post-save[data-post-id="${id}"]`
-        );
-
-
-    if (!botao) {
-
-        return;
-
-    }
-
+    if (!botao) return;
 
     try {
-
-        const resposta =
-            await fetch(
-                `/salvos/${id}/status`,
-                {
-
-                    headers: {
-
-                        Authorization:
-                            `Bearer ${tokenUsuario}`
-
-                    }
-
+        const resposta = await fetch(
+            `/salvos/${id}/status`,
+            {
+                headers: {
+                    Authorization: `Bearer ${tokenUsuario}`
                 }
-            );
+            }
+        );
 
+        if (!resposta.ok) return;
 
-        if (!resposta.ok) {
-
-            return;
-
-        }
-
-
-        const dados =
-            await resposta.json();
-
+        const dados = await resposta.json();
 
         atualizarBotaoSalvarCard(
             botao,
-            Boolean(
-                dados.salvo
-            )
+            Boolean(dados.salvo)
         );
 
-    }
-
-    catch (error) {
-
+    } catch (error) {
         console.error(
             `Erro ao verificar artigo salvo ${id}:`,
             error
         );
-
     }
-
 }
-
 
 /* =========================================================
    SALVAR / REMOVER ARTIGO
 ========================================================= */
 
-async function alternarSalvarArtigo(
-    botao
-) {
+async function alternarSalvarArtigo(botao) {
+    const id = botao.dataset.postId;
 
-    const id =
-        botao.dataset.postId;
-
-
-    if (!id) {
-
-        return;
-
-    }
-
-
-    /*
-    ---------------------------------------------------------
-    NÃO ESTÁ LOGADO
-    ---------------------------------------------------------
-    */
+    if (!id) return;
 
     if (!tokenUsuario) {
-
-        window.location.href =
-            "/login-usuario.html";
-
+        window.location.href = "/login-usuario.html";
         return;
-
     }
 
+    const salvo = botao.classList.contains("salvo");
 
-    const salvo =
-        botao.classList.contains(
-            "salvo"
-        );
+    const metodo = salvo ? "DELETE" : "POST";
 
-
-    const metodo =
-        salvo
-            ? "DELETE"
-            : "POST";
-
-
-    botao.disabled =
-        true;
-
+    botao.disabled = true;
 
     try {
-
-        const resposta =
-            await fetch(
-                `/salvos/${id}`,
-                {
-
-                    method:
-                        metodo,
-
-                    headers: {
-
-                        Authorization:
-                            `Bearer ${tokenUsuario}`
-
-                    }
-
+        const resposta = await fetch(
+            `/salvos/${id}`,
+            {
+                method: metodo,
+                headers: {
+                    Authorization: `Bearer ${tokenUsuario}`
                 }
-            );
-
-
-        /*
-        -----------------------------------------------------
-        SESSÃO INVÁLIDA
-        -----------------------------------------------------
-        */
+            }
+        );
 
         if (
             resposta.status === 401 ||
             resposta.status === 403
         ) {
+            localStorage.removeItem("tokenUsuario");
 
-            localStorage.removeItem(
-                "tokenUsuario"
-            );
-
-
-            window.location.href =
-                "/login-usuario.html";
-
-
+            window.location.href = "/login-usuario.html";
             return;
-
         }
 
-
         if (!resposta.ok) {
-
             console.error(
                 "Não foi possível alterar o artigo salvo."
             );
 
             return;
-
         }
 
+        atualizarBotaoSalvarCard(botao, !salvo);
 
-        atualizarBotaoSalvarCard(
-            botao,
-            !salvo
-        );
-
-    }
-
-    catch (error) {
-
+    } catch (error) {
         console.error(
             "Erro ao salvar artigo:",
             error
         );
 
+    } finally {
+        botao.disabled = false;
     }
-
-    finally {
-
-        botao.disabled =
-            false;
-
-    }
-
 }
-
 
 /* =========================================================
    EVENTOS DOS CARDS
-
-   Usamos delegação de eventos porque os cards são
-   reconstruídos quando o usuário pesquisa ou filtra.
 ========================================================= */
 
 if (todosPosts) {
+    todosPosts.addEventListener("click", async event => {
+        const botaoCurtir = event.target.closest(
+            ".post-like"
+        );
 
-    todosPosts.addEventListener(
-        "click",
-        async (event) => {
+        if (botaoCurtir) {
+            event.preventDefault();
+            event.stopPropagation();
 
-
-            /*
-            -------------------------------------------------
-            CURTIR
-            -------------------------------------------------
-            */
-
-            const botaoCurtir =
-                event.target.closest(
-                    ".post-like"
-                );
-
-
-            if (botaoCurtir) {
-
-                event.preventDefault();
-
-                event.stopPropagation();
-
-
-                await curtirArtigo(
-                    botaoCurtir
-                );
-
-
-                return;
-
-            }
-
-
-            /*
-            -------------------------------------------------
-            SALVAR
-            -------------------------------------------------
-            */
-
-            const botaoSalvar =
-                event.target.closest(
-                    ".post-save"
-                );
-
-
-            if (botaoSalvar) {
-
-                event.preventDefault();
-
-                event.stopPropagation();
-
-
-                await alternarSalvarArtigo(
-                    botaoSalvar
-                );
-
-            }
-
+            await curtirArtigo(botaoCurtir);
+            return;
         }
-    );
 
+        const botaoSalvar = event.target.closest(
+            ".post-save"
+        );
+
+        if (botaoSalvar) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            await alternarSalvarArtigo(botaoSalvar);
+        }
+    });
 }
-
 
 /* =========================================================
-   CARREGAR INTERAÇÕES DOS CARDS
+   INTERAÇÕES DOS CARDS
 ========================================================= */
 
-function carregarInteracoesCards(
-    listaPosts
-) {
+function carregarInteracoesCards(listaPosts) {
+    listaPosts.forEach(post => {
+        if (!post.id) return;
 
-    listaPosts.forEach(
-        (post) => {
+        carregarCurtidasCard(post.id);
 
-            if (!post.id) {
-
-                return;
-
-            }
-
-
-            /*
-            -------------------------------------------------
-            CURTIDAS
-            -------------------------------------------------
-            */
-
-            carregarCurtidasCard(
-                post.id
-            );
-
-
-            /*
-            -------------------------------------------------
-            SALVOS
-            -------------------------------------------------
-            */
-
-            if (tokenUsuario) {
-
-                verificarSalvoCard(
-                    post.id
-                );
-
-            }
-
+        if (tokenUsuario) {
+            verificarSalvoCard(post.id);
         }
-    );
-
+    });
 }
-
-
 
 /* =========================================================
    PESQUISA EM TEMPO REAL
 ========================================================= */
 
-let temporizadorPesquisa = null;
-
 if (pesquisaConteudos) {
-    pesquisaConteudos.addEventListener(
-        "input",
-        (event) => {
-            termoPesquisa = event.target.value;
+    pesquisaConteudos.addEventListener("input", event => {
+        termoPesquisa = event.target.value;
 
-            if (limparPesquisa) {
-                limparPesquisa.hidden =
-                    !termoPesquisa.trim();
-            }
-
-            // Cancela a atualização anterior
-            clearTimeout(temporizadorPesquisa);
-
-            // Aguarda 180ms para atualizar os resultados
-            temporizadorPesquisa = setTimeout(() => {
-                aplicarFiltros();
-            }, 180);
+        if (limparPesquisa) {
+            limparPesquisa.hidden = !termoPesquisa.trim();
         }
-    );
-}
 
+        clearTimeout(temporizadorPesquisa);
+
+        temporizadorPesquisa = setTimeout(() => {
+            aplicarFiltros();
+        }, 180);
+    });
+}
 
 /* =========================================================
    LIMPAR PESQUISA
 ========================================================= */
 
 if (limparPesquisa) {
+    limparPesquisa.addEventListener("click", () => {
+        clearTimeout(temporizadorPesquisa);
 
-    limparPesquisa.addEventListener(
-        "click",
-        () => {
+        termoPesquisa = "";
 
-            termoPesquisa =
-                "";
-
-            pesquisaConteudos.value =
-                "";
-
-            limparPesquisa.hidden =
-                true;
-
+        if (pesquisaConteudos) {
+            pesquisaConteudos.value = "";
             pesquisaConteudos.focus();
-
-
-            aplicarFiltros();
-
         }
-    );
 
+        limparPesquisa.hidden = true;
+
+        aplicarFiltros();
+    });
 }
-
 
 /* =========================================================
    LIMPAR TODOS OS FILTROS
 ========================================================= */
 
 if (limparFiltros) {
+    limparFiltros.addEventListener("click", () => {
+        clearTimeout(temporizadorPesquisa);
 
-    limparFiltros.addEventListener(
-        "click",
-        () => {
+        termoPesquisa = "";
+        categoriaSelecionada = "Todos";
+        painelCategoriasAberto = false;
 
-            termoPesquisa =
-                "";
-
-            categoriaSelecionada =
-                "Todos";
-
-
-            if (pesquisaConteudos) {
-
-                pesquisaConteudos.value =
-                    "";
-
-                pesquisaConteudos.focus();
-
-            }
-
-
-            if (limparPesquisa) {
-
-                limparPesquisa.hidden =
-                    true;
-
-            }
-
-
-            renderizarCategorias();
-
-            aplicarFiltros();
-
+        if (pesquisaConteudos) {
+            pesquisaConteudos.value = "";
+            pesquisaConteudos.focus();
         }
-    );
 
+        if (limparPesquisa) {
+            limparPesquisa.hidden = true;
+        }
+
+        atualizarUrlCategoria();
+        renderizarCategorias();
+        aplicarFiltros();
+    });
 }
 
-
 /* =========================================================
-   CARREGAR POSTS
+   CARREGAR ARTIGOS DA API
 ========================================================= */
 
 async function carregarTodosPosts() {
-
     try {
-
-
-        /* -------------------------------------------------
-           LOADING
-        ------------------------------------------------- */
-
         if (conteudosLoading) {
-
-            conteudosLoading.hidden =
-                false;
-
+            conteudosLoading.hidden = false;
         }
 
-
-        /* -------------------------------------------------
-           API
-        ------------------------------------------------- */
-
-        const resposta =
-            await fetch(
-                apiPosts
-            );
-
+        const resposta = await fetch(apiPosts);
 
         if (!resposta.ok) {
-
             throw new Error(
                 `Erro HTTP ${resposta.status}`
             );
-
         }
 
+        const dados = await resposta.json();
 
-        const dados =
-            await resposta.json();
+        posts = Array.isArray(dados) ? dados : [];
 
+        categoriaSelecionada = obterCategoriaDaUrl();
 
-        posts =
-            Array.isArray(dados)
-
-                ? dados
-
-                : [];
-
-
-        /* -------------------------------------------------
-           ESCONDER LOADING
-        ------------------------------------------------- */
+        painelCategoriasAberto = false;
 
         if (conteudosLoading) {
-
-            conteudosLoading.hidden =
-                true;
-
+            conteudosLoading.hidden = true;
         }
-
-
-        /* -------------------------------------------------
-           CATEGORIAS
-        ------------------------------------------------- */
 
         renderizarCategorias();
-
-
-        /* -------------------------------------------------
-           POSTS
-        ------------------------------------------------- */
-
         aplicarFiltros();
 
-
-        /* -------------------------------------------------
-           ÍCONES
-        ------------------------------------------------- */
-
         if (window.lucide) {
-
             window.lucide.createIcons();
-
         }
 
-    }
-
-    catch (error) {
-
+    } catch (error) {
         console.error(
             "Erro ao carregar conteúdos:",
             error
         );
 
-
         if (conteudosLoading) {
-
-            conteudosLoading.hidden =
-                true;
-
+            conteudosLoading.hidden = true;
         }
 
-
         if (todosPosts) {
-
             todosPosts.innerHTML = `
-
                 <div class="conteudos-erro">
-
                     <h3>
                         Não foi possível carregar os conteúdos.
                     </h3>
@@ -1752,62 +1341,48 @@ async function carregarTodosPosts() {
                     >
                         Tentar novamente
                     </button>
-
                 </div>
-
             `;
 
-
-            const tentarNovamente =
-                document.getElementById(
-                    "tentarNovamenteConteudos"
-                );
-
+            const tentarNovamente = document.getElementById(
+                "tentarNovamenteConteudos"
+            );
 
             if (tentarNovamente) {
-
                 tentarNovamente.addEventListener(
                     "click",
                     carregarTodosPosts
                 );
-
             }
-
         }
-
     }
-
 }
-
 
 /* =========================================================
    ANO DO RODAPÉ
 ========================================================= */
 
 if (anoAtual) {
-
-    anoAtual.textContent =
-        new Date().getFullYear();
-
+    anoAtual.textContent = new Date().getFullYear();
 }
 
-
 /* =========================================================
-   INICIAR
+   INICIAR PÁGINA
 ========================================================= */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+function iniciarPaginaConteudos() {
+    carregarTodosPosts();
 
-        carregarTodosPosts();
-
-
-        if (window.lucide) {
-
-            window.lucide.createIcons();
-
-        }
-
+    if (window.lucide) {
+        window.lucide.createIcons();
     }
-);
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener(
+        "DOMContentLoaded",
+        iniciarPaginaConteudos
+    );
+} else {
+    iniciarPaginaConteudos();
+}

@@ -5800,3 +5800,100 @@ button {
   }
 }
 
+
+/* ==========================================
+   PSIFÁCIL — CATEGORIAS MAIS COMPACTAS
+   ========================================== */
+
+/* Desktop */
+@media (min-width: 1101px) {
+    .categorias-section .categorias-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 14px;
+    }
+}
+
+/* Organização interna dos cards */
+.categorias-section .categoria-card {
+    min-width: 0;
+    min-height: 205px;
+    padding: 22px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+/* Ícone */
+.categorias-section .categoria-icon {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    margin-bottom: 20px;
+}
+
+/* Título */
+.categorias-section .categoria-card h3 {
+    margin: 0 0 7px;
+    font-size: 16px;
+    line-height: 1.35;
+    overflow-wrap: break-word;
+}
+
+/* Descrição */
+.categorias-section .categoria-card p {
+    max-width: none;
+    margin: 0;
+    padding-right: 10px;
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+/* Espaço reservado para a seta */
+.categorias-section .categoria-card > svg {
+    right: 18px;
+    bottom: 18px;
+}
+
+/* Tablet */
+@media (min-width: 681px) and (max-width: 1100px) {
+    .categorias-section .categorias-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+    }
+}
+
+/* Celular: mantém o carrossel */
+@media (max-width: 680px) {
+    .categorias-section .categoria-card {
+        flex: 0 0 82%;
+        min-height: 205px;
+    }
+}
+
+@media (max-width: 420px) {
+    .categorias-section .categoria-card {
+        flex-basis: 86%;
+    }
+}
+
+/* Card de explorar todos os temas */
+.categorias-section .categoria-card-todos {
+    background: #f0e6df;
+    border-color: #ddccc3;
+}
+
+.categorias-section .categoria-card-todos .categoria-icon {
+    background: #fff;
+}
+
+.categorias-section .categoria-card-todos:hover {
+    background: #eadbd2;
+    border-color: #cdb4a8;
+}
+
+.categorias-section .categoria-card:focus-visible {
+    outline: 3px solid var(--brown);
+    outline-offset: 4px;
+}
