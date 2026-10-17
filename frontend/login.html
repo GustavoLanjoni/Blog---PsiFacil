@@ -2,60 +2,219 @@
 <html lang="pt-BR">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXHLZFTYTN"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
+    <title>Entrar na minha conta | PsiFácil</title>
 
-    gtag('config', 'G-QXHLZFTYTN');
-  </script>
+    <meta name="description"
+        content="Entre na sua conta PsiFácil e continue sua experiência com conteúdos de psicologia e bem-estar.">
 
-  <meta charset="UTF-8">
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Admin | PsiBlog</title>
-  <link rel="stylesheet" href="css/login.css">
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
 
-  <!-- Google adsense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8328619879268221"
-    crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/login-usuario.css">
 
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXHLZFTYTN">
+    </script>
+
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+        gtag("config", "G-QXHLZFTYTN");
+    </script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js?client=ca-pub-8328619879268221"
+        crossorigin="anonymous">
+        </script>
 </head>
 
 <body>
 
-  <main class="login-page">
-    <section class="login-card">
-      <div class="login-logo">
-        <h1>PsiBlog</h1>
-        <p>Acesso administrativo</p>
-      </div>
+    <main class="login-page">
 
-      <form id="loginForm">
-        <div class="form-group">
-          <label>E-mail</label>
-          <input type="email" id="email" placeholder="Digite seu e-mail" required>
+        <div class="login-container">
+
+            <!-- ÁREA DE APRESENTAÇÃO -->
+
+            <section class="login-welcome">
+
+                <a href="psifacil.html" class="brand" aria-label="PsiFácil - página inicial">
+
+
+                    <span class="brand-icon">
+                        <img src="img/favicon.svg" alt="Ícone do PsiFácil">
+                    </span>
+                    <span>PsiFácil</span>
+
+
+                </a>
+
+                <div class="welcome-content">
+
+                    <span class="welcome-tag">
+                        PSICOLOGIA & BEM-ESTAR
+                    </span>
+
+                    <h1>
+                        Um espaço para
+                        <span>cuidar de você.</span>
+                    </h1>
+
+                    <p>
+                        Conhecimento, acolhimento e
+                        reflexões para compreender melhor
+                        suas emoções e viver com mais
+                        equilíbrio.
+                    </p>
+
+                    <div class="welcome-quote">
+                        <span class="quote-symbol">“</span>
+                        <p>
+                            Cuidar da mente também é uma
+                            forma de cuidar da vida.
+                        </p>
+                    </div>
+
+                </div>
+
+                <span class="welcome-footer">
+                    PsiFácil — Conhecimento que acolhe.
+                </span>
+
+            </section>
+
+            <!-- ÁREA DO FORMULÁRIO -->
+
+            <section class="login-form-area">
+
+                <div class="login-card">
+
+
+                    <div class="mobile-brand">
+                        <img src="img/favicon.svg" alt="Ícone do PsiFácil" class="mobile-brand-icon">
+                        <span>PsiFácil</span>
+                    </div>
+
+
+                    <span class="login-eyebrow">
+                        QUE BOM TER VOCÊ DE VOLTA
+                    </span>
+
+                    <h2>Entre na sua conta</h2>
+
+                    <p class="login-description">
+                        Acesse sua conta e continue sua
+                        experiência no PsiFácil.
+                    </p>
+
+                    <form id="formLoginUsuario">
+
+                        <div class="form-group">
+
+                            <label for="email">
+                                E-mail
+                            </label>
+
+                            <input type="email" id="email" name="email" placeholder="seuemail@email.com"
+                                autocomplete="username" maxlength="254" required>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="senha">
+                                Senha
+                            </label>
+
+                            <div class="password-wrapper">
+
+                                <input type="password" id="senha" name="senha" placeholder="Digite sua senha"
+                                    autocomplete="current-password" required>
+
+                                <button type="button" id="toggleSenha" class="toggle-password"
+                                    aria-label="Mostrar senha" aria-pressed="false">
+                                    Mostrar
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <p id="mensagemErro" class="mensagem-erro" role="alert" aria-live="polite"></p>
+
+                        <button type="submit" class="btn-login">
+                            Entrar na minha conta
+                            <span aria-hidden="true">→</span>
+                        </button>
+
+                    </form>
+
+                    <div class="signup-area">
+
+                        <p>
+                            Ainda não tem uma conta?
+                            <a href="cadastro.html">
+                                Cadastre-se gratuitamente
+                            </a>
+                        </p>
+
+                    </div>
+
+                    <a href="psifacil.html" class="back-link">
+                        ← Voltar para o site
+                    </a>
+
+                    <p class="privacy-note">
+                        Sua experiência começa em um
+                        ambiente acolhedor e respeitoso.
+                    </p>
+
+                </div>
+
+            </section>
+
         </div>
 
-        <div class="form-group">
-          <label>Senha</label>
-          <input type="password" id="senha" placeholder="Digite sua senha" required>
-        </div>
+    </main>
 
-        <p id="mensagemErro" class="mensagem-erro"></p>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-        <button type="submit">Entrar no painel</button>
-      </form>
+    <script src="js/login-usuario.js"></script>
 
-      <a href="psifacil.html" class="voltar-blog">← Voltar para o blog</a>
-    </section>
-  </main>
+    <script>
+        const toggleSenha =
+            document.getElementById("toggleSenha");
 
-  <script src="js/login.js"></script>
+        const campoSenha =
+            document.getElementById("senha");
+
+        toggleSenha.addEventListener("click", () => {
+            const mostrando =
+                campoSenha.type === "text";
+
+            campoSenha.type =
+                mostrando ? "password" : "text";
+
+            toggleSenha.textContent =
+                mostrando ? "Mostrar" : "Ocultar";
+
+            toggleSenha.setAttribute(
+                "aria-label",
+                mostrando ? "Mostrar senha" : "Ocultar senha"
+            );
+
+            toggleSenha.setAttribute(
+                "aria-pressed",
+                String(!mostrando)
+            );
+        });
+    </script>
+
 </body>
 
 </html>

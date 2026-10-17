@@ -410,3 +410,30 @@ a {
     transition: none !important;
   }
 }
+
+
+
+/* LOGO OFICIAL DO PSIFÁCIL NO CELULAR */
+
+.mobile-brand {
+  display: none;
+  align-items: center;
+  gap: 12px;
+}
+
+.mobile-brand-icon {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+@media (max-width: 800px) {
+  .mobile-brand {
+    display: flex;
+    align-items: center;
+    font-size: 25px;
+    font-weight: 800;
+    margin-bottom: 55px;
+  }
+}

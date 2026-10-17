@@ -387,7 +387,7 @@ async function alternarPostSalvo(
 
   if (!token) {
     window.location.href =
-      "login-usuario.html";
+      "login.html";
 
     return;
   }
@@ -460,7 +460,7 @@ async function alternarPostSalvo(
       );
 
       window.location.href =
-        "login-usuario.html";
+        "login.html";
 
       return;
     }
@@ -1324,7 +1324,7 @@ async function alternarFraseSalva() {
 
   if (!token) {
     window.location.href =
-      "login-usuario.html";
+      "login.html";
 
     return;
   }
@@ -1393,7 +1393,7 @@ async function alternarFraseSalva() {
       );
 
       window.location.href =
-        "login-usuario.html";
+        "login.html";
 
       return;
     }

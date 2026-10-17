@@ -1,74 +1,276 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QXHLZFTYTN"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
+  <title>Criar minha conta | PsiFácil</title>
 
-        gtag('config', 'G-QXHLZFTYTN');
-    </script>
+  <meta name="description"
+        content="Crie sua conta gratuitamente no PsiFácil e participe de um espaço dedicado à psicologia e ao bem-estar.">
 
+  <link rel="icon"
+        type="image/svg+xml"
+        href="img/favicon.svg">
 
-    <meta charset="UTF-8">
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar Conta | PsiFácil</title>
-    <link rel="stylesheet" href="css/cadastro-usuario.css">
+  <link rel="stylesheet"
+        href="css/cadastro-usuario.css">
 
-    <!-- Google adsense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8328619879268221"
-        crossorigin="anonymous"></script>
+  <!-- Google Analytics -->
+  <script async
+    src="https://www.googletagmanager.com/gtag/js?id=G-QXHLZFTYTN">
+  </script>
 
-
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+    gtag("config", "G-QXHLZFTYTN");
+  </script>
 </head>
 
 <body>
 
-    <main class="login-page">
-        <section class="login-card">
-            <span class="tag">Criar conta</span>
+  <main class="cadastro-page">
 
-            <h1>Cadastre-se</h1>
-            <p>Crie sua conta para interagir com os conteúdos do PsiFácil.</p>
+    <div class="cadastro-container">
 
-            <form id="formCadastro">
-                <div class="form-group">
-                    <label>Nome</label>
-                    <input type="text" id="nome" placeholder="Seu nome completo">
-                </div>
+      <!-- APRESENTAÇÃO -->
 
-                <div class="form-group">
-                    <label>E-mail</label>
-                    <input type="email" id="email" placeholder="seuemail@email.com">
-                </div>
+      <section class="cadastro-welcome">
 
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" id="senha" placeholder="Crie uma senha">
-                </div>
+        <a
+          href="psifacil.html"
+          class="brand"
+          aria-label="PsiFácil - página inicial"
+        >
+          <img
+            src="img/favicon.svg"
+            alt=""
+            class="brand-icon"
+          >
+          <span>PsiFácil</span>
+        </a>
 
-                <p id="mensagemErro" class="mensagem-erro"></p>
+        <div class="welcome-content">
 
-                <button type="submit">Criar conta</button>
-            </form>
+          <span class="welcome-tag">
+            PSICOLOGIA & BEM-ESTAR
+          </span>
 
-            <a href="login-usuario.html" class="back-link">
-                Já tenho conta
-            </a>
+          <h1>
+            Seu espaço de
+            <span>autoconhecimento começa aqui.</span>
+          </h1>
 
-            <a href="psifacil.html" class="back-link">
-                Voltar para o site
-            </a>
-        </section>
-    </main>
-    <div id="toast" class="toast"></div>
-    <script src="js/cadastro.js"></script>
+          <p>
+            Faça parte do PsiFácil e tenha
+            uma experiência mais próxima
+            dos conteúdos que ajudam você
+            a compreender suas emoções.
+          </p>
+
+          <div class="welcome-quote">
+            <span class="quote-symbol">“</span>
+            <p>
+              Cada passo em direção ao
+              autoconhecimento é uma forma
+              de cuidar de si.
+            </p>
+          </div>
+
+        </div>
+
+        <span class="welcome-footer">
+          PsiFácil — Conhecimento que acolhe.
+        </span>
+
+      </section>
+
+      <!-- FORMULÁRIO -->
+
+      <section class="cadastro-form-area">
+
+        <div class="cadastro-card">
+
+          <!-- LOGO PARA CELULAR -->
+
+          <a
+            href="psifacil.html"
+            class="mobile-brand"
+            aria-label="PsiFácil - página inicial"
+          >
+            <img
+              src="img/favicon.svg"
+              alt=""
+              class="mobile-brand-icon"
+            >
+            <span>PsiFácil</span>
+          </a>
+
+          <span class="cadastro-eyebrow">
+            COMECE SUA JORNADA
+          </span>
+
+          <h2>Crie sua conta</h2>
+
+          <p class="cadastro-description">
+            É gratuito! Cadastre-se para
+            interagir com os conteúdos
+            do PsiFácil.
+          </p>
+
+          <form id="formCadastro">
+
+            <div class="form-group">
+              <label for="nome">
+                Nome completo
+              </label>
+
+              <input
+                type="text"
+                id="nome"
+                name="nome"
+                placeholder="Como podemos chamar você?"
+                autocomplete="name"
+                maxlength="120"
+                required
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="email">
+                E-mail
+              </label>
+
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="seuemail@email.com"
+                autocomplete="email"
+                maxlength="254"
+                required
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="senha">
+                Crie uma senha
+              </label>
+
+              <div class="password-wrapper">
+
+                <input
+                  type="password"
+                  id="senha"
+                  name="senha"
+                  placeholder="Digite sua senha"
+                  autocomplete="new-password"
+                  required
+                >
+
+                <button
+                  type="button"
+                  id="toggleSenha"
+                  class="toggle-password"
+                  aria-label="Mostrar senha"
+                  aria-pressed="false"
+                >
+                  Mostrar
+                </button>
+
+              </div>
+            </div>
+
+            <p
+              id="mensagemErro"
+              class="mensagem-erro"
+              role="alert"
+              aria-live="polite"
+            ></p>
+
+            <button
+              type="submit"
+              class="btn-cadastro"
+            >
+              Criar minha conta
+              <span aria-hidden="true">→</span>
+            </button>
+
+          </form>
+
+          <div class="signin-area">
+            <p>
+              Já faz parte do PsiFácil?
+              <a href="login.html">
+                Entrar na minha conta
+              </a>
+            </p>
+          </div>
+
+          <a
+            href="psifacil.html"
+            class="back-link"
+          >
+            ← Voltar para o site
+          </a>
+
+          <p class="privacy-note">
+            Seu espaço para aprender,
+            refletir e se conhecer melhor.
+          </p>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+  ></div>
+
+  <script src="js/cadastro.js"></script>
+
+  <script>
+    const toggleSenha =
+      document.getElementById("toggleSenha");
+
+    const campoSenha =
+      document.getElementById("senha");
+
+    toggleSenha.addEventListener("click", () => {
+      const mostrando =
+        campoSenha.type === "text";
+
+      campoSenha.type =
+        mostrando ? "password" : "text";
+
+      toggleSenha.textContent =
+        mostrando ? "Mostrar" : "Ocultar";
+
+      toggleSenha.setAttribute(
+        "aria-label",
+        mostrando ? "Mostrar senha" : "Ocultar senha"
+      );
+
+      toggleSenha.setAttribute(
+        "aria-pressed",
+        String(!mostrando)
+      );
+    });
+  </script>
+
 </body>
-
 </html>

@@ -73,7 +73,7 @@ const totalFrasesSalvas =
 if (!token) {
 
   window.location.href =
-    "login-usuario.html";
+    "login.html";
 
 }
 
@@ -123,7 +123,7 @@ function encerrarSessao() {
 
 
   window.location.href =
-    "login-usuario.html";
+    "login.html";
 
 }
 
@@ -2600,7 +2600,7 @@ if (btnConfirmarExcluirConta) {
         setTimeout(() => {
 
           window.location.href =
-            "login-usuario.html";
+            "login.html";
 
         }, 1500);
 
@@ -2704,7 +2704,7 @@ if (btnConfirmarExcluirConta) {
           setTimeout(() => {
 
             window.location.href =
-              "login-usuario.html";
+              "login.html";
 
           }, 1600);
 
@@ -4332,7 +4332,7 @@ function sairUsuario() {
 
 
   window.location.href =
-    "login-usuario.html";
+    "login.html";
 
 }
 

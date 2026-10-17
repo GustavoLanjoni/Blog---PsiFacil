@@ -2136,7 +2136,7 @@ if (btnSalvar) {
 
         window.location.href =
 
-          "/login-usuario.html";
+          "/login.html";
 
 
 
@@ -2230,7 +2230,7 @@ if (btnSalvar) {
 
           window.location.href =
 
-            "/login-usuario.html";
+            "/login.html";
 
 
 

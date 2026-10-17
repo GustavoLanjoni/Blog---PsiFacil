@@ -42,7 +42,7 @@ formCadastro.addEventListener("submit", async (e) => {
     }
 
     mostrarToast("Conta criada com sucesso!");
-    window.location.href = "login-usuario.html";
+    window.location.href = "login.html";
 
   } catch (error) {
     console.error(error);

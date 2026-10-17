@@ -1110,7 +1110,7 @@ async function alternarSalvarArtigo(botao) {
     if (!id) return;
 
     if (!tokenUsuario) {
-        window.location.href = "/login-usuario.html";
+        window.location.href = "/login.html";
         return;
     }
 
@@ -1137,7 +1137,7 @@ async function alternarSalvarArtigo(botao) {
         ) {
             localStorage.removeItem("tokenUsuario");
 
-            window.location.href = "/login-usuario.html";
+            window.location.href = "/login.html";
             return;
         }
 

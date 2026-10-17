@@ -3564,7 +3564,7 @@ function sairAdmin() {
 
 
     window.location.href =
-        "login-usuario.html"
+        "login.html"
 }
 
 
@@ -4591,7 +4591,7 @@ async function carregarParceriasAdmin() {
 
 
             window.location.href =
-                "login-usuario.html"
+                "login.html"
 
             return;
 
@@ -4711,7 +4711,7 @@ async function alterarStatusParceria(
     if (!tokenAdmin) {
 
         window.location.href =
-            "login-usuario.html";
+            "login.html";
 
 
         return;
@@ -4815,7 +4815,7 @@ async function alterarStatusParceria(
 
 
             window.location.href =
-                "login-usuario.html";
+                "login.html";
 
 
             return;
@@ -4918,7 +4918,7 @@ async function excluirParceria(id) {
     if (!tokenAdmin) {
 
         window.location.href =
-            "login-usuario.html";
+            "login.html";
 
 
         return;
@@ -4975,7 +4975,7 @@ async function excluirParceria(id) {
 
 
             window.location.href =
-                "login-usuario.html";
+                "login.html";
 
 
             return;
@@ -5110,7 +5110,7 @@ async function iniciarPainelAdmin() {
     if (!tokenAdmin) {
 
         window.location.href =
-            "login-usuario.html"
+            "login.html"
         return;
 
     }
