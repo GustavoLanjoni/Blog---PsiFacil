@@ -5,28 +5,15 @@
 
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Leads Capturados | PsiFácil</title>
 
-    <link
-        rel="icon"
-        type="image/svg+xml"
-        href="img/favicon.svg"
-    >
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
 
-    <link
-        rel="stylesheet"
-        href="css/admin.css"
-    >
+    <link rel="stylesheet" href="css/admin.css">
 
-    <link
-        rel="stylesheet"
-        href="css/leads.css"
-    >
+    <link rel="stylesheet" href="css/leads.css">
 
 </head>
 
@@ -42,8 +29,7 @@
 
         if (!localStorage.getItem("tokenAdmin")) {
 
-            window.location.href = "login.html";
-
+            window.location.href = "login-usuario.html";
         }
 
     </script>
@@ -54,10 +40,7 @@
          OVERLAY MOBILE
     ========================================== -->
 
-    <div
-        class="leads-sidebar-overlay"
-        id="adminSidebarOverlay"
-    ></div>
+    <div class="leads-sidebar-overlay" id="adminSidebarOverlay"></div>
 
 
 
@@ -65,10 +48,7 @@
          SIDEBAR
     ========================================== -->
 
-    <aside
-        class="leads-sidebar"
-        id="adminSidebar"
-    >
+    <aside class="leads-sidebar" id="adminSidebar">
 
 
         <!-- LOGO -->
@@ -96,12 +76,7 @@
             </div>
 
 
-            <button
-                type="button"
-                class="leads-sidebar-close"
-                id="adminSidebarClose"
-                aria-label="Fechar menu"
-            >
+            <button type="button" class="leads-sidebar-close" id="adminSidebarClose" aria-label="Fechar menu">
 
                 <i data-lucide="x"></i>
 
@@ -126,10 +101,7 @@
                 </span>
 
 
-                <a
-                    href="admin.html#dashboard"
-                    class="leads-nav-item"
-                >
+                <a href="admin.html#dashboard" class="leads-nav-item">
 
                     <i data-lucide="layout-dashboard"></i>
 
@@ -140,10 +112,7 @@
                 </a>
 
 
-                <a
-                    href="leads.html"
-                    class="leads-nav-item active"
-                >
+                <a href="leads.html" class="leads-nav-item active">
 
                     <i data-lucide="users"></i>
 
@@ -166,10 +135,7 @@
                 </span>
 
 
-                <a
-                    href="admin.html#criar-post"
-                    class="leads-nav-item"
-                >
+                <a href="admin.html#criar-post" class="leads-nav-item">
 
                     <i data-lucide="file-plus-2"></i>
 
@@ -180,10 +146,7 @@
                 </a>
 
 
-                <a
-                    href="admin.html#posts"
-                    class="leads-nav-item"
-                >
+                <a href="admin.html#posts" class="leads-nav-item">
 
                     <i data-lucide="newspaper"></i>
 
@@ -194,10 +157,7 @@
                 </a>
 
 
-                <a
-                    href="admin.html#novidade"
-                    class="leads-nav-item"
-                >
+                <a href="admin.html#novidade" class="leads-nav-item">
 
                     <i data-lucide="send"></i>
 
@@ -220,12 +180,7 @@
                 </span>
 
 
-                <a
-                    href="psifacil.html"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="leads-nav-item"
-                >
+                <a href="psifacil.html" target="_blank" rel="noopener noreferrer" class="leads-nav-item">
 
                     <i data-lucide="external-link"></i>
 
@@ -236,11 +191,7 @@
                 </a>
 
 
-                <button
-                    type="button"
-                    class="leads-nav-item leads-nav-button"
-                    onclick="sairAdmin()"
-                >
+                <button type="button" class="leads-nav-item leads-nav-button" onclick="sairAdmin()">
 
                     <i data-lucide="log-out"></i>
 
@@ -277,12 +228,7 @@
             <div class="leads-header-left">
 
 
-                <button
-                    type="button"
-                    class="leads-menu-button"
-                    id="adminMenuButton"
-                    aria-label="Abrir menu"
-                >
+                <button type="button" class="leads-menu-button" id="adminMenuButton" aria-label="Abrir menu">
 
                     <i data-lucide="menu"></i>
 
@@ -310,10 +256,7 @@
             </div>
 
 
-            <a
-                href="admin.html#dashboard"
-                class="leads-back-button"
-            >
+            <a href="admin.html#dashboard" class="leads-back-button">
 
                 <i data-lucide="arrow-left"></i>
 
@@ -489,10 +432,7 @@
                     o leads.js já utiliza este elemento.
                 -->
 
-                <div
-                    class="leads-list"
-                    id="listaLeadsAdmin"
-                >
+                <div class="leads-list" id="listaLeadsAdmin">
 
 
                     <div class="leads-loading-state">
@@ -664,8 +604,7 @@
             );
 
             window.location.href =
-                "login.html";
-
+                "login-usuario.html"
         }
 
 
