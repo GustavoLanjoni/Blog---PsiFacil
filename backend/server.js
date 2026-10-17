@@ -252,11 +252,16 @@ app.use(
 );
 
 /* =========================================
-   LIMITES DE AUTENTICAÇÃO
+   RATE LIMIT - AUTENTICAÇÃO
 ========================================= */
 
 app.use(
   "/auth/login",
+  limiteLogin
+);
+
+app.use(
+  "/auth/login-unico",
   limiteLogin
 );
 

@@ -9,6 +9,7 @@ const router = express.Router();
    AUTENTICAÇÃO DO USUÁRIO
 ===================================================== */
 
+
 function autenticarUsuario(req, res, next) {
     const authorization = req.headers.authorization || "";
 
@@ -31,21 +32,33 @@ function autenticarUsuario(req, res, next) {
 
         const decoded = jwt.verify(
             token,
-            process.env.JWT_SECRET
+            process.env.JWT_SECRET,
+            { algorithms: ["HS256"] }
         );
+
+        // Aceita tokens antigos e novos dos leitores.
+        // Bloqueia tokens administrativos.
 
         if (
             !decoded ||
-            !/^[1-9]\d*$/.test(String(decoded.id || ""))
+            !/^[1-9]\d*$/.test(String(decoded.id || "")) ||
+            (
+                decoded.role !== undefined &&
+                decoded.role !== "usuario"
+            ) ||
+            (
+                decoded.role === undefined &&
+                decoded.email !== undefined
+            )
         ) {
-            return res.status(401).json({
-                erro: "Sessão inválida."
+            return res.status(403).json({
+                erro: "Acesso permitido apenas para usuários."
             });
         }
 
         req.usuarioId = String(decoded.id);
 
-        next();
+        return next();
 
     } catch (error) {
         return res.status(401).json({
@@ -53,6 +66,7 @@ function autenticarUsuario(req, res, next) {
         });
     }
 }
+
 
 /* =====================================================
    CONSULTAR PREFERÊNCIA DO HISTÓRICO
