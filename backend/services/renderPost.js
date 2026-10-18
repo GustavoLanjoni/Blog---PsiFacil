@@ -62,7 +62,6 @@ function limparHtml(valor = "") {
         .trim();
 }
 
-
 function criarDescricao(post) {
     const resumo = limparHtml(post.resumo || "");
     const conteudo = limparHtml(post.conteudo || "");
@@ -85,7 +84,6 @@ function criarDescricao(post) {
             : trecho
     ).trimEnd() + "...";
 }
-
 
 function calcularTempoLeitura(conteudo = "") {
     const texto = limparHtml(conteudo);
@@ -113,7 +111,6 @@ function formatarData(data) {
         timeZone: "America/Sao_Paulo"
     });
 }
-
 
 function normalizarImagem(imagem = "") {
     const valor = String(imagem || "").trim();
@@ -144,7 +141,6 @@ function normalizarImagem(imagem = "") {
         return "";
     }
 }
-
 
 /* =====================================================
    FONTES E CRÉDITOS FORMATADOS
@@ -237,7 +233,6 @@ function gerarAvisoSaudeMental() {
             class="aviso-saude-mental"
             aria-labelledby="avisoSaudeMentalTitulo"
         >
-
             <h2 id="avisoSaudeMentalTitulo">
                 ⚠️ Um lembrete importante do PsiFácil
             </h2>
@@ -287,7 +282,6 @@ function gerarAvisoSaudeMental() {
                     cuidado e acolhimento.
                 </strong>
             </p>
-
         </section>
     `;
 }
@@ -327,8 +321,20 @@ function renderPost(post) {
         ? escaparHtml(imagemOriginal)
         : "";
 
-    const dataPublicacaoISO = post.criado_em
-        ? new Date(post.criado_em).toISOString()
+    /* ================================================
+       DATA REAL DE PUBLICAÇÃO — CORRIGIDO
+
+       Prioriza a data em que o artigo foi publicado.
+       Mantém criado_em como alternativa para artigos
+       antigos que ainda não possuem publicado_em.
+    ================================================= */
+
+    const dataEfetivaPublicacao =
+        post.publicado_em ||
+        post.criado_em;
+
+    const dataPublicacaoISO = dataEfetivaPublicacao
+        ? new Date(dataEfetivaPublicacao).toISOString()
         : "";
 
     const dataModificacaoISO = post.atualizado_em
@@ -336,7 +342,7 @@ function renderPost(post) {
         : dataPublicacaoISO;
 
     const dataPublicacao = formatarData(
-        post.criado_em
+        dataEfetivaPublicacao
     );
 
     const tempoLeitura = calcularTempoLeitura(
@@ -801,7 +807,7 @@ function renderPost(post) {
                                     aria-hidden="true"
                                 >
                                     <path
-                                        d="M23.5 6.2s-.2-1.6-.8-2.3c-.8-.9-1.7-.9-2.1-1C17.5 2.6 12 2.6 12 2.6h0s-5.5 0-8.6.3c-.5.1-1.3.1-2.1 1C.7 4.6.5 6.2.5 6.2S.2 8 .2 9.8v1.4c0 1.8.3 3.6.3 3.6s.2 1.6.8 2.3c.8.9 1.9.9 2.4 1 1.7.2 7.3.3 7.3.3s5.5 0 8.6-.3c.5-.1 1.3-.1-2.1-1 .6-.7.8-2.3.8-2.3s.3-1.8.3-3.6V9.8c0-1.8-.3-3.6-.3-3.6zM9.8 14.7V7.8l6 3.5-6 3.4z"
+                                        d="M23.5 6.2s-.2-1.6-.8-2.3c-.8-.9-1.7-.9-2.1-1C17.5 2.6 12 2.6 12 2.6h0s-5.5 0-8.6.3c-.5.1-1.3.1-2.1 1C.7 4.6.5 6.2.5 6.2S.2 8 .2 9.8v1.4c0 1.8.3 3.6.3 3.6s.2 1.6.8 2.3c.8.9 1.9.9 2.4 1 1.7.2 7.3.3 7.3.3s5.5 0 8.6-.3c.5-.1 1.3-.1 2.1-1 .6-.7.8-2.3.8-2.3s.3-1.8.3-3.6V9.8c0-1.8-.3-3.6-.3-3.6zM9.8 14.7V7.8l6 3.5-6 3.4z"
                                     />
                                 </svg>
                             </a>
