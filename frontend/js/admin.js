@@ -1189,13 +1189,15 @@ function montarDadosPost() {
             ? statusPost.value
             : "publicado";
 
+
     const agendadoValor =
         agendadoPara &&
             agendadoPara.value
-            ? new Date(
+            ? converterHorarioBrasiliaParaISO(
                 agendadoPara.value
-            ).toISOString()
+            )
             : null;
+
 
 
     return {
@@ -2168,50 +2170,91 @@ async function carregarPostsAdmin() {
    FORMATAR DATA PARA DATETIME-LOCAL
 ========================================================= */
 
-function converterParaDatetimeLocal(
-    data
-) {
 
-    if (!data) {
+function obterPartesDataBrasilia(data) {
 
-        return "";
+    const partes = new Intl.DateTimeFormat(
+        "en-US",
+        {
+            timeZone: "America/Sao_Paulo",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hourCycle: "h23"
+        }
+    ).formatToParts(data);
 
-    }
-
-
-    const d =
-        new Date(data);
-
-
-    if (
-        Number.isNaN(
-            d.getTime()
-        )
-    ) {
-
-        return "";
-
-    }
-
-
-    const pad =
-        (numero) =>
-            String(numero)
-                .padStart(
-                    2,
-                    "0"
-                );
-
-
-    return (
-        `${d.getFullYear()}-` +
-        `${pad(d.getMonth() + 1)}-` +
-        `${pad(d.getDate())}T` +
-        `${pad(d.getHours())}:` +
-        `${pad(d.getMinutes())}`
+    return Object.fromEntries(
+        partes.map(parte => [parte.type, parte.value])
     );
 
 }
+
+
+function converterHorarioBrasiliaParaISO(valor) {
+
+    if (!valor) return null;
+
+    const resultado =
+        /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/.exec(valor);
+
+    if (!resultado) return null;
+
+    const [, ano, mes, dia, hora, minuto] = resultado.map(Number);
+
+    const utcBase = Date.UTC(ano, mes - 1, dia, hora, minuto);
+    let instante = utcBase;
+
+    for (let tentativa = 0; tentativa < 3; tentativa++) {
+
+        const partes = obterPartesDataBrasilia(new Date(instante));
+
+        const horarioBrasiliaComoUTC = Date.UTC(
+            Number(partes.year),
+            Number(partes.month) - 1,
+            Number(partes.day),
+            Number(partes.hour),
+            Number(partes.minute),
+            Number(partes.second)
+        );
+
+        instante += utcBase - horarioBrasiliaComoUTC;
+
+    }
+
+    const conferencia = obterPartesDataBrasilia(new Date(instante));
+
+    const horarioConferido =
+        `${conferencia.year}-${conferencia.month}-${conferencia.day}` +
+        `T${conferencia.hour}:${conferencia.minute}`;
+
+    if (horarioConferido !== valor) return null;
+
+    return new Date(instante).toISOString();
+
+}
+
+
+function converterParaDatetimeLocal(data) {
+
+    if (!data) return "";
+
+    const dataObjeto = new Date(data);
+
+    if (Number.isNaN(dataObjeto.getTime())) return "";
+
+    const partes = obterPartesDataBrasilia(dataObjeto);
+
+    return (
+        `${partes.year}-${partes.month}-${partes.day}T` +
+        `${partes.hour}:${partes.minute}`
+    );
+
+}
+
 
 
 /* =========================================================
