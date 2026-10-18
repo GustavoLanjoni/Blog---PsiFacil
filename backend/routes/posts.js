@@ -758,7 +758,7 @@ router.post(
               $7,
               $8,
               $9,
-              CASE WHEN $8 = 'publicado' THEN NOW() ELSE NULL END,
+              CASE WHEN $8::varchar = 'publicado' THEN NOW() ELSE NULL END,
               FALSE
             )
 
@@ -977,10 +977,10 @@ router.put(
               status = $7,
               agendado_para = $8,
               slug = $9,
-              publicado_em = CASE
-                WHEN $7 = 'publicado' THEN COALESCE(publicado_em, NOW())
-                ELSE publicado_em
-              END
+publicado_em = CASE
+  WHEN $7::varchar = 'publicado' THEN COALESCE(publicado_em, NOW())
+  ELSE publicado_em
+END
 
             WHERE id = $10
 
