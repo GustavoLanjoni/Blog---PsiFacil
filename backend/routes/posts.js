@@ -1,3 +1,4 @@
+
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
@@ -363,19 +364,20 @@ async function processarPostsAgendados() {
      * acabaram de mudar para "publicado".
      */
 
-    const resultado =
-      await db.query(
-        `
-          UPDATE posts
+    const resultado = await db.query(
+      `
+    UPDATE posts
 
-          SET status = 'publicado'
+    SET
+      status = 'publicado',
+      publicado_em = COALESCE(publicado_em, agendado_para, NOW())
 
-          WHERE status = 'agendado'
-            AND agendado_para <= NOW()
+    WHERE status = 'agendado'
+      AND agendado_para <= NOW()
 
-          RETURNING *
-        `
-      );
+    RETURNING *
+  `
+    );
 
 
     if (
@@ -742,6 +744,7 @@ router.post(
               fontes,
               status,
               agendado_para,
+              publicado_em,
               notificacao_enviada
             )
 
@@ -755,6 +758,7 @@ router.post(
               $7,
               $8,
               $9,
+              CASE WHEN $8 = 'publicado' THEN NOW() ELSE NULL END,
               FALSE
             )
 
@@ -972,7 +976,11 @@ router.put(
               fontes = $6,
               status = $7,
               agendado_para = $8,
-              slug = $9
+              slug = $9,
+              publicado_em = CASE
+                WHEN $7 = 'publicado' THEN COALESCE(publicado_em, NOW())
+                ELSE publicado_em
+              END
 
             WHERE id = $10
 
