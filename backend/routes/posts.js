@@ -825,14 +825,17 @@ router.post(
    EDITAR POST
 ========================================================= */
 
+
+/* =====================================================
+   EDITAR POST
+===================================================== */
+
 router.put(
   "/:id",
   autenticarAdmin,
   async (req, res) => {
 
-    const { id } =
-      req.params;
-
+    const { id } = req.params;
 
     const {
       titulo,
@@ -845,48 +848,34 @@ router.put(
       agendado_para
     } = req.body;
 
-
     /* =====================================================
        VALIDAÇÃO
     ===================================================== */
 
-    if (
-      !titulo ||
-      !conteudo
-    ) {
-
+    if (!titulo || !conteudo) {
       return res.status(400).json({
-        erro:
-          "Título e conteúdo são obrigatórios"
+        erro: "Título e conteúdo são obrigatórios"
       });
-
     }
-
 
     const statusFinal =
       status === "agendado"
         ? "agendado"
         : "publicado";
 
-
     const agendamentoFinal =
       statusFinal === "agendado"
         ? agendado_para
         : null;
 
-
     if (
       statusFinal === "agendado" &&
       !agendamentoFinal
     ) {
-
       return res.status(400).json({
-        erro:
-          "Escolha a data e hora do agendamento."
+        erro: "Escolha a data e hora do agendamento."
       });
-
     }
-
 
     try {
 
@@ -894,120 +883,101 @@ router.put(
          BUSCAR ESTADO ANTERIOR
       =================================================== */
 
-      const anterior =
-        await db.query(
-          `
-            SELECT
-              status,
-              notificacao_enviada,
-              slug
+      const anterior = await db.query(
+        `
+          SELECT
+            status,
+            notificacao_enviada,
+            slug
+          FROM posts
+          WHERE id = $1
+        `,
+        [id]
+      );
 
-            FROM posts
-
-            WHERE id = $1
-          `,
-          [
-            id
-          ]
-        );
-
-
-      if (
-        anterior.rows.length === 0
-      ) {
-
+      if (anterior.rows.length === 0) {
         return res.status(404).json({
-          erro:
-            "Post não encontrado"
+          erro: "Post não encontrado"
         });
-
       }
 
-
-      const postAnterior =
-        anterior.rows[0];
-
+      const postAnterior = anterior.rows[0];
 
       /* ===================================================
-         PROTEÇÃO PARA POSTS ANTIGOS SEM SLUG
+         PRESERVAR O SLUG DO ARTIGO
 
-         Normalmente o slug NÃO muda durante uma edição.
-
-         Porém, se existir algum post antigo sem slug,
-         geramos um automaticamente uma única vez.
+         O slug existente não muda quando o título
+         é editado, preservando a URL pública e o SEO.
       =================================================== */
 
-      let slugAtual =
-        postAnterior.slug;
-
+      let slugAtual = postAnterior.slug;
 
       if (
         !slugAtual ||
         !String(slugAtual).trim()
       ) {
-
-        slugAtual =
-          await gerarSlugUnico(
-            titulo
-          );
-
+        slugAtual = await gerarSlugUnico(titulo);
       }
 
-
       /* ===================================================
-         ATUALIZAR POST
+         ATUALIZAR ARTIGO
 
-         IMPORTANTE:
-         Alterar o título NÃO altera o slug existente.
-         Isso preserva a URL para SEO.
+         NOVO:
+         atualizado_em = NOW()
+
+         Registra a última edição sem modificar
+         a data de criação ou a lógica de publicação.
       =================================================== */
 
-      const resultado =
-        await db.query(
-          `
-            UPDATE posts
+      const resultado = await db.query(
+        `
+          UPDATE posts
 
-            SET
-              titulo = $1,
-              categoria = $2,
-              resumo = $3,
-              conteudo = $4,
-              imagem = $5,
-              fontes = $6,
-              status = $7,
-              agendado_para = $8,
-              slug = $9,
-publicado_em = CASE
-  WHEN $7::varchar = 'publicado' THEN COALESCE(publicado_em, NOW())
-  ELSE publicado_em
-END
+          SET
+            titulo = $1,
+            categoria = $2,
+            resumo = $3,
+            conteudo = $4,
+            imagem = $5,
+            fontes = $6,
+            status = $7,
+            agendado_para = $8,
+            slug = $9,
+            
 
-            WHERE id = $10
+            publicado_em = CASE
+              WHEN $7::varchar = 'publicado'
+                THEN COALESCE(publicado_em, NOW())
+              ELSE publicado_em
+            END,
 
-            RETURNING *
-          `,
-          [
-            titulo,
-            categoria,
-            resumo,
-            conteudo,
-            imagem,
-            fontes,
-            statusFinal,
-            agendamentoFinal,
-            slugAtual,
-            id
-          ]
-        );
+            atualizado_em = NOW()
 
+          WHERE id = $10
 
-      const postAtualizado =
-        resultado.rows[0];
+          RETURNING *
+        `,
+        [
+          titulo,
+          categoria,
+          resumo,
+          conteudo,
+          imagem,
+          fontes,
+          statusFinal,
+          agendamentoFinal,
+          slugAtual,
+          id
+        ]
+      );
 
+      const postAtualizado = resultado.rows[0];
 
       /* ===================================================
-         SE ERA AGENDADO E FOI PUBLICADO MANUALMENTE,
-         ENVIAR A NOTIFICAÇÃO
+         NOTIFICAÇÃO
+
+         Se um artigo estava agendado e foi
+         publicado manualmente, envia a notificação.
       =================================================== */
 
       if (
@@ -1015,18 +985,14 @@ END
         postAtualizado.status === "publicado" &&
         postAtualizado.notificacao_enviada !== true
       ) {
-
-        await notificarNovoArtigo(
-          postAtualizado
-        );
-
+        await notificarNovoArtigo(postAtualizado);
       }
 
+      /* ===================================================
+         RESPOSTA
+      =================================================== */
 
-      res.json(
-        postAtualizado
-      );
-
+      res.json(postAtualizado);
 
     } catch (error) {
 
@@ -1035,10 +1001,8 @@ END
         error
       );
 
-
       res.status(500).json({
-        erro:
-          "Erro ao atualizar post"
+        erro: "Erro ao atualizar post"
       });
 
     }

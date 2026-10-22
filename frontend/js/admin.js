@@ -25,6 +25,28 @@ const previewImagem = document.getElementById("previewImagem");
 const listaPostsAdmin = document.getElementById("listaPostsAdmin");
 const listaPostsRecentes = document.getElementById("listaPostsRecentes");
 
+
+/* =========================================================
+   GERENCIADOR DE PUBLICAÇÕES - FILTROS
+========================================================= */
+
+const pesquisaPostsAdmin =
+    document.getElementById("pesquisaPostsAdmin");
+
+const filtroStatusPostsAdmin =
+    document.getElementById("filtroStatusPostsAdmin");
+
+const ordenacaoPostsAdmin =
+    document.getElementById("ordenacaoPostsAdmin");
+
+const quantidadePostsFiltrados =
+    document.getElementById("quantidadePostsFiltrados");
+
+// Armazena os artigos carregados da API para filtrar
+// sem precisar consultar o servidor a cada pesquisa.
+let todosPostsAdmin = [];
+
+
 const totalPosts = document.getElementById("totalPosts");
 const totalLeads = document.getElementById("totalLeads");
 
@@ -1691,55 +1713,61 @@ if (formPost) {
 
 }
 
+
 /* =========================================================
-   STATUS DO POST
+   STATUS REAL DO ARTIGO
 ========================================================= */
 
 function obterStatusAdmin(post) {
 
-    const agora =
-        new Date();
-
-
-    const dataAgendada =
-        post.agendado_para
-            ? new Date(
-                post.agendado_para
-            )
-            : null;
-
-
-    if (
-        post.status === "agendado" &&
-        dataAgendada &&
-        dataAgendada > agora
-    ) {
-
+    if (post.status === "publicado") {
         return {
-
-            texto:
-                `Agendado para ${formatarDataAdmin(
-                    post.agendado_para
-                )}`,
-
-            classe:
-                "status-agendado"
-
+            texto: "Publicado",
+            classe: "status-publicado"
         };
-
     }
 
+    if (post.status === "agendado") {
+
+        const dataAgendada = post.agendado_para
+            ? new Date(post.agendado_para)
+            : null;
+
+        if (
+            dataAgendada &&
+            !Number.isNaN(dataAgendada.getTime())
+        ) {
+
+            if (dataAgendada.getTime() <= Date.now()) {
+                return {
+                    texto: "Agendamento vencido",
+                    classe: "status-agendado"
+                };
+            }
+
+            return {
+                texto: `Agendado para ${formatarDataAdmin(post.agendado_para)}`,
+                classe: "status-agendado"
+            };
+        }
+
+        return {
+            texto: "Agendamento sem data válida",
+            classe: "status-agendado"
+        };
+    }
+
+    if (post.status === "rascunho") {
+        return {
+            texto: "Rascunho",
+            classe: "status-rascunho"
+        };
+    }
 
     return {
-
-        texto:
-            "Publicado",
-
-        classe:
-            "status-publicado"
-
+        texto: post.status || "Status desconhecido",
+        classe: "status-agendado"
     };
-
 }
 
 
@@ -1747,136 +1775,291 @@ function obterStatusAdmin(post) {
    RENDERIZAR POSTS NO GERENCIAMENTO
 ========================================================= */
 
-function renderizarPostsAdmin(posts) {
 
-    if (!listaPostsAdmin) {
-        return;
+/* =========================================================
+   GERENCIADOR DE PUBLICAÇÕES - TABELA
+========================================================= */
+
+function renderizarPostsAdmin(posts) {
+    if (!listaPostsAdmin) return;
+
+    todosPostsAdmin = Array.isArray(posts) ? posts : [];
+
+    function dataValida(valor) {
+        if (!valor) return null;
+
+        const data = new Date(valor);
+        return Number.isNaN(data.getTime()) ? null : data;
     }
 
+    function mostrarData(valor) {
+        const data = dataValida(valor);
 
-    if (
-        !Array.isArray(posts) ||
-        posts.length === 0
-    ) {
+        if (!data) {
+            return '<span class="admin-post-date">—</span>';
+        }
+
+        const dia = new Intl.DateTimeFormat("pt-BR", {
+            timeZone: "America/Sao_Paulo",
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        }).format(data);
+
+        const hora = new Intl.DateTimeFormat("pt-BR", {
+            timeZone: "America/Sao_Paulo",
+            hour: "2-digit",
+            minute: "2-digit",
+            hourCycle: "h23"
+        }).format(data);
+
+        return `
+            <div class="admin-post-date">
+                <strong>${dia}</strong>
+                <span>${hora} • Brasília</span>
+            </div>
+        `;
+    }
+
+    function atualizarTabela() {
+        const pesquisa = (
+            pesquisaPostsAdmin?.value || ""
+        ).trim().toLocaleLowerCase("pt-BR");
+
+        const statusSelecionado =
+            filtroStatusPostsAdmin?.value || "todos";
+
+        const ordenacao =
+            ordenacaoPostsAdmin?.value || "recentes";
+
+        const filtrados = todosPostsAdmin.filter(post => {
+            const texto = [
+                post.titulo || "",
+                post.categoria || ""
+            ].join(" ").toLocaleLowerCase("pt-BR");
+
+            const correspondePesquisa =
+                !pesquisa || texto.includes(pesquisa);
+
+            const correspondeStatus =
+                statusSelecionado === "todos" ||
+                post.status === statusSelecionado;
+
+            return correspondePesquisa && correspondeStatus;
+        });
+
+        const dataReferencia = post =>
+            dataValida(
+                post.publicado_em ||
+                post.agendado_para ||
+                post.criado_em
+            )?.getTime() || 0;
+
+        filtrados.sort((a, b) => {
+            if (ordenacao === "titulo") {
+                return (a.titulo || "").localeCompare(
+                    b.titulo || "", "pt-BR"
+                );
+            }
+
+            if (ordenacao === "antigos") {
+                return dataReferencia(a) - dataReferencia(b);
+            }
+
+            return dataReferencia(b) - dataReferencia(a);
+        });
+
+        if (quantidadePostsFiltrados) {
+            quantidadePostsFiltrados.textContent =
+                `${filtrados.length} de ${todosPostsAdmin.length} artigos`;
+        }
+
+        if (filtrados.length === 0) {
+            listaPostsAdmin.innerHTML = `
+                <div class="empty-posts">
+                    <i data-lucide="inbox"></i>
+                    <p>Nenhum artigo encontrado.</p>
+                </div>
+            `;
+
+            renderizarIcones();
+            return;
+        }
 
         listaPostsAdmin.innerHTML = `
+            <div class="admin-posts-table-wrapper">
+                <table class="admin-posts-table">
+                    <thead>
 
-            <div class="empty-posts">
+<tr>
+    <th>Artigo</th>
+    <th>Status</th>
+    <th>Publicação</th>
+    <th>Agendamento</th>
+    <th>Última edição</th>
+    <th>Ações</th>
+</tr>
 
-                <i data-lucide="inbox"></i>
+                    </thead>
 
-                <p>
-                    Nenhum post criado ainda.
-                </p>
+                    <tbody>
+                        ${filtrados.map(post => {
+            const id = Number(post.id);
+            const status = obterStatusAdmin(post);
 
+            const dataPublicacao =
+                post.status === "agendado"
+                    ? post.agendado_para
+                    : post.status === "publicado"
+                        ? post.publicado_em
+                        : null;
+
+            return `
+                                <tr>
+                                    <td>
+                                        <strong class="admin-post-title">
+                                            ${escaparHtmlAdmin(
+                post.titulo || "Sem título"
+            )}
+                                        </strong>
+
+                                        <span class="admin-post-category">
+                                            ${escaparHtmlAdmin(
+                String(post.categoria || "Sem categoria")
+            )}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="post-status ${status.classe}">
+                                            ${escaparHtmlAdmin(status.texto)}
+                                        </span>
+                                    </td>
+
+<td>
+    ${mostrarData(
+                post.status === "publicado"
+                    ? post.publicado_em
+                    : null
+            )}
+</td>
+
+<td>
+    ${mostrarData(
+                post.status === "agendado"
+                    ? post.agendado_para
+                    : null
+            )}
+</td>
+<td>
+    ${mostrarData(post.atualizado_em)}
+</td>
+
+<td>
+    <div class="admin-post-actions">
+                                            <button
+                                                type="button"
+                                                class="admin-post-action-btn"
+                                                onclick="prepararEdicao(${id})"
+                                                title="Editar artigo"
+                                                aria-label="Editar artigo"
+                                            >
+                                                <i data-lucide="pencil"></i>
+                                            </button>
+
+                                            
+<button
+    type="button"
+    class="admin-post-action-btn visualizar"
+    onclick="visualizarPostAdmin(${id})"
+    title="Visualizar artigo"
+    aria-label="Visualizar artigo"
+>
+    <i data-lucide="eye"></i>
+</button>
+
+
+                                            <button
+                                                type="button"
+                                                class="admin-post-action-btn excluir"
+                                                onclick="confirmarExclusaoPost(${id})"
+                                                title="Excluir artigo"
+                                                aria-label="Excluir artigo"
+                                            >
+                                                <i data-lucide="trash-2"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
+        }).join("")}
+                    </tbody>
+                </table>
             </div>
-
         `;
 
-
         renderizarIcones();
-
-        return;
-
     }
 
+    // Conecta os filtros uma única vez.
+    if (!listaPostsAdmin.dataset.filtrosAtivos) {
+        pesquisaPostsAdmin?.addEventListener(
+            "input", () => atualizarTabela()
+        );
 
-    listaPostsAdmin.innerHTML =
-        posts
-            .map((post) => {
+        filtroStatusPostsAdmin?.addEventListener(
+            "change", () => atualizarTabela()
+        );
 
-                const statusInfo =
-                    obterStatusAdmin(post);
+        ordenacaoPostsAdmin?.addEventListener(
+            "change", () => atualizarTabela()
+        );
 
+        listaPostsAdmin.dataset.filtrosAtivos = "true";
+    }
 
-                const resumoTexto =
-                    limitarTextoAdmin(
+    // Disponibiliza a atualização para os filtros.
+    listaPostsAdmin.atualizarTabela = atualizarTabela;
 
-                        pegarTextoLimpo(
-                            post.resumo || ""
-                        ),
-
-                        180
-
-                    );
-
-
-                return `
-
-                    <article class="post-admin-card">
-
-                        <div class="post-admin-top">
-
-                            <span
-                                class="post-status ${statusInfo.classe}"
-                            >
-                                ${escaparHtmlAdmin(
-                    statusInfo.texto
-                )}
-                            </span>
-
-                        </div>
+    atualizarTabela();
+}
 
 
-                        <h3>
 
-                            ${escaparHtmlAdmin(
-                    post.titulo ||
-                    "Artigo sem título"
-                )}
+/* =========================================================
+   GERENCIADOR - VISUALIZAR ARTIGO
+========================================================= */
 
-                        </h3>
+function visualizarPostAdmin(id) {
+    const post = todosPostsAdmin.find(
+        artigo => Number(artigo.id) === Number(id)
+    );
 
+    if (!post) {
+        alert("Artigo não encontrado.");
+        return;
+    }
 
-                        <p>
+    if (post.status !== "publicado") {
+        alert(
+            "Este artigo ainda não está publicado. " +
+            "Use a opção Editar para visualizar seu conteúdo."
+        );
+        return;
+    }
 
-                            ${escaparHtmlAdmin(
-                    resumoTexto ||
-                    "Sem resumo cadastrado."
-                )}
+    // Usa o identificador de URL, quando disponível.
+    if (!post.slug) {
+        alert(
+            "Não foi possível identificar o endereço público " +
+            "deste artigo."
+        );
+        return;
+    }
 
-                        </p>
+    const url = `/artigos/${encodeURIComponent(post.slug)}`;
 
-
-                        <div class="post-admin-actions">
-
-                            <button
-                                type="button"
-                                class="btn-editar"
-                                onclick="prepararEdicao(${Number(
-                    post.id
-                )})"
-                            >
-
-                                Editar
-
-                            </button>
-
-
-                            <button
-                                type="button"
-                                class="btn-excluir"
-                                onclick="confirmarExclusaoPost(${Number(
-                    post.id
-                )})"
-                            >
-
-                                Excluir
-
-                            </button>
-
-                        </div>
-
-                    </article>
-
-                `;
-
-            })
-            .join("");
-
-
-    renderizarIcones();
-
+    window.open(url, "_blank", "noopener,noreferrer");
 }
 
 
@@ -2020,6 +2203,97 @@ function renderizarPostsRecentes(posts) {
 
 
 /* =========================================================
+   DASHBOARD - PRÓXIMAS PUBLICAÇÕES
+========================================================= */
+
+function renderizarProximasPublicacoes(posts) {
+
+    const lista = document.getElementById(
+        "listaProximasPublicacoes"
+    );
+
+    if (!lista) return;
+
+    const agendados = posts
+        .filter(post =>
+            post.status === "agendado" &&
+            post.agendado_para &&
+            !Number.isNaN(
+                new Date(post.agendado_para).getTime()
+            ) &&
+            new Date(post.agendado_para).getTime() > Date.now()
+        )
+        .sort((a, b) =>
+            new Date(a.agendado_para) -
+            new Date(b.agendado_para)
+        )
+        .slice(0, 5);
+
+    if (agendados.length === 0) {
+
+        lista.innerHTML = `
+            <div class="admin-empty-state">
+                <i data-lucide="calendar-check"></i>
+
+                <strong>Nenhuma publicação agendada</strong>
+
+                <span>
+                    Quando você agendar um artigo,
+                    ele aparecerá aqui.
+                </span>
+            </div>
+        `;
+
+        renderizarIcones();
+        return;
+    }
+
+    lista.innerHTML = agendados.map(post => `
+
+        <article class="admin-recent-post-item">
+
+            <div class="admin-recent-post-main">
+
+                <span class="post-status status-agendado">
+                    Agendado
+                </span>
+
+                <h3>
+                    ${escaparHtmlAdmin(post.titulo || "Sem título")}
+                </h3>
+
+                <p>
+                    Publicação prevista:
+                    ${escaparHtmlAdmin(
+        formatarDataAdmin(post.agendado_para)
+    )}
+                    (Brasília)
+                </p>
+
+            </div>
+
+            <div class="admin-recent-post-actions">
+
+                <button
+                    type="button"
+                    class="admin-recent-edit"
+                    onclick="prepararEdicao(${Number(post.id)})"
+                >
+                    <i data-lucide="pencil"></i>
+                    Editar
+                </button>
+
+            </div>
+
+        </article>
+
+    `).join("");
+
+    renderizarIcones();
+}
+
+
+/* =========================================================
    CARREGAR POSTS
 ========================================================= */
 
@@ -2083,11 +2357,29 @@ async function carregarPostsAdmin() {
                 );
 
 
+        // DASHBOARD INTELIGENTE - CONTADORES DE ARTIGOS
+
+        const quantidadePublicados = posts.filter(
+            post => post.status === "publicado"
+        ).length;
+
+        const quantidadeAgendados = posts.filter(
+            post => post.status === "agendado"
+        ).length;
+
         if (totalPosts) {
+            totalPosts.textContent = posts.length;
+        }
 
-            totalPosts.textContent =
-                posts.length;
+        const totalPublicados = document.getElementById("totalPublicados");
+        const totalAgendados = document.getElementById("totalAgendados");
 
+        if (totalPublicados) {
+            totalPublicados.textContent = quantidadePublicados;
+        }
+
+        if (totalAgendados) {
+            totalAgendados.textContent = quantidadeAgendados;
         }
 
 
@@ -2100,6 +2392,11 @@ async function carregarPostsAdmin() {
             posts
         );
 
+        renderizarProximasPublicacoes(
+            posts
+        );
+
+        renderizarCalendarioEditorial(posts);
 
     } catch (error) {
 
@@ -2114,6 +2411,39 @@ async function carregarPostsAdmin() {
             totalPosts.textContent =
                 "—";
 
+        }
+
+        // DASHBOARD - LIMPAR INDICADORES EM CASO DE ERRO
+
+        const totalPublicados = document.getElementById("totalPublicados");
+        const totalAgendados = document.getElementById("totalAgendados");
+
+        if (totalPublicados) {
+            totalPublicados.textContent = "—";
+        }
+
+        if (totalAgendados) {
+            totalAgendados.textContent = "—";
+        }
+
+        // DASHBOARD - ERRO NA AGENDA EDITORIAL
+
+        const listaProximasPublicacoes = document.getElementById(
+            "listaProximasPublicacoes"
+        );
+
+        if (listaProximasPublicacoes) {
+            listaProximasPublicacoes.innerHTML = `
+        <div class="admin-empty-state">
+            <i data-lucide="circle-alert"></i>
+
+            <strong>Não foi possível carregar a agenda</strong>
+
+            <span>
+                Atualize a página e tente novamente.
+            </span>
+        </div>
+    `;
         }
 
 
@@ -2261,249 +2591,149 @@ function converterParaDatetimeLocal(data) {
    PREPARAR EDIÇÃO
 ========================================================= */
 
+
+/* =========================================================
+   PREPARAR EDIÇÃO
+========================================================= */
+
 async function prepararEdicao(id) {
 
-    const tokenAdmin =
-        obterTokenAdmin();
-
+    const tokenAdmin = obterTokenAdmin();
 
     if (!tokenAdmin) {
-
         mostrarToast(
             "Sua sessão administrativa expirou. Faça login novamente.",
             "error"
         );
-
         return;
-
     }
-
-
-    /*
-       Primeiro abrimos a página do editor.
-    */
-
-    abrirPaginaAdmin(
-        "criar-post"
-    );
-
 
     try {
 
-        const resposta =
-            await fetch(
-                `/posts/admin/${id}`,
+        // Primeiro procura nos artigos já carregados no painel.
+        let post = todosPostsAdmin.find(
+            item => Number(item.id) === Number(id)
+        );
+
+        // Se não estiver na memória, consulta a lista administrativa.
+        if (!post) {
+
+            const resposta = await fetch(
+                "/posts/admin/todos",
                 {
                     headers: {
-
-                        Authorization:
-                            `Bearer ${tokenAdmin}`
-
+                        Authorization: `Bearer ${tokenAdmin}`
                     }
                 }
             );
 
-
-        /*
-           Caso a API não possua
-           /posts/admin/:id, tentamos
-           encontrar o post pela lista
-           administrativa completa.
-        */
-
-        let post = null;
-
-
-        if (resposta.ok) {
-
-            const resultado =
-                await resposta.json();
-
-
-            post =
-                resultado.post ||
-                resultado;
-
-
-        } else {
-
-            const respostaTodos =
-                await fetch(
-                    "/posts/admin/todos",
-                    {
-                        headers: {
-
-                            Authorization:
-                                `Bearer ${tokenAdmin}`
-
-                        }
-                    }
-                );
-
-
-            if (!respostaTodos.ok) {
-
+            if (!resposta.ok) {
                 throw new Error(
                     "Não foi possível carregar o artigo."
                 );
-
             }
 
+            const resultado = await resposta.json();
 
-            const resultadoTodos =
-                await respostaTodos.json();
+            const posts = Array.isArray(resultado)
+                ? resultado
+                : Array.isArray(resultado.posts)
+                    ? resultado.posts
+                    : [];
 
-
-            const posts =
-                Array.isArray(
-                    resultadoTodos
-                )
-                    ? resultadoTodos
-                    : (
-                        Array.isArray(
-                            resultadoTodos.posts
-                        )
-                            ? resultadoTodos.posts
-                            : []
-                    );
-
-
-            post =
-                posts.find(
-                    (item) =>
-                        Number(item.id) ===
-                        Number(id)
-                );
-
+            post = posts.find(
+                item => Number(item.id) === Number(id)
+            );
         }
-
 
         if (!post) {
-
-            throw new Error(
-                "Artigo não encontrado."
-            );
-
+            throw new Error("Artigo não encontrado.");
         }
 
+        // Abre o editor somente depois de encontrar o artigo.
+        abrirPaginaAdmin("criar-post");
 
-        postEditandoId =
-            Number(post.id);
-
+        // Mantém o ID para salvar por PUT, sem criar outro artigo.
+        postEditandoId = Number(post.id);
 
         if (titulo) {
-
-            titulo.value =
-                post.titulo || "";
-
+            titulo.value = post.titulo || "";
         }
-
 
         if (categoria) {
-
-            categoria.value =
-                post.categoria || "";
-
+            categoria.value = post.categoria || "";
         }
-
 
         if (imagem) {
-
-            imagem.value =
-                post.imagem || "";
-
+            imagem.value = post.imagem || "";
         }
 
+        if (imagemArquivo) {
+            imagemArquivo.value = "";
+        }
 
+        if (statusUploadImagem) {
+            statusUploadImagem.textContent = "";
+        }
 
         setarConteudoEditor(
             "fontes",
             post.fontes || ""
         );
 
-
-
-        if (statusPost) {
-
-            statusPost.value =
-                post.status === "agendado"
-                    ? "agendado"
-                    : "publicado";
-
-        }
-
-
-        if (agendadoPara) {
-
-            agendadoPara.value =
-                converterParaDatetimeLocal(
-                    post.agendado_para
-                );
-
-        }
-
-
         setarConteudoEditor(
             "resumo",
             post.resumo || ""
         );
-
 
         setarConteudoEditor(
             "conteudo",
             post.conteudo || ""
         );
 
-
-        controlarAgendamento();
-
-        atualizarPreview();
-
-
-        /* -------------------------
-           BOTÃO EM MODO EDIÇÃO
-        ------------------------- */
-
-        const botao =
-            formPost
-                ? formPost.querySelector(
-                    ".btn-publicar"
-                )
-                : null;
-
-
-        if (botao) {
-
-            botao.innerHTML = `
-
-                <i data-lucide="save"></i>
-
-                Salvar alterações
-
-            `;
-
+        if (statusPost) {
+            statusPost.value =
+                post.status === "agendado"
+                    ? "agendado"
+                    : "publicado";
         }
 
+        if (agendadoPara) {
+            agendadoPara.value =
+                post.status === "agendado"
+                    ? converterParaDatetimeLocal(
+                        post.agendado_para
+                    )
+                    : "";
+        }
+
+        controlarAgendamento();
+        atualizarPreview();
+
+        const botao = formPost
+            ? formPost.querySelector(".btn-publicar")
+            : null;
+
+        if (botao) {
+            botao.disabled = false;
+            botao.classList.remove("is-loading");
+
+            botao.innerHTML = `
+                <i data-lucide="save"></i>
+                Salvar alterações
+            `;
+        }
 
         renderizarIcones();
 
-
         setTimeout(() => {
-
             if (formPost) {
-
                 formPost.scrollIntoView({
-                    behavior:
-                        "smooth",
-
-                    block:
-                        "start"
+                    behavior: "smooth",
+                    block: "start"
                 });
-
             }
-
         }, 120);
-
 
     } catch (error) {
 
@@ -2512,16 +2742,14 @@ async function prepararEdicao(id) {
             error
         );
 
-
         mostrarToast(
             error.message ||
             "Não foi possível abrir o artigo para edição.",
             "error"
         );
-
     }
-
 }
+
 
 
 /* =========================================================
@@ -5091,6 +5319,341 @@ if (btnAtualizarParcerias) {
 }
 
 
+
+
+/* ==========================================
+   PSIFÁCIL - CALENDÁRIO EDITORIAL
+========================================== */
+
+let postsCalendarioEditorial = [];
+let mesCalendarioEditorial = null;
+let dataSelecionadaCalendario = null;
+
+const fusoCalendario = "America/Sao_Paulo";
+
+const formatadorPartesCalendario = new Intl.DateTimeFormat(
+    "en-US",
+    {
+        timeZone: fusoCalendario,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+    }
+);
+
+const formatadorHoraCalendario = new Intl.DateTimeFormat(
+    "pt-BR",
+    {
+        timeZone: fusoCalendario,
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+    }
+);
+
+function chaveDataCalendario(valor) {
+    if (!valor) return null;
+
+    const data = new Date(valor);
+    if (Number.isNaN(data.getTime())) return null;
+
+    const partes = formatadorPartesCalendario.formatToParts(data);
+    const obter = tipo =>
+        partes.find(parte => parte.type === tipo)?.value;
+
+    return `${obter("year")}-${obter("month")}-${obter("day")}`;
+}
+
+function hojeCalendarioEditorial() {
+    return chaveDataCalendario(new Date());
+}
+
+function escaparTextoCalendario(valor) {
+    return String(valor ?? "").replace(/[&<>"']/g, caractere => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    }[caractere]));
+}
+
+function formatarChaveCalendario(data) {
+    const [ano, mes, dia] = data.split("-").map(Number);
+
+    return new Intl.DateTimeFormat("pt-BR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        timeZone: "UTC"
+    }).format(new Date(Date.UTC(ano, mes - 1, dia)));
+}
+
+function eventosCalendarioEditorial() {
+    const eventos = new Map();
+
+    postsCalendarioEditorial.forEach(post => {
+        let data = null;
+
+        if (post.status === "agendado") {
+            data = chaveDataCalendario(post.agendado_para);
+        } else if (post.status === "publicado") {
+            data = chaveDataCalendario(post.publicado_em);
+        }
+
+        if (!data) return;
+
+        if (!eventos.has(data)) {
+            eventos.set(data, []);
+        }
+
+        eventos.get(data).push(post);
+    });
+
+    return eventos;
+}
+
+function renderizarCalendarioEditorial(posts) {
+    postsCalendarioEditorial = Array.isArray(posts) ? posts : [];
+
+    const hoje = hojeCalendarioEditorial();
+
+    if (!mesCalendarioEditorial) {
+        mesCalendarioEditorial = hoje.slice(0, 7);
+    }
+
+    if (!dataSelecionadaCalendario) {
+        dataSelecionadaCalendario = hoje;
+    }
+
+    desenharCalendarioEditorial();
+}
+
+function desenharCalendarioEditorial() {
+    const grade = document.getElementById("calendarioDias");
+    const titulo = document.getElementById("calendarioMesAno");
+
+    if (!grade || !titulo || !mesCalendarioEditorial) return;
+
+    const [ano, mes] = mesCalendarioEditorial.split("-").map(Number);
+    const primeiroDia = new Date(Date.UTC(ano, mes - 1, 1));
+    const deslocamento = primeiroDia.getUTCDay();
+    const quantidadeDias = new Date(Date.UTC(ano, mes, 0)).getUTCDate();
+
+    titulo.textContent = new Intl.DateTimeFormat("pt-BR", {
+        month: "long",
+        year: "numeric",
+        timeZone: "UTC"
+    }).format(primeiroDia);
+
+    const eventos = eventosCalendarioEditorial();
+    const hoje = hojeCalendarioEditorial();
+
+    
+    /* ==========================================
+       RESUMO MENSAL DO CALENDÁRIO
+    ========================================== */
+
+    let publicadosNoMes = 0;
+    let agendadosNoMes = 0;
+
+    eventos.forEach((artigos, data) => {
+
+        // Considerar apenas o mês exibido.
+        if (!data.startsWith(mesCalendarioEditorial + "-")) {
+            return;
+        }
+
+        artigos.forEach(post => {
+
+            if (post.status === "publicado") {
+                publicadosNoMes++;
+            }
+
+            if (post.status === "agendado") {
+                agendadosNoMes++;
+            }
+
+        });
+
+    });
+
+    // Atualizar os indicadores do HTML.
+    const indicadorPublicados = document.getElementById(
+        "calendarioTotalPublicados"
+    );
+
+    const indicadorAgendados = document.getElementById(
+        "calendarioTotalAgendados"
+    );
+
+    if (indicadorPublicados) {
+        indicadorPublicados.textContent = publicadosNoMes;
+    }
+
+    if (indicadorAgendados) {
+        indicadorAgendados.textContent = agendadosNoMes;
+    }
+
+    
+    grade.innerHTML = "";
+
+    for (let i = 0; i < deslocamento; i++) {
+        const vazio = document.createElement("div");
+        vazio.setAttribute("aria-hidden", "true");
+        grade.appendChild(vazio);
+    }
+
+    for (let dia = 1; dia <= quantidadeDias; dia++) {
+        const chave = `${ano}-${String(mes).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
+        const artigos = eventos.get(chave) || [];
+
+        const publicados = artigos.filter(
+            post => post.status === "publicado"
+        ).length;
+
+        const agendados = artigos.filter(
+            post => post.status === "agendado"
+        ).length;
+
+        const botao = document.createElement("button");
+        botao.type = "button";
+        botao.className = "calendario-dia";
+
+        if (chave === hoje) botao.classList.add("hoje");
+
+        if (chave === dataSelecionadaCalendario) {
+            botao.classList.add("selecionado");
+        }
+
+        botao.setAttribute(
+            "aria-label",
+            `${formatarChaveCalendario(chave)}, ${artigos.length} artigos`
+        );
+
+        botao.setAttribute(
+            "aria-pressed",
+            String(chave === dataSelecionadaCalendario)
+        );
+
+        botao.innerHTML = `
+            <span class="calendario-dia-numero">${dia}</span>
+
+            <span class="calendario-dia-eventos">
+                ${publicados ? '<i class="calendario-ponto publicado"></i>' : ""}
+                ${agendados ? '<i class="calendario-ponto agendado"></i>' : ""}
+            </span>
+
+            ${artigos.length
+                ? `<span class="calendario-dia-contagem">
+                    ${artigos.length} ${artigos.length === 1 ? "artigo" : "artigos"}
+                   </span>`
+                : ""}
+        `;
+
+        botao.addEventListener("click", () => {
+            dataSelecionadaCalendario = chave;
+            desenharCalendarioEditorial();
+        });
+
+        grade.appendChild(botao);
+    }
+
+    mostrarArtigosDiaCalendario(eventos);
+}
+
+function mostrarArtigosDiaCalendario(eventos) {
+    const titulo = document.getElementById("calendarioDataSelecionada");
+    const lista = document.getElementById("calendarioArtigosDia");
+
+    if (!titulo || !lista || !dataSelecionadaCalendario) return;
+
+    titulo.textContent = formatarChaveCalendario(
+        dataSelecionadaCalendario
+    );
+
+    const artigos = eventos.get(dataSelecionadaCalendario) || [];
+
+    if (!artigos.length) {
+        lista.innerHTML = `
+            <p>Nenhuma publicação encontrada nesta data.</p>
+        `;
+        return;
+    }
+
+    lista.innerHTML = "";
+
+    artigos.forEach(post => {
+        const agendado = post.status === "agendado";
+        const valorData = agendado
+            ? post.agendado_para
+            : post.publicado_em;
+
+        const hora = formatadorHoraCalendario.format(
+            new Date(valorData)
+        );
+
+        const item = document.createElement("div");
+        item.className = "calendario-artigo";
+
+        item.innerHTML = `
+            <div class="calendario-artigo-info">
+                <strong>${escaparTextoCalendario(post.titulo)}</strong>
+                <span>
+                    ${agendado ? "Agendado" : "Publicado"}
+                    • ${hora} (Brasília)
+                </span>
+            </div>
+
+            <div class="calendario-artigo-acoes">
+                <button type="button">
+                    Editar artigo
+                </button>
+            </div>
+        `;
+
+        item.querySelector("button").addEventListener("click", () => {
+            if (typeof prepararEdicao === "function") {
+                prepararEdicao(post.id);
+            }
+        });
+
+        lista.appendChild(item);
+    });
+}
+
+function mudarMesCalendario(diferenca) {
+    if (!mesCalendarioEditorial) return;
+
+    const [ano, mes] = mesCalendarioEditorial.split("-").map(Number);
+    const novoMes = new Date(Date.UTC(ano, mes - 1 + diferenca, 1));
+
+    mesCalendarioEditorial = [
+        novoMes.getUTCFullYear(),
+        String(novoMes.getUTCMonth() + 1).padStart(2, "0")
+    ].join("-");
+
+    dataSelecionadaCalendario = `${mesCalendarioEditorial}-01`;
+
+    desenharCalendarioEditorial();
+}
+
+document.getElementById("calendarioMesAnterior")
+    ?.addEventListener("click", () => mudarMesCalendario(-1));
+
+document.getElementById("calendarioProximoMes")
+    ?.addEventListener("click", () => mudarMesCalendario(1));
+
+document.getElementById("calendarioHoje")
+    ?.addEventListener("click", () => {
+        dataSelecionadaCalendario = hojeCalendarioEditorial();
+        mesCalendarioEditorial = dataSelecionadaCalendario.slice(0, 7);
+        desenharCalendarioEditorial();
+    });
+
+
+
+
 /* =========================================================
    GARANTIR FUNÇÕES PARA ONCLICK
 ========================================================= */
@@ -5135,6 +5698,138 @@ window.sairAdmin =
 window.abrirPaginaAdmin =
     abrirPaginaAdmin;
 
+
+
+
+
+/* ==========================================
+   CRIAR ARTIGO A PARTIR DO CALENDÁRIO
+========================================== */
+
+
+function criarArtigoPeloCalendario() {
+
+    if (!dataSelecionadaCalendario) {
+        mostrarToast("Selecione uma data no calendário.");
+        return;
+    }
+
+    // Garantir que estamos criando um novo artigo.
+    postEditandoId = null;
+
+
+    const formulario = document.getElementById("formPost");
+
+    // Limpar os campos sem disparar o evento "reset",
+    // que apagaria o agendamento escolhido no calendário.
+    if (titulo) {
+        titulo.value = "";
+    }
+
+    if (categoria) {
+        categoria.value = "";
+    }
+
+    if (imagemArquivo) {
+        imagemArquivo.value = "";
+    }
+
+    if (statusPost) {
+        statusPost.value = "publicado";
+    }
+
+    if (agendadoPara) {
+        agendadoPara.value = "";
+    }
+
+
+    // Limpar os editores de texto.
+    if (typeof tinymce !== "undefined") {
+        ["fontes", "resumo", "conteudo"].forEach(id => {
+            const editor = tinymce.get(id);
+
+            if (editor) {
+                editor.setContent("");
+            }
+        });
+    }
+
+    // Limpar imagem anterior.
+    const campoImagem = document.getElementById("imagem");
+
+    if (campoImagem) {
+        campoImagem.value = "";
+    }
+
+    const statusUpload = document.getElementById(
+        "statusUploadImagem"
+    );
+
+    if (statusUpload) {
+        statusUpload.textContent = "";
+    }
+
+    // Restaurar botão de criação.
+    const botaoPublicar = formulario?.querySelector(
+        'button[type="submit"]'
+    );
+
+    if (botaoPublicar) {
+        botaoPublicar.innerHTML = `
+            <i data-lucide="send"></i>
+            Publicar artigo
+        `;
+    }
+
+    // Abrir a página Criar artigo.
+    abrirPaginaAdmin("criar-post");
+
+    // Localizar os campos do formulário.
+    const campoStatus = document.getElementById("status");
+    const campoData = document.getElementById("agendadoPara");
+    const grupoAgendamento = document.getElementById(
+        "grupoAgendamento"
+    );
+
+    // Selecionar Agendar publicação.
+    if (campoStatus) {
+        campoStatus.value = "agendado";
+
+        campoStatus.dispatchEvent(
+            new Event("change", { bubbles: true })
+        );
+    }
+
+    // Atualizar a visibilidade do agendamento.
+    if (typeof controlarAgendamento === "function") {
+        controlarAgendamento();
+    }
+
+    if (grupoAgendamento) {
+        grupoAgendamento.style.display = "";
+    }
+
+    // Preencher a data escolhida no calendário.
+    // 09:00 é apenas um horário sugerido.
+    if (campoData) {
+        campoData.value =
+            `${dataSelecionadaCalendario}T09:00`;
+
+        campoData.dispatchEvent(
+            new Event("change", { bubbles: true })
+        );
+    }
+
+    // Atualizar a prévia.
+    if (typeof atualizarPreview === "function") {
+        atualizarPreview();
+    }
+
+    renderizarIcones();
+}
+
+document.getElementById("btnCriarArtigoCalendario")
+    ?.addEventListener("click", criarArtigoPeloCalendario);
 
 /* =========================================================
    INICIALIZAÇÃO

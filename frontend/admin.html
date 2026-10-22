@@ -168,6 +168,17 @@
                     </button>
 
 
+                    <!-- CALENDÁRIO EDITORIAL -->
+
+                    <button type="button" class="admin-nav-link" data-admin-page="calendario">
+                        <i data-lucide="calendar-days"></i>
+
+                        <span>
+                            Calendário editorial
+                        </span>
+                    </button>
+
+
                     <button type="button" class="admin-nav-link" data-admin-page="novidade">
 
                         <i data-lucide="sparkles"></i>
@@ -425,6 +436,32 @@
                             </div>
 
                         </article>
+
+                        <!-- ARTIGOS PUBLICADOS -->
+                        <div class="admin-stat-card">
+                            <div class="admin-stat-icon">
+                                <i data-lucide="check-circle-2"></i>
+                            </div>
+
+                            <div class="admin-stat-content">
+                                <span>Artigos publicados</span>
+                                <strong id="totalPublicados">—</strong>
+                                <small>Disponíveis no blog</small>
+                            </div>
+                        </div>
+
+                        <!-- ARTIGOS AGENDADOS -->
+                        <div class="admin-stat-card">
+                            <div class="admin-stat-icon">
+                                <i data-lucide="calendar-clock"></i>
+                            </div>
+
+                            <div class="admin-stat-content">
+                                <span>Artigos agendados</span>
+                                <strong id="totalAgendados">—</strong>
+                                <small>Aguardando publicação</small>
+                            </div>
+                        </div>
 
 
                         <!-- LEADS -->
@@ -696,6 +733,31 @@
 
                     </section>
 
+                    <!-- DASHBOARD - PRÓXIMAS PUBLICAÇÕES -->
+                    <section class="admin-dashboard-block">
+
+                        <div class="admin-section-heading">
+                            <div>
+                                <span class="admin-eyebrow">AGENDA EDITORIAL</span>
+                                <h2>Próximas publicações</h2>
+                            </div>
+                        </div>
+
+                        <div id="listaProximasPublicacoes" class="admin-recent-posts">
+
+                            <div class="admin-empty-state">
+                                <i data-lucide="calendar-clock"></i>
+
+                                <strong>Carregando agendamentos...</strong>
+
+                                <span>
+                                    Os próximos artigos agendados aparecerão aqui.
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </section>
                 </section>
 
 
@@ -1012,24 +1074,246 @@
                     </div>
 
 
+                    <!-- GERENCIADOR PROFISSIONAL DE ARTIGOS -->
                     <div class="posts-admin-section" id="posts-criados">
 
-                        <div class="posts-admin-list" id="listaPostsAdmin">
+                        <!-- BARRA DE FERRAMENTAS -->
+                        <div class="admin-posts-toolbar">
 
-                            <div class="empty-posts">
+                            <div class="admin-posts-search">
+                                <i data-lucide="search"></i>
 
-                                <i data-lucide="inbox"></i>
+                                <input type="search" id="pesquisaPostsAdmin"
+                                    placeholder="Pesquisar artigos pelo título..." autocomplete="off">
+                            </div>
 
-                                <p>
-                                    Nenhum post criado ainda.
-                                </p>
+                            <div class="admin-posts-filters">
+
+                                <select id="filtroStatusPostsAdmin">
+                                    <option value="todos">Todos os status</option>
+                                    <option value="publicado">Publicados</option>
+                                    <option value="agendado">Agendados</option>
+                                    <option value="rascunho">Rascunhos</option>
+                                </select>
+
+                                <select id="ordenacaoPostsAdmin">
+                                    <option value="recentes">Mais recentes</option>
+                                    <option value="antigos">Mais antigos</option>
+                                    <option value="titulo">Título A–Z</option>
+                                </select>
 
                             </div>
 
                         </div>
 
+                        <!-- RESUMO DA LISTAGEM -->
+                        <div class="admin-posts-list-header">
+                            <div>
+                                <h2>Gerenciar publicações</h2>
+                                <p>
+                                    Consulte artigos, datas, horários e status
+                                    das publicações do PsiFácil.
+                                </p>
+                            </div>
+
+                            <span id="quantidadePostsFiltrados">
+                                Carregando artigos...
+                            </span>
+                        </div>
+
+                        <!-- LISTA DINÂMICA -->
+                        <div class="posts-admin-list" id="listaPostsAdmin">
+
+                            <div class="empty-posts">
+                                <i data-lucide="inbox"></i>
+                                <p>Carregando publicações...</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+                <!-- ==========================================
+     CALENDÁRIO EDITORIAL
+========================================== -->
+
+                <section class="admin-page" id="admin-page-calendario" data-page="calendario">
+                    <div class="admin-page-heading">
+                        <div>
+                            <span class="admin-eyebrow">
+                                Planejamento de conteúdo
+                            </span>
+
+                            <h1>Calendário editorial</h1>
+
+                            <p>
+                                Acompanhe os artigos publicados e
+                                as próximas publicações do PsiFácil.
+                            </p>
+                        </div>
+
+                        <button type="button" class="admin-primary-button" data-admin-go="criar-post">
+                            <i data-lucide="plus"></i>
+                            Novo artigo
+                        </button>
                     </div>
 
+                    <div class="admin-form-card">
+                        <div class="admin-card-heading">
+                            <div class="admin-card-heading-icon">
+                                <i data-lucide="calendar-days"></i>
+                            </div>
+
+                            <div>
+                                <span class="admin-eyebrow">
+                                    Agenda editorial
+                                </span>
+
+                                <h2>Calendário de publicações</h2>
+
+                                <p>
+                                    Consulte o planejamento dos artigos
+                                    publicados e agendados.
+                                </p>
+                            </div>
+                        </div>
+
+
+                        <!-- CALENDÁRIO EDITORIAL -->
+
+                        <div class="calendario-editorial" id="calendarioEditorial">
+
+                            <!-- NAVEGAÇÃO ENTRE MESES -->
+                            <div class="calendario-toolbar">
+
+                                <div>
+                                    <span class="calendario-subtitulo">
+                                        Planejamento mensal
+                                    </span>
+
+                                    <h3 id="calendarioMesAno">
+                                        Carregando calendário...
+                                    </h3>
+                                </div>
+
+                                <div class="calendario-navegacao">
+
+                                    <button type="button" id="calendarioMesAnterior" aria-label="Mês anterior">
+                                        <i data-lucide="chevron-left"></i>
+                                    </button>
+
+                                    <button type="button" id="calendarioHoje">
+                                        Hoje
+                                    </button>
+
+                                    <button type="button" id="calendarioProximoMes" aria-label="Próximo mês">
+                                        <i data-lucide="chevron-right"></i>
+                                    </button>
+
+                                </div>
+                            </div>
+
+
+                            <!-- ==========================================
+     RESUMO MENSAL DO CALENDÁRIO
+========================================== -->
+
+                            <div class="calendario-resumo-mensal">
+
+                                <!-- ARTIGOS PUBLICADOS -->
+                                <div class="calendario-resumo-card">
+
+                                    <div class="calendario-resumo-icone publicado">
+                                        <i data-lucide="check-circle-2"></i>
+                                    </div>
+
+                                    <div class="calendario-resumo-info">
+                                        <span>Publicados no mês</span>
+
+                                        <strong id="calendarioTotalPublicados">
+                                            0
+                                        </strong>
+                                    </div>
+
+                                </div>
+
+                                <!-- ARTIGOS AGENDADOS -->
+                                <div class="calendario-resumo-card">
+
+                                    <div class="calendario-resumo-icone agendado">
+                                        <i data-lucide="calendar-clock"></i>
+                                    </div>
+
+                                    <div class="calendario-resumo-info">
+                                        <span>Agendados no mês</span>
+
+                                        <strong id="calendarioTotalAgendados">
+                                            0
+                                        </strong>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- LEGENDA -->
+                            <div class="calendario-legenda">
+                                <span>
+                                    <i class="calendario-ponto publicado"></i>
+                                    Publicado
+                                </span>
+
+                                <span>
+                                    <i class="calendario-ponto agendado"></i>
+                                    Agendado
+                                </span>
+                            </div>
+
+                            <!-- DIAS DA SEMANA -->
+                            <div class="calendario-semana">
+                                <span>Dom</span>
+                                <span>Seg</span>
+                                <span>Ter</span>
+                                <span>Qua</span>
+                                <span>Qui</span>
+                                <span>Sex</span>
+                                <span>Sáb</span>
+                            </div>
+
+                            <!-- DIAS GERADOS PELO JAVASCRIPT -->
+                            <div class="calendario-dias" id="calendarioDias">
+                            </div>
+
+                            <!-- ARTIGOS DA DATA SELECIONADA -->
+
+                            <div class="calendario-detalhes">
+
+                                <div class="calendario-detalhes-cabecalho">
+
+                                    <h3 id="calendarioDataSelecionada">
+                                        Selecione uma data
+                                    </h3>
+
+                                    <button type="button" class="admin-primary-button" id="btnCriarArtigoCalendario">
+                                        <i data-lucide="plus"></i>
+                                        Criar artigo para esta data
+                                    </button>
+
+                                </div>
+
+
+                                <div id="calendarioArtigosDia">
+                                    <p>Selecione um dia para consultar as publicações.</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
                 </section>
 
 

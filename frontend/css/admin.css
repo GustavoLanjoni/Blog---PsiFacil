@@ -1,7 +1,3 @@
-/* =========================================================
-   PSIFÁCIL
-   PAINEL ADMINISTRATIVO
-========================================================= */
 
 
 /* =========================================================
@@ -251,7 +247,7 @@ img {
     padding: 20px 14px;
 }
 
-.admin-nav-group + .admin-nav-group {
+.admin-nav-group+.admin-nav-group {
     margin-top: 25px;
 }
 
@@ -568,7 +564,7 @@ img {
     margin-bottom: 28px;
 }
 
-.admin-page-heading > div {
+.admin-page-heading>div {
     min-width: 0;
 }
 
@@ -687,13 +683,21 @@ img {
 
 .admin-stats {
     display: grid;
-
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
-
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
-
     margin-bottom: 34px;
+}
+
+@media (max-width: 1100px) {
+    .admin-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .admin-stats {
+        grid-template-columns: 1fr;
+    }
 }
 
 .admin-stat-card {
@@ -869,7 +873,7 @@ img {
     height: 18px;
 }
 
-.admin-action-card > div:nth-child(2) {
+.admin-action-card>div:nth-child(2) {
     min-width: 0;
     flex: 1;
 
@@ -1027,7 +1031,7 @@ img {
     height: 19px;
 }
 
-.admin-card-heading > div:last-child {
+.admin-card-heading>div:last-child {
     min-width: 0;
 }
 
@@ -1297,7 +1301,7 @@ img {
     border-bottom: 1px solid var(--admin-border-soft);
 }
 
-.preview-card-header > div {
+.preview-card-header>div {
     display: flex;
     flex-direction: column;
 }
@@ -1308,7 +1312,7 @@ img {
     font-size: 12px;
 }
 
-.preview-card-header > svg {
+.preview-card-header>svg {
     width: 17px;
     height: 17px;
 
@@ -1339,7 +1343,7 @@ img {
     background: #eee9e5;
 }
 
-.preview-image > svg {
+.preview-image>svg {
     width: 28px;
     height: 28px;
 }
@@ -1355,7 +1359,7 @@ img {
     padding: 18px;
 }
 
-.preview-content > span {
+.preview-content>span {
     display: inline-flex;
 
     margin-bottom: 9px;
@@ -1415,7 +1419,7 @@ img {
     padding: 18px;
 }
 
-.posts-admin-list > .empty-posts {
+.posts-admin-list>.empty-posts {
     grid-column: 1 / -1;
 }
 
@@ -1487,7 +1491,7 @@ img {
     overflow-wrap: anywhere;
 }
 
-.post-admin-card > p {
+.post-admin-card>p {
     flex: 1;
 
     display: -webkit-box;
@@ -1622,7 +1626,7 @@ img {
     height: 17px;
 }
 
-.notification-preview-top > div:last-child {
+.notification-preview-top>div:last-child {
     display: flex;
     flex-direction: column;
 }
@@ -1646,7 +1650,7 @@ img {
     overflow-wrap: anywhere;
 }
 
-.notification-preview-window > p {
+.notification-preview-window>p {
     color: var(--admin-text-soft);
 
     font-size: 10px;
@@ -1669,7 +1673,7 @@ img {
     border-radius: 11px;
 }
 
-.admin-info-box > svg {
+.admin-info-box>svg {
     width: 16px;
     height: 16px;
 
@@ -1769,7 +1773,7 @@ img {
     font-size: 17px;
 }
 
-.modal-box > p {
+.modal-box>p {
     color: var(--admin-text-soft);
 
     font-size: 11px;
@@ -1923,14 +1927,14 @@ img {
         margin-left: 11px;
     }
 
-    .admin-header-mobile-brand > svg {
+    .admin-header-mobile-brand>svg {
         width: 19px;
         height: 19px;
 
         color: var(--admin-primary);
     }
 
-    .admin-header-mobile-brand > div {
+    .admin-header-mobile-brand>div {
         display: flex;
         flex-direction: column;
     }
@@ -1948,8 +1952,7 @@ img {
 
     .admin-main {
         padding:
-            32px 26px
-            60px;
+            32px 26px 60px;
     }
 
     .admin-quick-actions {
@@ -2001,8 +2004,7 @@ img {
 
     .admin-main {
         padding:
-            25px 17px
-            50px;
+            25px 17px 50px;
     }
 
     .admin-page-heading {
@@ -2069,8 +2071,7 @@ img {
 
     .admin-main {
         padding:
-            22px 13px
-            45px;
+            22px 13px 45px;
     }
 
     .admin-page-heading h1 {
@@ -2374,7 +2375,7 @@ img {
 }
 
 
-.parcerias-admin-section > .admin-section-heading {
+.parcerias-admin-section>.admin-section-heading {
     margin: 0;
 
     padding: 20px 21px;
@@ -2601,7 +2602,7 @@ img {
 }
 
 
-.parceria-admin-grid > div {
+.parceria-admin-grid>div {
     min-width: 0;
 
     padding: 11px 12px;
@@ -2659,7 +2660,7 @@ img {
 }
 
 
-.parceria-admin-mensagem > span {
+.parceria-admin-mensagem>span {
     display: block;
 
     margin-bottom: 6px;
@@ -2840,21 +2841,11 @@ img {
 
 
 /* =========================================================
-   DASHBOARD COM 4 CARDS
+   DASHBOARD INTELIGENTE - 6 INDICADORES
 ========================================================= */
 
-/*
-    O Dashboard agora possui:
-
-    Posts
-    Leads
-    Novas parcerias
-    Notificações
-*/
-
 .admin-stats {
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 
@@ -2882,7 +2873,7 @@ img {
     }
 
 
-    .parceria-admin-grid > div:last-child {
+    .parceria-admin-grid>div:last-child {
         grid-column: 1 / -1;
     }
 
@@ -2954,8 +2945,7 @@ img {
     }
 
 
-    .parcerias-admin-section >
-    .admin-section-heading {
+    .parcerias-admin-section>.admin-section-heading {
         padding: 16px;
     }
 
@@ -2977,7 +2967,7 @@ img {
     }
 
 
-    .parceria-admin-grid > div:last-child {
+    .parceria-admin-grid>div:last-child {
         grid-column: auto;
     }
 
@@ -3023,3 +3013,1208 @@ img {
     }
 
 }
+
+/* =========================================================
+   PSIFÁCIL - REFINAMENTO PROFISSIONAL 2026
+   Mantém a paleta original e as classes já utilizadas.
+   Componentes novos de gerenciamento podem ser adotados
+   gradualmente no HTML e JavaScript.
+========================================================= */
+
+/* Melhor legibilidade e navegação por teclado */
+.admin-nav-link:focus-visible,
+.admin-primary-button:focus-visible,
+.admin-text-button:focus-visible,
+.admin-action-card:focus-visible,
+.btn-editar:focus-visible,
+.btn-excluir:focus-visible,
+.admin-menu-button:focus-visible,
+.admin-recent-edit:focus-visible {
+    outline: 3px solid rgba(77, 128, 109, 0.35);
+    outline-offset: 2px;
+}
+
+/* Evita que títulos longos quebrem os cartões */
+.admin-recent-post-main,
+.admin-recent-post-item,
+.admin-section-heading > div {
+    min-width: 0;
+}
+
+.admin-recent-post-main h3 {
+    overflow-wrap: anywhere;
+}
+
+/* Linha de publicações recentes e próximas publicações */
+.admin-recent-post-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--admin-border-soft);
+}
+
+.admin-recent-post-item:last-child {
+    border-bottom: 0;
+}
+
+.admin-recent-post-main {
+    flex: 1;
+}
+
+.admin-recent-post-main h3 {
+    margin: 7px 0 4px;
+    color: var(--admin-text);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.admin-recent-post-main p {
+    color: var(--admin-muted);
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.admin-recent-post-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.admin-recent-edit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 35px;
+    padding: 8px 12px;
+    border-radius: 9px;
+    color: var(--admin-primary-dark);
+    background: var(--admin-primary-soft);
+    font-size: 11px;
+    font-weight: 650;
+    cursor: pointer;
+    transition: background var(--admin-transition);
+}
+
+.admin-recent-edit:hover {
+    background: #e2efe9;
+}
+
+.admin-recent-edit svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Rascunhos ganham distinção visual */
+.status-rascunho {
+    color: var(--admin-text-soft);
+    background: #eeeae6;
+}
+
+/* Base opcional para a futura tabela de gerenciamento de artigos */
+.admin-articles-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.admin-articles-filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.admin-articles-search,
+.admin-articles-select {
+    min-height: 42px;
+    padding: 9px 12px;
+    color: var(--admin-text);
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-sm);
+    outline: none;
+}
+
+.admin-articles-search:focus,
+.admin-articles-select:focus {
+    border-color: #91b3a5;
+    box-shadow: 0 0 0 3px rgba(77, 128, 109, 0.09);
+}
+
+.admin-articles-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--admin-radius-lg);
+    box-shadow: var(--admin-shadow);
+}
+
+.admin-articles-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 12px;
+}
+
+.admin-articles-table th {
+    padding: 15px 17px;
+    color: var(--admin-text-soft);
+    background: var(--admin-surface-soft);
+    border-bottom: 1px solid var(--admin-border);
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.admin-articles-table td {
+    padding: 16px 17px;
+    border-bottom: 1px solid var(--admin-border-soft);
+    vertical-align: middle;
+}
+
+.admin-articles-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.admin-articles-table tbody tr:hover {
+    background: #fcfaf8;
+}
+
+.admin-articles-table .article-title {
+    font-weight: 650;
+    overflow-wrap: anywhere;
+}
+
+.admin-articles-table .article-datetime {
+    color: var(--admin-text-soft);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* Regras finais consolidadas para os 6 indicadores */
+@media (min-width: 1101px) {
+    .admin-stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 521px) and (max-width: 1100px) {
+    .admin-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+    /* Duas colunas no celular, como aprovado no teste visual */
+    .admin-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .admin-stat-card {
+        gap: 10px;
+        padding: 13px;
+    }
+
+    .admin-stat-icon {
+        width: 39px;
+        height: 39px;
+    }
+
+    .admin-stat-content strong {
+        font-size: 22px;
+    }
+
+    .admin-stat-card:last-child {
+        grid-column: auto;
+    }
+
+    .admin-recent-post-item {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+        padding: 15px;
+    }
+
+    .admin-recent-post-actions {
+        width: 100%;
+    }
+
+    .admin-recent-edit {
+        width: 100%;
+    }
+
+    .admin-articles-search,
+    .admin-articles-select {
+        width: 100%;
+    }
+}
+
+@media (max-width: 360px) {
+    .admin-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-page,
+    .admin-stat-card,
+    .admin-action-card,
+    .post-admin-card {
+        animation: none;
+        transition: none;
+    }
+}
+
+
+
+
+/* ==========================================================
+   PSIFÁCIL - GERENCIADOR PROFISSIONAL DE PUBLICAÇÕES
+   Mantém a identidade visual atual
+========================================================== */
+
+:root {
+    --posts-verde: #4d806d;
+    --posts-verde-escuro: #3e6b5b;
+    --posts-verde-claro: #edf5f0;
+    --posts-bege: #f7f4f1;
+    --posts-borda: #e8e1dc;
+    --posts-texto: #242b29;
+    --posts-cinza: #78817c;
+}
+
+/* CONTAINER PRINCIPAL */
+
+#posts-criados {
+    width: 100%;
+    min-width: 0;
+}
+
+/* BARRA DE PESQUISA E FILTROS */
+
+.admin-posts-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 22px;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid var(--posts-borda);
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(45, 55, 48, 0.035);
+}
+
+/* CAMPO DE PESQUISA */
+
+.admin-posts-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1 1 280px;
+    min-width: 0;
+    min-height: 46px;
+    padding: 0 15px;
+    background: #faf9f7;
+    border: 1px solid var(--posts-borda);
+    border-radius: 11px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.admin-posts-search:focus-within {
+    border-color: var(--posts-verde);
+    box-shadow: 0 0 0 3px rgba(77, 128, 109, 0.12);
+}
+
+.admin-posts-search > svg {
+    width: 19px;
+    height: 19px;
+    color: var(--posts-verde);
+    flex-shrink: 0;
+}
+
+.admin-posts-search input {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--posts-texto);
+    font: inherit;
+    font-size: 13px;
+}
+
+.admin-posts-search input::placeholder {
+    color: #969c98;
+}
+
+/* FILTROS */
+
+.admin-posts-filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.admin-posts-filters select {
+    min-height: 46px;
+    padding: 0 34px 0 14px;
+    border: 1px solid var(--posts-borda);
+    border-radius: 11px;
+    background-color: #faf9f7;
+    color: var(--posts-texto);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.admin-posts-filters select:focus {
+    border-color: var(--posts-verde);
+    box-shadow: 0 0 0 3px rgba(77, 128, 109, 0.12);
+}
+
+/* CABEÇALHO DA LISTAGEM */
+
+.admin-posts-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.admin-posts-list-header h2 {
+    margin: 0 0 5px;
+    color: var(--posts-texto);
+    font-size: 19px;
+    font-weight: 750;
+    letter-spacing: -0.4px;
+}
+
+.admin-posts-list-header p {
+    margin: 0;
+    color: var(--posts-cinza);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+#quantidadePostsFiltrados {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 13px;
+    border: 1px solid #dce9e1;
+    border-radius: 999px;
+    background: var(--posts-verde-claro);
+    color: var(--posts-verde-escuro);
+    font-size: 12px;
+    font-weight: 650;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   GERENCIADOR DE PUBLICAÇÕES - LISTA E TABELA
+   Seis colunas: artigo, status, publicação, agendamento,
+   última edição e ações.
+========================================================= */
+
+#admin-page-posts,
+#posts-criados {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+}
+
+#posts-criados {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid var(--posts-borda);
+    border-radius: 18px;
+}
+
+#posts-criados .admin-posts-list-header {
+    order: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0;
+    padding: 0 0 20px;
+    border-bottom: 1px solid #eee8e3;
+}
+
+#posts-criados .admin-posts-list-header h2 {
+    margin: 0 0 6px;
+    font-size: 20px;
+    font-weight: 750;
+}
+
+#posts-criados .admin-posts-list-header p {
+    margin: 0;
+    font-size: 13px;
+    color: #78817c;
+}
+
+#posts-criados #quantidadePostsFiltrados {
+    flex-shrink: 0;
+}
+
+#posts-criados .admin-posts-toolbar {
+    order: 2;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0;
+    padding: 20px 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+#listaPostsAdmin,
+#posts-criados #listaPostsAdmin {
+    display: block;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+}
+
+#posts-criados #listaPostsAdmin {
+    order: 3;
+}
+
+/* Contêiner com rolagem própria, sem cortar as ações */
+.admin-posts-table-wrapper,
+#listaPostsAdmin .admin-posts-table-wrapper {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    border: 1px solid var(--posts-borda);
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 8px 28px rgba(45, 55, 48, 0.035);
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Tabela e larguras consistentes */
+.admin-posts-table,
+#listaPostsAdmin .admin-posts-table {
+    width: 100%;
+    min-width: 1050px;
+    table-layout: fixed;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 13px;
+}
+
+.admin-posts-table thead {
+    background: #f8f7f5;
+}
+
+.admin-posts-table th {
+    padding: 17px 16px;
+    border-bottom: 1px solid var(--posts-borda);
+    color: #69766e;
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.admin-posts-table td,
+#listaPostsAdmin .admin-posts-table td {
+    padding: 17px 16px;
+    border-bottom: 1px solid #f0ebe7;
+    color: var(--posts-texto);
+    vertical-align: middle;
+}
+
+.admin-posts-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.admin-posts-table tbody tr:hover {
+    background: #fafbf9;
+}
+
+.admin-posts-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.admin-posts-table th:nth-child(1),
+.admin-posts-table td:nth-child(1) { width: 30%; }
+.admin-posts-table th:nth-child(2),
+.admin-posts-table td:nth-child(2) { width: 13%; }
+.admin-posts-table th:nth-child(3),
+.admin-posts-table td:nth-child(3) { width: 14%; }
+.admin-posts-table th:nth-child(4),
+.admin-posts-table td:nth-child(4) { width: 14%; }
+.admin-posts-table th:nth-child(5),
+.admin-posts-table td:nth-child(5) { width: 16%; }
+.admin-posts-table th:nth-child(6),
+.admin-posts-table td:nth-child(6) { width: 13%; }
+
+/* Títulos, categorias e datas */
+.admin-post-title,
+#listaPostsAdmin .admin-post-title {
+    display: block;
+    max-width: none;
+    color: var(--posts-texto);
+    font-weight: 700;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.admin-post-category {
+    display: block;
+    margin-top: 5px;
+    color: var(--posts-cinza);
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.admin-post-date {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.admin-post-date strong {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.admin-post-date span {
+    color: var(--posts-cinza);
+    font-size: 11px;
+}
+
+/* Status - mantém compatibilidade com classes existentes */
+.admin-post-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.admin-post-badge.publicado {
+    background: #e8f5ec;
+    color: #32764e;
+}
+
+.admin-post-badge.agendado {
+    background: #fff3df;
+    color: #9a671d;
+}
+
+.admin-post-badge.rascunho {
+    background: #eef0f2;
+    color: #657079;
+}
+
+/* Ações: editar, visualizar e excluir */
+.admin-post-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: nowrap;
+}
+
+.admin-post-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid var(--posts-borda);
+    border-radius: 9px;
+    background: #ffffff;
+    color: var(--posts-verde-escuro);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.admin-post-action-btn:hover {
+    background: var(--posts-verde-claro);
+    border-color: #bfd8c9;
+}
+
+.admin-post-action-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.admin-post-action-btn.visualizar {
+    color: #4d806d;
+}
+
+.admin-post-action-btn.visualizar:hover {
+    background: #edf5f0;
+    border-color: #bfd8c9;
+}
+
+.admin-post-action-btn.excluir {
+    color: #b34e4e;
+}
+
+.admin-post-action-btn.excluir:hover {
+    background: #fff0f0;
+    border-color: #e9c5c5;
+}
+
+/* Lista vazia */
+#listaPostsAdmin .empty-posts {
+    padding: 48px 20px;
+    text-align: center;
+}
+
+#listaPostsAdmin .empty-posts svg {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 12px;
+    color: var(--posts-verde);
+}
+
+/* Responsividade dos filtros e do gerenciador */
+@media (max-width: 900px) {
+    .admin-posts-toolbar { align-items: stretch; }
+    .admin-posts-search { flex-basis: 100%; }
+    .admin-posts-filters { width: 100%; }
+    .admin-posts-filters select {
+        flex: 1 1 180px;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 700px) {
+    #posts-criados { padding: 16px; }
+    #posts-criados .admin-posts-list-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    #posts-criados .admin-posts-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    #posts-criados .admin-posts-search,
+    #posts-criados .admin-posts-filters { width: 100%; }
+}
+
+@media (max-width: 600px) {
+    .admin-posts-toolbar {
+        padding: 14px;
+        gap: 12px;
+        border-radius: 13px;
+    }
+    .admin-posts-search { flex-basis: 100%; }
+    .admin-posts-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .admin-posts-filters select {
+        flex: none;
+        width: 100%;
+    }
+    .admin-posts-list-header { align-items: flex-start; }
+    .admin-posts-list-header h2 { font-size: 17px; }
+    .admin-posts-table-wrapper { border-radius: 12px; }
+    .admin-posts-table th,
+    .admin-posts-table td { padding: 14px 12px; }
+}
+
+
+
+/* ==========================================
+   PSIFÁCIL - CALENDÁRIO EDITORIAL
+========================================== */
+
+.calendario-editorial {
+    width: 100%;
+    min-width: 0;
+}
+
+/* NAVEGAÇÃO DOS MESES */
+
+.calendario-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.calendario-subtitulo {
+    display: block;
+    margin-bottom: 6px;
+    color: #668477;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+}
+
+.calendario-toolbar h3 {
+    margin: 0;
+    color: #25362f;
+    font-size: 22px;
+    font-weight: 750;
+    text-transform: capitalize;
+}
+
+.calendario-navegacao {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.calendario-navegacao button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid #e8e0da;
+    border-radius: 10px;
+    background: #fff;
+    color: #426f5e;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.calendario-navegacao button:hover {
+    background: #eef5f0;
+    border-color: #b9d3c4;
+}
+
+.calendario-navegacao button:focus-visible,
+.calendario-dia:focus-visible {
+    outline: 2px solid #4d806d;
+    outline-offset: 2px;
+}
+
+.calendario-navegacao button svg {
+    width: 17px;
+    height: 17px;
+}
+
+/* LEGENDA */
+
+.calendario-legenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.calendario-legenda span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #69766e;
+    font-size: 12px;
+}
+
+.calendario-ponto {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.calendario-ponto.publicado {
+    background: #4d806d;
+}
+
+.calendario-ponto.agendado {
+    background: #c39551;
+}
+
+/* CABEÇALHO DOS DIAS DA SEMANA */
+
+.calendario-semana {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.calendario-semana span {
+    padding: 12px 4px;
+    color: #7c857e;
+    font-size: 11px;
+    font-weight: 750;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* GRADE MENSAL */
+
+.calendario-dias {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.calendario-dia {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    min-width: 0;
+    min-height: 105px;
+    padding: 12px;
+    border: 1px solid #ece6e0;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #25362f;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.calendario-dia:hover {
+    background: #f7faf7;
+    border-color: #c4d8cb;
+}
+
+.calendario-dia.fora-mes {
+    background: #faf9f7;
+    opacity: 0.55;
+}
+
+.calendario-dia.hoje {
+    border-color: #4d806d;
+}
+
+.calendario-dia.selecionado {
+    background: #eef5f0;
+    border-color: #4d806d;
+    box-shadow: inset 0 0 0 1px #4d806d;
+}
+
+.calendario-dia-numero {
+    font-size: 13px;
+    font-weight: 750;
+}
+
+.calendario-dia.hoje .calendario-dia-numero {
+    color: #32745c;
+}
+
+.calendario-dia-eventos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+}
+
+.calendario-dia-contagem {
+    color: #69766e;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+/* DETALHES DO DIA SELECIONADO */
+
+.calendario-detalhes {
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid #eee7e1;
+}
+
+.calendario-detalhes h3 {
+    margin: 0 0 16px;
+    color: #25362f;
+    font-size: 17px;
+    font-weight: 750;
+}
+
+#calendarioArtigosDia {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.calendario-artigo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 17px;
+    border: 1px solid #eee7e1;
+    border-radius: 12px;
+    background: #faf9f7;
+}
+
+.calendario-artigo-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.calendario-artigo-info strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #25362f;
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.calendario-artigo-info span {
+    color: #78857b;
+    font-size: 11px;
+}
+
+.calendario-artigo-acoes {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.calendario-artigo-acoes button {
+    padding: 9px 13px;
+    border: 1px solid #c9dcd0;
+    border-radius: 9px;
+    background: #fff;
+    color: #426f5e;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.calendario-artigo-acoes button:hover {
+    background: #eef5f0;
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 900px) {
+    .calendario-dia {
+        min-height: 85px;
+        padding: 9px;
+    }
+}
+
+@media (max-width: 600px) {
+    .calendario-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .calendario-toolbar h3 {
+        font-size: 19px;
+    }
+
+    .calendario-navegacao {
+        width: 100%;
+    }
+
+    .calendario-dia {
+        min-height: 58px;
+        padding: 6px;
+        gap: 5px;
+        border-radius: 8px;
+    }
+
+    .calendario-dia-numero {
+        font-size: 11px;
+    }
+
+    .calendario-dia-contagem {
+        display: none;
+    }
+
+    .calendario-semana,
+    .calendario-dias {
+        gap: 3px;
+    }
+
+    .calendario-semana span {
+        padding: 8px 0;
+        font-size: 10px;
+    }
+
+    .calendario-artigo {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+
+
+/* ==========================================
+   CALENDÁRIO - CRIAR ARTIGO
+========================================== */
+
+.calendario-detalhes-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.calendario-detalhes-cabecalho h3 {
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .calendario-detalhes-cabecalho {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .calendario-detalhes-cabecalho .admin-primary-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+
+
+/* ==========================================
+   PSIFÁCIL - RESUMO MENSAL DO CALENDÁRIO
+========================================== */
+
+.calendario-resumo-mensal {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin: 0 0 24px;
+}
+
+/* CARDS */
+
+.calendario-resumo-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+    padding: 20px 22px;
+    background: #ffffff;
+    border: 1px solid #eae5df;
+    border-radius: 14px;
+    box-shadow: 0 5px 18px rgba(45, 55, 48, 0.035);
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.calendario-resumo-card:hover {
+    transform: translateY(-2px);
+    border-color: #d5e2d9;
+    box-shadow: 0 8px 22px rgba(45, 55, 48, 0.07);
+}
+
+/* ÍCONES */
+
+.calendario-resumo-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+}
+
+.calendario-resumo-icone svg {
+    width: 23px;
+    height: 23px;
+}
+
+.calendario-resumo-icone.publicado {
+    background: #eaf4ed;
+    color: #438165;
+}
+
+.calendario-resumo-icone.agendado {
+    background: #faf0df;
+    color: #b78943;
+}
+
+/* INFORMAÇÕES */
+
+.calendario-resumo-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.calendario-resumo-info span {
+    color: #78857b;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.calendario-resumo-info strong {
+    color: #25362f;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 700px) {
+    .calendario-resumo-mensal {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .calendario-resumo-card {
+        padding: 16px;
+    }
+
+    .calendario-resumo-icone {
+        width: 46px;
+        height: 46px;
+    }
+
+    .calendario-resumo-info strong {
+        font-size: 26px;
+    }
+}
+
+
