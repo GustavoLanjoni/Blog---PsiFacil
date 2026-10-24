@@ -6004,3 +6004,122 @@ button {
     opacity: 1 !important;
     visibility: visible !important;
 }
+
+
+
+/* =====================================================
+   NOVAS REDES SOCIAIS - FOOTER PSIFÁCIL
+   MANTÉM O VISUAL ORIGINAL
+====================================================== */
+
+/* Tamanho dos novos ícones */
+
+.footer .social-icons .shorts-brand-icon,
+.footer .social-icons .tiktok-brand-icon,
+.footer .social-icons .kwai-brand-icon,
+.footer .social-icons .facebook-brand-icon {
+    width: 24px;
+    height: 24px;
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Garantir as cores originais dos SVGs */
+
+.footer .social-icons .footer-shorts,
+.footer .social-icons .footer-tiktok,
+.footer .social-icons .footer-kwai,
+.footer .social-icons .footer-facebook {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Evitar que regras antigas alterem os desenhos */
+
+.footer .social-icons .shorts-brand-icon path,
+.footer .social-icons .tiktok-brand-icon path,
+.footer .social-icons .facebook-brand-icon path {
+    fill: revert-layer;
+}
+
+/* Corrigir preenchimento do Kwai */
+
+.footer .social-icons .kwai-brand-icon circle,
+.footer .social-icons .kwai-brand-icon rect,
+.footer .social-icons .kwai-brand-icon path {
+    fill: none !important;
+    stroke: #FF4F12 !important;
+}
+
+/* Ajustes de cores dos novos ícones */
+
+.footer .social-icons .facebook-brand-icon path {
+    fill: #1877F2 !important;
+}
+
+.footer .social-icons .shorts-brand-icon path:first-child {
+    fill: #FF0000 !important;
+}
+
+.footer .social-icons .shorts-brand-icon path:last-child {
+    fill: #FFFFFF !important;
+}
+
+.footer .social-icons .tiktok-brand-icon path:nth-child(1) {
+    fill: #25F4EE !important;
+}
+
+.footer .social-icons .tiktok-brand-icon path:nth-child(2) {
+    fill: #FE2C55 !important;
+}
+
+.footer .social-icons .tiktok-brand-icon path:nth-child(3) {
+    fill: #111111 !important;
+}
+
+
+
+/* =====================================================
+   CORREÇÃO INSTAGRAM E YOUTUBE - FOOTER
+   REMOVE FUNDOS COLORIDOS ANTIGOS
+====================================================== */
+
+.footer .social-icons a.footer-instagram,
+.footer .social-icons a.footer-youtube {
+    background: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: none !important;
+}
+
+/* Remove preenchimento branco forçado do YouTube */
+
+.footer .social-icons .youtube-brand-icon {
+    fill: none !important;
+}
+
+/* Mantém as cores originais do YouTube */
+
+.footer .social-icons .youtube-brand-icon path:first-child {
+    fill: #FF0000 !important;
+}
+
+.footer .social-icons .youtube-brand-icon path:last-child {
+    fill: #FFFFFF !important;
+}
+
+/* Mantém o Instagram colorido */
+
+.footer .social-icons .instagram-brand-icon rect:first-of-type {
+    fill: url(#footerInstagramGradient) !important;
+}
+
+.footer .social-icons .instagram-brand-icon rect:nth-of-type(2),
+.footer .social-icons .instagram-brand-icon circle:first-of-type {
+    fill: none !important;
+    stroke: #FFFFFF !important;
+}
+
+.footer .social-icons .instagram-brand-icon circle:last-of-type {
+    fill: #FFFFFF !important;
+}
