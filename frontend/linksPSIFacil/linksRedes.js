@@ -377,6 +377,24 @@ const iconesRedes = {
 const redesSociais = [
 
 
+        /* =====================================================
+       BLOG PSIFÁCIL
+    ====================================================== */
+
+    {
+        nome:
+            "Blog PsiFácil",
+
+        descricao:
+            "Artigos, dicas e informações sobre psicologia, saúde mental e muito mais.",
+
+        icone:
+            "blog",
+
+        url:
+            "https://psifacilblog.com.br/"
+    },
+
     /* =====================================================
        YOUTUBE SHORTS
     ====================================================== */
@@ -485,23 +503,9 @@ const redesSociais = [
     },
 
 
-    /* =====================================================
-       BLOG PSIFÁCIL
-    ====================================================== */
 
-    {
-        nome:
-            "Blog PsiFácil",
 
-        descricao:
-            "Artigos, dicas e informações sobre psicologia, saúde mental e muito mais.",
 
-        icone:
-            "blog",
-
-        url:
-            "https://psifacilblog.com.br/"
-    }
 
 ];
 
