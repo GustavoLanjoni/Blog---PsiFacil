@@ -231,6 +231,30 @@ const iconesRedes = {
     `,
 
 
+
+    /* =====================================================
+       FACEBOOK
+    ====================================================== */
+
+    facebook: `
+    <div class="social-logo social-logo-facebook">
+
+        <svg
+            viewBox="0 0 24 24"
+            class="social-logo-svg"
+            aria-hidden="true"
+        >
+            <path
+                fill="#1877F2"
+                d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12z"
+            ></path>
+        </svg>
+
+    </div>
+`,
+
+
+
     /* =====================================================
        TIKTOK
     ====================================================== */
@@ -427,6 +451,19 @@ const redesSociais = [
         url:
             "https://www.instagram.com/psifacil.oficial/"
     },
+
+
+
+    {
+        nome: "Facebook",
+
+        descricao: "Acompanhe novidades, artigos e conteúdos sobre saúde mental e bem-estar.",
+
+        icone: "facebook",
+
+        url: "https://www.facebook.com/profile.php?id=61594874082225&locale=pt_BR"
+    },
+
 
 
     /* =====================================================

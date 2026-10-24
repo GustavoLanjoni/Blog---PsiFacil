@@ -5897,3 +5897,110 @@ button {
     outline: 3px solid var(--brown);
     outline-offset: 4px;
 }
+
+
+
+/* Novos ícones sociais */
+
+.final-tiktok {
+    color: #111111;
+}
+
+.final-kwai {
+    color: #FF6B00;
+}
+
+.final-facebook {
+    color: #1877F2;
+}
+
+/* Organização responsiva dos ícones */
+
+.final-social-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.final-social-buttons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25s ease;
+}
+
+.final-social-buttons a:hover {
+    transform: translateY(-4px);
+}
+
+.final-social-buttons a svg {
+    width: 25px;
+    height: 25px;
+}
+
+
+
+/* REDES SOCIAIS - PSIFÁCIL */
+
+.final-social-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.final-social-buttons > a {
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 48px;
+    border-radius: 14px;
+    background: #f5f1ee;
+    text-decoration: none;
+    transition: transform .25s ease,
+                background .25s ease;
+}
+
+.final-social-buttons > a:hover {
+    transform: translateY(-4px);
+    background: #ece6e1;
+}
+
+.final-social-buttons > a > svg {
+    display: block !important;
+    width: 27px !important;
+    height: 27px !important;
+    min-width: 27px;
+    min-height: 27px;
+    opacity: 1 !important;
+    visibility: visible !important;
+    overflow: visible;
+}
+
+.final-social-buttons > a.final-tiktok > svg,
+.final-social-buttons > a.final-kwai > svg {
+    width: 32px !important;
+    height: 32px !important;
+}
+
+.final-social-buttons > a > svg path,
+.final-social-buttons > a > svg circle,
+.final-social-buttons > a > svg rect {
+    opacity: 1 !important;
+}
+
+
+/* YOUTUBE SHORTS */
+
+.final-social-buttons > a.final-shorts > svg {
+    width: 28px !important;
+    height: 28px !important;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}

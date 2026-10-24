@@ -1098,3 +1098,24 @@ body {
     }
 
 }
+
+
+
+/* ==========================================
+   FACEBOOK - PÁGINA DE LINKS
+========================================== */
+
+.social-logo-facebook {
+    width: 43px;
+    height: 43px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-logo-facebook .social-logo-svg {
+    width: 40px;
+    height: 40px;
+    display: block;
+}
