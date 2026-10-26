@@ -6123,3 +6123,43 @@ button {
 .footer .social-icons .instagram-brand-icon circle:last-of-type {
     fill: #FFFFFF !important;
 }
+
+
+
+
+/* ==========================================
+   HOME — LINK DE DIREITOS AUTORAIS
+========================================== */
+
+.footer-separator {
+    margin: 0 8px;
+    color: #a8867e;
+    opacity: 0.7;
+}
+
+.footer-direitos {
+    color: #d8b8a9;
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.3s ease;
+}
+
+.footer-direitos:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 768px) {
+    .footer-love {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .footer-separator {
+        margin: 0 5px;
+    }
+}

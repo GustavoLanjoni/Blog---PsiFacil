@@ -2890,3 +2890,47 @@ button:focus-visible {
         padding: 8px 12px;
     }
 }
+
+
+/* ==========================================
+   PSIFÁCIL — DIREITOS AUTORAIS NO FOOTER
+========================================== */
+
+.footer-separator {
+    margin: 0 8px;
+    color: #a8867e;
+    opacity: 0.7;
+}
+
+.footer-direitos {
+    color: #d8b8a9;
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.3s ease;
+}
+
+.footer-direitos:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.footer-direitos:focus-visible {
+    outline: 2px solid #d8b8a9;
+    outline-offset: 4px;
+    border-radius: 3px;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 768px) {
+    .footer-love {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .footer-separator {
+        margin: 0 5px;
+    }
+}

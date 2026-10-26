@@ -27,6 +27,7 @@
     ====================================================== -->
 
     <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/admin-livros.css">
 
 
     <!-- =====================================================
@@ -166,6 +167,18 @@
                         </span>
 
                     </button>
+
+
+                    <!-- GERENCIAR LIVROS -->
+
+                    <button type="button" class="admin-nav-link" data-admin-page="livros">
+                        <i data-lucide="book-open"></i>
+
+                        <span>
+                            Gerenciar livros
+                        </span>
+                    </button>
+
 
 
                     <!-- CALENDÁRIO EDITORIAL -->
@@ -1317,6 +1330,410 @@
                 </section>
 
 
+
+
+
+                <!-- ==========================================
+     GERENCIAR LIVROS - PSIFÁCIL
+========================================== -->
+
+                <section class="admin-page" id="admin-page-livros" data-page="livros">
+
+                    <!-- CABEÇALHO -->
+                    <div class="admin-page-heading">
+                        <div>
+                            <span class="admin-eyebrow">Biblioteca PsiFácil</span>
+                            <h1>Gerenciar livros</h1>
+                            <p>
+                                Cadastre, visualize, edite e organize os livros
+                                recomendados na Biblioteca PsiFácil.
+                            </p>
+                        </div>
+
+
+                    </div>
+
+                    <!-- NAVEGAÇÃO DAS ABAS -->
+                    <div class="admin-livros-tabs">
+
+                        <button type="button" class="admin-livros-tab ativo" id="abaCadastrarLivro">
+                            <i data-lucide="book-plus"></i>
+                            Cadastrar / Editar
+                        </button>
+
+                        <button type="button" class="admin-livros-tab" id="abaListarLivros">
+                            <i data-lucide="library-big"></i>
+                            Livros cadastrados
+                        </button>
+
+                    </div>
+
+                    <!-- ======================================
+         ABA 1 - CADASTRO E PREVIEW
+    ======================================= -->
+
+                    <div id="painelCadastrarLivro">
+
+                        <div id="areaFormularioLivro" class="admin-form-card"
+                            style="display: none; margin-bottom: 24px;">
+
+                            <div class="admin-card-heading">
+                                <div class="admin-card-heading-icon">
+                                    <i data-lucide="book-plus"></i>
+                                </div>
+
+                                <div>
+                                    <span class="admin-eyebrow">
+                                        Biblioteca PsiFácil
+                                    </span>
+
+                                    <h2 id="tituloFormularioLivro">
+                                        Cadastrar novo livro
+                                    </h2>
+
+                                    <p>
+                                        Preencha os dados e confira a prévia
+                                        antes de publicar.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="admin-livros-editor-grid">
+
+                                <!-- FORMULÁRIO -->
+                                <div class="admin-livros-formulario">
+
+                                    <form id="formLivro">
+
+                                        <div class="form-group">
+                                            <label for="livroTitulo">
+                                                Título do livro
+                                            </label>
+
+                                            <input type="text" id="livroTitulo" maxlength="200"
+                                                placeholder="Ex: A coragem de ser imperfeito" required>
+                                        </div>
+
+                                        <div class="form-row">
+
+                                            <div class="form-group">
+                                                <label for="livroAutor">
+                                                    Autor
+                                                </label>
+
+                                                <input type="text" id="livroAutor" placeholder="Nome do autor" required>
+                                            </div>
+
+
+                                            <!-- CATEGORIA DO LIVRO -->
+                                            <div class="form-group">
+
+                                                <label for="livroCategoria">
+                                                    Categoria
+                                                </label>
+
+                                                <input type="text" id="livroCategoria" name="categoria"
+                                                    placeholder="Ex: Autoconhecimento, Ansiedade, Autoestima..."
+                                                    maxlength="80" autocomplete="off" required>
+
+                                                <small class="form-helper">
+                                                    Digite a categoria que melhor representa o livro.
+                                                </small>
+
+                                            </div>
+
+
+                                        </div>
+
+                                        <!-- CAPA -->
+                                        <div class="form-group">
+                                            <label for="livroImagemArquivo">
+                                                Imagem da capa
+                                            </label>
+
+                                            <input type="file" id="livroImagemArquivo"
+                                                accept="image/jpeg,image/png,image/webp">
+
+                                            <input type="hidden" id="livroImagem">
+
+                                            <small class="form-helper" id="livroStatusImagem">
+                                                Selecione uma imagem JPG, PNG ou WEBP.
+                                            </small>
+                                        </div>
+
+                                        <!-- DESCRIÇÃO -->
+                                        <div class="form-group">
+                                            <label for="livroDescricao">
+                                                Descrição do livro
+                                            </label>
+
+                                            <textarea id="livroDescricao" rows="5" maxlength="500"
+                                                placeholder="Escreva uma breve apresentação do livro..."
+                                                required></textarea>
+                                        </div>
+
+                                        <!-- AMAZON -->
+                                        <div class="form-group">
+                                            <label for="livroLinkAmazon">
+                                                Link de afiliado da Amazon
+                                            </label>
+
+                                            <input type="url" id="livroLinkAmazon" placeholder="https://..." required>
+
+                                            <small class="form-helper">
+                                                Insira o link de afiliado
+                                                correspondente a este livro.
+                                            </small>
+                                        </div>
+
+                                        <!-- STATUS -->
+                                        <div class="form-row">
+
+                                            <div class="form-group">
+                                                <label for="livroStatus">
+                                                    Status
+                                                </label>
+
+                                                <select id="livroStatus">
+                                                    <option value="publicado">
+                                                        Publicado
+                                                    </option>
+                                                    <option value="rascunho">
+                                                        Rascunho
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="livroDestaque">
+                                                    Exibir na página inicial
+                                                </label>
+
+                                                <select id="livroDestaque">
+                                                    <option value="sim">Sim</option>
+                                                    <option value="nao">Não</option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- BOTÕES -->
+                                        <div class="admin-livros-form-actions"
+                                            style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px;">
+
+                                            <button type="submit" class="admin-primary-button" id="btnSalvarLivro">
+                                                <i data-lucide="save"></i>
+                                                Salvar livro
+                                            </button>
+
+                                            <button type="button" class="admin-text-button" id="btnCancelarLivro">
+                                                Cancelar
+                                            </button>
+
+                                        </div>
+
+                                    </form>
+
+                                </div>
+
+                                <!-- ==================================
+                     PREVIEW DO LIVRO
+                =================================== -->
+
+                                <aside class="admin-livros-preview-area">
+
+                                    <div class="admin-card-heading">
+                                        <div class="admin-card-heading-icon">
+                                            <i data-lucide="eye"></i>
+                                        </div>
+
+                                        <div>
+                                            <span class="admin-eyebrow">
+                                                Pré-visualização
+                                            </span>
+                                            <h2>Como ficará no blog</h2>
+                                        </div>
+                                    </div>
+
+                                    <article class="admin-livro-preview-card" id="previewLivroCard">
+
+                                        <div class="admin-livro-preview-capa" id="previewLivroCapa">
+
+                                            <i data-lucide="book-open"></i>
+                                            <span>Capa do livro</span>
+
+                                        </div>
+
+                                        <div class="admin-livro-preview-conteudo">
+
+                                            <span class="admin-livro-preview-categoria" id="previewLivroCategoria">
+                                                Categoria
+                                            </span>
+
+                                            <h3 id="previewLivroTitulo">
+                                                Título do livro
+                                            </h3>
+
+                                            <p class="admin-livro-preview-autor" id="previewLivroAutor">
+                                                Nome do autor
+                                            </p>
+
+                                            <p class="admin-livro-preview-descricao" id="previewLivroDescricao">
+                                                A descrição do livro aparecerá
+                                                aqui enquanto você preenche
+                                                o formulário.
+                                            </p>
+
+                                            <a id="previewLivroAmazon" href="#" target="_blank"
+                                                rel="sponsored noopener noreferrer" class="admin-primary-button"
+                                                style="pointer-events: none; opacity: .6;">
+                                                <i data-lucide="external-link"></i>
+                                                Ver na Amazon
+                                            </a>
+
+                                        </div>
+
+                                    </article>
+
+                                    <div class="admin-livro-preview-status">
+                                        <span id="previewLivroStatus">
+                                            Publicado
+                                        </span>
+
+                                        <span id="previewLivroDestaque">
+                                            Destaque na página inicial
+                                        </span>
+                                    </div>
+
+                                    <p class="form-helper">
+                                        Esta é uma prévia administrativa.
+                                        O livro publicado utilizará o visual
+                                        da Biblioteca PsiFácil.
+                                    </p>
+
+                                </aside>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ESTADO INICIAL -->
+                        <div class="admin-form-card" id="mensagemNovoLivro">
+
+                            <div class="admin-empty-state">
+                                <i data-lucide="book-plus"></i>
+
+                                <strong>Pronto para cadastrar um livro?</strong>
+
+                                <span>
+                                    Clique em Novo livro para abrir
+                                    o formulário e visualizar a prévia.
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- ======================================
+         ABA 2 - LIVROS CADASTRADOS
+    ======================================= -->
+
+                    <div id="painelListarLivros" style="display: none;">
+
+                        <div class="admin-form-card">
+
+                            <div class="admin-card-heading">
+                                <div class="admin-card-heading-icon">
+                                    <i data-lucide="library-big"></i>
+                                </div>
+
+                                <div>
+                                    <span class="admin-eyebrow">
+                                        Catálogo
+                                    </span>
+
+                                    <h2>Livros cadastrados</h2>
+
+                                    <p>
+                                        Visualize, pesquise, edite e exclua
+                                        os livros da Biblioteca PsiFácil.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- FILTROS -->
+                            <div class="admin-livros-filtros">
+
+                                <div class="form-group">
+                                    <label for="pesquisaLivrosAdmin">
+                                        Pesquisar livro
+                                    </label>
+
+                                    <input type="search" id="pesquisaLivrosAdmin"
+                                        placeholder="Pesquisar por título ou autor...">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="filtroStatusLivrosAdmin">
+                                        Status
+                                    </label>
+
+                                    <select id="filtroStatusLivrosAdmin">
+                                        <option value="todos">Todos</option>
+                                        <option value="publicado">Publicados</option>
+                                        <option value="rascunho">Rascunhos</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="ordenacaoLivrosAdmin">
+                                        Ordenar por
+                                    </label>
+
+                                    <select id="ordenacaoLivrosAdmin">
+                                        <option value="recentes">
+                                            Mais recentes
+                                        </option>
+                                        <option value="antigos">
+                                            Mais antigos
+                                        </option>
+                                        <option value="titulo">
+                                            Título A-Z
+                                        </option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <p class="form-helper" id="quantidadeLivrosFiltrados">
+                                Carregando livros...
+                            </p>
+
+                            <!-- LISTAGEM -->
+                            <div id="listaLivrosAdmin">
+
+                                <div class="admin-empty-state">
+                                    <i data-lucide="book-open"></i>
+
+                                    <strong>Nenhum livro carregado</strong>
+
+                                    <span>
+                                        Os livros cadastrados
+                                        aparecerão aqui.
+                                    </span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
                 <!-- =================================================
                  PARCERIAS
             ================================================== -->
@@ -1749,6 +2166,50 @@
     </div>
 
 
+
+
+    <!-- MODAL DE EXCLUSÃO DE LIVROS -->
+    <div class="livros-modal-overlay" id="modalExcluirLivro" hidden>
+
+        <div class="livros-modal" role="alertdialog" aria-modal="true" aria-labelledby="modalExcluirLivroTitulo"
+            aria-describedby="modalExcluirLivroDescricao" tabindex="-1">
+
+            <div class="livros-modal-icon">
+                <i data-lucide="trash-2"></i>
+            </div>
+
+            <h2 id="modalExcluirLivroTitulo">
+                Excluir livro?
+            </h2>
+
+            <p id="modalExcluirLivroDescricao">
+                Você está prestes a excluir permanentemente
+                este livro da Biblioteca PsiFácil.
+            </p>
+
+            <div class="livros-modal-livro" id="modalExcluirLivroNome">
+            </div>
+
+            <p class="livros-modal-aviso">
+                Esta ação não poderá ser desfeita.
+            </p>
+
+            <div class="livros-modal-acoes">
+                <button type="button" id="btnCancelarExclusaoLivro" class="livros-modal-cancelar">
+                    Cancelar
+                </button>
+
+                <button type="button" id="btnConfirmarExclusaoLivro" class="livros-modal-confirmar">
+                    <i data-lucide="trash-2"></i>
+                    Excluir livro
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+
+
     <!-- =========================================================
      SCRIPTS
 ========================================================= -->
@@ -1756,6 +2217,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <script src="js/admin.js"></script>
+    <script src="js/admin-livros.js"></script>
 
 
 </body>

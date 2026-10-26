@@ -1,0 +1,567 @@
+
+/* ==========================================================
+   BIBLIOTECA PSIFÁCIL — VITRINE DE LIVROS
+========================================================== */
+
+.biblioteca-section {
+    --bib-verde: #26775e;
+    --bib-verde-escuro: #195c47;
+    --bib-titulo: #292a29;
+    --bib-texto: #776f69;
+
+    width: 100%;
+    padding: 80px 24px 85px;
+    background: #ffffff;
+}
+
+.biblioteca-section *,
+.biblioteca-section *::before,
+.biblioteca-section *::after {
+    box-sizing: border-box;
+}
+
+.biblioteca-container {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+/* CABEÇALHO */
+
+.biblioteca-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 38px;
+}
+
+.biblioteca-header-text {
+    max-width: 730px;
+}
+
+.biblioteca-header h2 {
+    margin: 0 0 10px;
+    color: var(--bib-titulo);
+    font-size: clamp(30px, 3.5vw, 43px);
+    font-weight: 800;
+    letter-spacing: -1.4px;
+    line-height: 1.15;
+}
+
+.biblioteca-header p {
+    margin: 0;
+    color: var(--bib-texto);
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.biblioteca-ver-todos {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    padding: 10px 0;
+    color: var(--bib-verde);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: gap .25s ease;
+}
+
+.biblioteca-ver-todos svg {
+    width: 15px;
+    height: 15px;
+}
+
+.biblioteca-ver-todos:hover {
+    gap: 13px;
+    color: var(--bib-verde-escuro);
+}
+
+/* GRID DE LIVROS */
+
+.biblioteca-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 28px;
+    align-items: stretch;
+}
+
+/* LIVRO SEM BORDA */
+
+.biblioteca-livro {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+/* IMAGEM DO LIVRO */
+
+.biblioteca-livro-imagem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 285px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.biblioteca-livro-imagem img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    transition: transform .3s ease;
+}
+
+.biblioteca-livro:hover .biblioteca-livro-imagem img {
+    transform: scale(1.04);
+}
+
+/* ESPAÇOS PARA PRÓXIMOS LIVROS */
+
+.biblioteca-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 75%;
+    height: 85%;
+    border-radius: 12px;
+    background: #edf5ef;
+    color: var(--bib-verde);
+}
+
+.biblioteca-placeholder svg {
+    width: 38px;
+    height: 38px;
+    stroke-width: 1.5;
+}
+
+.biblioteca-placeholder span {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* INFORMAÇÕES ABAIXO DA CAPA */
+
+.biblioteca-livro-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+    min-width: 0;
+}
+
+.biblioteca-categoria {
+    display: inline-block;
+    margin-bottom: 10px;
+    color: var(--bib-verde);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .5px;
+    line-height: 1.5;
+}
+
+.biblioteca-livro-info h3 {
+    margin: 0 0 9px;
+    color: var(--bib-titulo);
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -.3px;
+    line-height: 1.4;
+}
+
+.biblioteca-autor {
+    margin: 0 0 16px;
+    color: #8b928c;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.biblioteca-descricao {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+
+    margin: 0 0 22px;
+    color: var(--bib-texto);
+    font-size: 13px;
+    line-height: 1.75;
+}
+
+/* BOTÃO VERDE */
+
+.biblioteca-botao-amazon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    width: 100%;
+    min-height: 44px;
+    margin-top: auto;
+    padding: 12px 15px;
+
+    background: var(--bib-verde);
+    color: #ffffff;
+    border-radius: 9px;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 750;
+    text-decoration: none;
+
+    transition:
+        background .25s ease,
+        transform .25s ease;
+}
+
+.biblioteca-botao-amazon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.biblioteca-botao-amazon:hover {
+    background: var(--bib-verde-escuro);
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* BOTÃO INATIVO */
+
+.biblioteca-botao-inativo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    width: 100%;
+    min-height: 44px;
+    margin-top: auto;
+    padding: 12px 15px;
+
+    background: #e6eee8;
+    color: #8a9d90;
+    border-radius: 9px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.biblioteca-botao-inativo svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* AVISO DE AFILIADOS */
+
+.biblioteca-aviso {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    margin-top: 35px;
+    padding-top: 20px;
+    border-top: 1px solid #edf0ed;
+}
+
+.biblioteca-aviso > svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: #92a39a;
+}
+
+.biblioteca-aviso p {
+    margin: 0;
+    color: #938b84;
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+
+/* ==========================================================
+   BIBLIOTECA PSIFÁCIL — MOBILE COM CARROSSEL
+========================================================== */
+
+@media (max-width: 600px) {
+
+    /* SEÇÃO */
+
+    .biblioteca-section {
+        padding: 55px 0 60px;
+        overflow: hidden;
+        background: #ffffff;
+    }
+
+    .biblioteca-container {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* CABEÇALHO */
+
+    .biblioteca-header {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+
+        margin-bottom: 26px;
+        padding: 0 20px;
+    }
+
+    .biblioteca-header h2 {
+        font-size: 30px;
+        line-height: 1.2;
+        letter-spacing: -1px;
+    }
+
+    .biblioteca-header p {
+        font-size: 13px;
+        line-height: 1.75;
+    }
+
+    .biblioteca-ver-todos {
+        font-size: 12px;
+        padding: 6px 0;
+    }
+
+    /* ==============================================
+       CARROSSEL HORIZONTAL
+    ============================================== */
+
+    .biblioteca-grid {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: stretch;
+
+        gap: 16px;
+
+        width: 100%;
+        padding: 5px 20px 20px;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        scroll-snap-type: x mandatory;
+        scroll-padding-inline: 20px;
+        -webkit-overflow-scrolling: touch;
+
+        scrollbar-width: none;
+        overscroll-behavior-x: contain;
+    }
+
+    .biblioteca-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* CADA LIVRO OCUPA UMA PARTE DA TELA */
+
+    .biblioteca-livro {
+        flex: 0 0 82%;
+        width: 82%;
+        max-width: none;
+        min-width: 0;
+        margin: 0;
+
+        scroll-snap-align: start;
+
+        background: #ffffff;
+        border: none;
+        box-shadow: none;
+    }
+
+    /* ==============================================
+       CAPA DO LIVRO
+    ============================================== */
+
+    .biblioteca-livro-imagem {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 100%;
+        height: 265px;
+
+        margin-bottom: 17px;
+        padding: 0;
+
+        background: #ffffff;
+        overflow: hidden;
+    }
+
+    .biblioteca-livro-imagem img {
+        display: block;
+        width: 100%;
+        height: 100%;
+
+        object-fit: contain;
+        object-position: center;
+
+        max-width: none;
+        max-height: none;
+    }
+
+    /* PLACEHOLDERS DOS PRÓXIMOS LIVROS */
+
+    .biblioteca-placeholder {
+        width: 100%;
+        height: 100%;
+        border-radius: 12px;
+        background: #edf5ef;
+    }
+
+    /* ==============================================
+       INFORMAÇÕES
+    ============================================== */
+
+    .biblioteca-livro-info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .biblioteca-categoria {
+        margin-bottom: 9px;
+        font-size: 10px;
+    }
+
+    .biblioteca-livro-info h3 {
+        font-size: 18px;
+        line-height: 1.4;
+        margin-bottom: 8px;
+    }
+
+    .biblioteca-autor {
+        margin-bottom: 12px;
+        font-size: 12px;
+    }
+
+    .biblioteca-descricao {
+        font-size: 12px;
+        line-height: 1.7;
+        margin-bottom: 20px;
+
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        overflow: hidden;
+    }
+
+    /* BOTÕES */
+
+    .biblioteca-botao-amazon,
+    .biblioteca-botao-inativo {
+        width: 100%;
+        min-height: 44px;
+        margin-top: auto;
+        border-radius: 9px;
+        font-size: 12px;
+    }
+
+    /* AVISO DE AFILIADOS */
+
+    .biblioteca-aviso {
+        margin: 20px 20px 0;
+        padding-top: 17px;
+    }
+
+    .biblioteca-aviso p {
+        font-size: 10px;
+        line-height: 1.7;
+    }
+
+}
+
+/* TELAS MUITO PEQUENAS */
+
+@media (max-width: 360px) {
+
+    .biblioteca-grid {
+        gap: 12px;
+        padding-left: 16px;
+        padding-right: 16px;
+        scroll-padding-inline: 16px;
+    }
+
+    .biblioteca-livro {
+        flex-basis: 86%;
+        width: 86%;
+    }
+
+    .biblioteca-header {
+        padding: 0 16px;
+    }
+
+}
+
+
+
+/* INDICAÇÃO DE DESLIZAR */
+
+.biblioteca-swipe-hint {
+    display: none;
+}
+
+@media (max-width: 600px) {
+
+    .biblioteca-swipe-hint {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+
+        padding: 4px 20px 10px;
+
+        color: #82958a;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .biblioteca-swipe-hint svg {
+        width: 17px;
+        height: 17px;
+        color: #26775e;
+    }
+
+}
+
+
+
+/* ==========================================
+   BIBLIOTECA PSIFÁCIL - ESTADOS DINÂMICOS
+========================================== */
+
+.biblioteca-grid .biblioteca-carregando {
+    grid-column: 1 / -1;
+    width: 100%;
+    padding: 45px 20px;
+    color: #8a7b71;
+    font-size: 14px;
+    text-align: center;
+}
+
+.biblioteca-livro-imagem img {
+    max-width: 100%;
+}
+
+.biblioteca-botao-amazon[aria-disabled="true"] {
+    opacity: .5;
+    pointer-events: none;
+}
+

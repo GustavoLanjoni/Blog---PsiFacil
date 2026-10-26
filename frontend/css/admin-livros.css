@@ -1,0 +1,1027 @@
+
+/* =========================================================
+   PSIFÁCIL - GERENCIAMENTO DE LIVROS
+   CSS EXCLUSIVO DA BIBLIOTECA
+========================================================= */
+
+#admin-page-livros {
+    --livros-verde: #4e806e;
+    --livros-verde-escuro: #376653;
+    --livros-verde-claro: #edf5f0;
+    --livros-texto: #202b27;
+    --livros-muted: #77847d;
+    --livros-borda: #e6e9e5;
+    --livros-fundo: #f8f9f7;
+}
+
+#admin-page-livros *,
+#admin-page-livros *::before,
+#admin-page-livros *::after {
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   ABAS
+========================================================= */
+
+#admin-page-livros .admin-livros-tabs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 26px 0 22px;
+    padding: 6px;
+    width: fit-content;
+    max-width: 100%;
+    background: #eef0ed;
+    border: 1px solid #e4e8e3;
+    border-radius: 15px;
+}
+
+#admin-page-livros .admin-livros-tab {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 12px 19px;
+    border: 1px solid transparent;
+    border-radius: 11px;
+    background: transparent;
+    color: #68776f;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+    cursor: pointer;
+    transition:
+        background .2s ease,
+        color .2s ease,
+        box-shadow .2s ease;
+}
+
+#admin-page-livros .admin-livros-tab svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+}
+
+#admin-page-livros .admin-livros-tab:hover {
+    color: var(--livros-verde-escuro);
+    background: rgba(255, 255, 255, .6);
+}
+
+#admin-page-livros .admin-livros-tab.ativo {
+    background: #fff;
+    color: var(--livros-verde-escuro);
+    border-color: #e0e8e2;
+    box-shadow: 0 2px 7px rgba(28, 58, 42, .07);
+}
+
+#admin-page-livros .admin-livros-tab:focus-visible {
+    outline: 3px solid #9bc6ae;
+    outline-offset: 2px;
+}
+
+/* =========================================================
+   FORMULÁRIO + PREVIEW
+========================================================= */
+
+#admin-page-livros .admin-livros-editor-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(300px, .75fr);
+    gap: 32px;
+    align-items: start;
+    margin-top: 26px;
+}
+
+#admin-page-livros .admin-livros-formulario {
+    min-width: 0;
+}
+
+#admin-page-livros .admin-livros-preview-area {
+    min-width: 0;
+    position: sticky;
+    top: 24px;
+    padding: 24px;
+    border: 1px solid var(--livros-borda);
+    border-radius: 18px;
+    background: var(--livros-fundo);
+}
+
+#admin-page-livros .admin-livros-preview-area
+.admin-card-heading {
+    margin-bottom: 20px;
+}
+
+/* =========================================================
+   CARD DO PREVIEW
+========================================================= */
+
+#admin-page-livros .admin-livro-preview-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #e4e9e3;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 8px 25px rgba(30, 52, 39, .04);
+}
+
+#admin-page-livros .admin-livro-preview-capa {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 250px;
+    padding: 24px;
+    background: #edf2ed;
+    color: #82968a;
+    text-align: center;
+}
+
+#admin-page-livros .admin-livro-preview-capa svg {
+    width: 35px;
+    height: 35px;
+    stroke-width: 1.5;
+}
+
+#admin-page-livros .admin-livro-preview-capa span {
+    font-size: 13px;
+}
+
+#admin-page-livros .admin-livro-preview-capa img {
+    display: block;
+    width: 100%;
+    max-width: 210px;
+    height: 270px;
+    object-fit: contain;
+    border-radius: 5px;
+}
+
+#admin-page-livros .admin-livro-preview-conteudo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 23px;
+}
+
+#admin-page-livros .admin-livro-preview-categoria {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 11px;
+    border-radius: 30px;
+    background: var(--livros-verde-claro);
+    color: var(--livros-verde-escuro);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+
+#admin-page-livros .admin-livro-preview-conteudo h3 {
+    margin: 2px 0 0;
+    color: var(--livros-texto);
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+#admin-page-livros .admin-livro-preview-autor {
+    margin: 0;
+    color: var(--livros-muted);
+    font-size: 13px;
+}
+
+#admin-page-livros .admin-livro-preview-descricao {
+    margin: 5px 0 10px;
+    color: #596760;
+    font-size: 13px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+    white-space: pre-line;
+}
+
+#admin-page-livros #previewLivroAmazon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 43px;
+    margin-top: 5px;
+    padding: 12px 16px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--livros-verde);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background .2s ease;
+}
+
+#admin-page-livros #previewLivroAmazon:hover {
+    background: var(--livros-verde-escuro);
+}
+
+#admin-page-livros #previewLivroAmazon svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* =========================================================
+   STATUS DO PREVIEW
+========================================================= */
+
+#admin-page-livros .admin-livro-preview-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+#admin-page-livros .admin-livro-preview-status span {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 11px;
+    border: 1px solid #dce9df;
+    border-radius: 8px;
+    background: #eaf3ec;
+    color: #47745b;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+#admin-page-livros .admin-livros-preview-area > .form-helper {
+    display: block;
+    margin-top: 16px;
+    color: var(--livros-muted);
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+/* =========================================================
+   CAMPOS DO FORMULÁRIO
+========================================================= */
+
+#admin-page-livros .admin-livros-formulario
+.form-group {
+    min-width: 0;
+    margin-bottom: 20px;
+}
+
+#admin-page-livros .admin-livros-formulario
+.form-group label {
+    display: block;
+    margin-bottom: 9px;
+    color: #34443b;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#admin-page-livros .admin-livros-formulario
+input:not([type="hidden"]),
+#admin-page-livros .admin-livros-formulario
+select,
+#admin-page-livros .admin-livros-formulario
+textarea {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid #dfe5df;
+    border-radius: 10px;
+    background: #fff;
+    color: var(--livros-texto);
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+#admin-page-livros .admin-livros-formulario
+input:focus,
+#admin-page-livros .admin-livros-formulario
+select:focus,
+#admin-page-livros .admin-livros-formulario
+textarea:focus {
+    border-color: var(--livros-verde);
+    box-shadow: 0 0 0 3px rgba(78, 128, 110, .12);
+}
+
+#admin-page-livros .admin-livros-formulario
+textarea {
+    min-height: 125px;
+    resize: vertical;
+    line-height: 1.7;
+}
+
+#admin-page-livros .admin-livros-formulario
+input[type="file"] {
+    cursor: pointer;
+    background: #f8faf8;
+}
+
+#admin-page-livros .admin-livros-formulario
+.form-helper {
+    display: block;
+    margin-top: 8px;
+    color: var(--livros-muted);
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+#admin-page-livros .admin-livros-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding-top: 18px;
+    border-top: 1px solid var(--livros-borda);
+}
+
+/* =========================================================
+   FILTROS DA LISTAGEM
+========================================================= */
+
+#admin-page-livros .admin-livros-filtros {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    align-items: end;
+    margin: 25px 0 16px;
+}
+
+#admin-page-livros .admin-livros-filtros
+.form-group {
+    min-width: 0;
+    margin-bottom: 0;
+}
+
+#admin-page-livros .admin-livros-filtros label {
+    display: block;
+    margin-bottom: 8px;
+    color: #405247;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+#admin-page-livros .admin-livros-filtros
+input,
+#admin-page-livros .admin-livros-filtros
+select {
+    width: 100%;
+    min-width: 0;
+    padding: 12px 13px;
+    border: 1px solid #dfe5df;
+    border-radius: 10px;
+    background: #fff;
+    color: var(--livros-texto);
+    font: inherit;
+    font-size: 13px;
+    outline: none;
+}
+
+#admin-page-livros .admin-livros-filtros
+input:focus,
+#admin-page-livros .admin-livros-filtros
+select:focus {
+    border-color: var(--livros-verde);
+    box-shadow: 0 0 0 3px rgba(78, 128, 110, .12);
+}
+
+#admin-page-livros #quantidadeLivrosFiltrados {
+    display: block;
+    margin: 14px 0;
+    color: var(--livros-muted);
+    font-size: 12px;
+}
+
+/* =========================================================
+   LIVROS CADASTRADOS
+========================================================= */
+
+#admin-page-livros #listaLivrosAdmin {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    margin-top: 18px;
+}
+
+#admin-page-livros .admin-livro-item {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 16px;
+    border: 1px solid var(--livros-borda);
+    border-radius: 14px;
+    background: #fff;
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+#admin-page-livros .admin-livro-item:hover {
+    border-color: #cbded0;
+    box-shadow: 0 5px 20px rgba(30, 52, 39, .04);
+}
+
+#admin-page-livros .admin-livro-item-capa {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 76px;
+    width: 76px;
+    height: 100px;
+    overflow: hidden;
+    border-radius: 7px;
+    background: #eef2ed;
+}
+
+#admin-page-livros .admin-livro-item-capa img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#admin-page-livros .admin-livro-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+#admin-page-livros .admin-livro-item-categoria {
+    display: inline-block;
+    margin-bottom: 7px;
+    color: var(--livros-verde);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+
+#admin-page-livros .admin-livro-item-info h3 {
+    margin: 0 0 6px;
+    color: var(--livros-texto);
+    font-size: 15px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+#admin-page-livros .admin-livro-item-info p {
+    margin: 0 0 10px;
+    color: var(--livros-muted);
+    font-size: 12px;
+}
+
+#admin-page-livros .admin-livro-item-info
+.post-status,
+#admin-page-livros .admin-livro-destaque {
+    display: inline-flex;
+    margin: 2px 6px 2px 0;
+    padding: 5px 9px;
+    border-radius: 7px;
+    background: #eef3ee;
+    color: #47745b;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+#admin-page-livros .admin-livro-item-info
+.status-rascunho {
+    background: #f4f0e7;
+    color: #927340;
+}
+
+#admin-page-livros .admin-livro-item-acoes {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+#admin-page-livros .admin-livro-item-acoes button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 11px;
+    border: 1px solid #e0e7e1;
+    border-radius: 9px;
+    background: #fff;
+    color: #52675b;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s ease;
+}
+
+#admin-page-livros .admin-livro-item-acoes button:hover {
+    background: var(--livros-verde-claro);
+}
+
+#admin-page-livros .admin-livro-item-acoes
+button[data-acao-livro="excluir"] {
+    color: #ae5c58;
+}
+
+#admin-page-livros .admin-livro-item-acoes
+button[data-acao-livro="excluir"]:hover {
+    background: #fdf0ef;
+}
+
+#admin-page-livros .admin-livro-item-acoes svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+========================================================= */
+
+@media (max-width: 1100px) {
+    #admin-page-livros .admin-livros-editor-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(270px, .8fr);
+        gap: 20px;
+    }
+
+    #admin-page-livros .admin-livros-preview-area {
+        padding: 18px;
+    }
+}
+
+@media (max-width: 900px) {
+    #admin-page-livros .admin-livros-editor-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #admin-page-livros .admin-livros-preview-area {
+        position: static;
+        max-width: 550px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    #admin-page-livros .admin-livros-filtros {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #admin-page-livros .admin-livros-filtros
+    .form-group:first-child {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 600px) {
+    #admin-page-livros .admin-livros-tabs {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 5px;
+        padding: 5px;
+    }
+
+    #admin-page-livros .admin-livros-tab {
+        min-width: 0;
+        padding: 11px 8px;
+        gap: 6px;
+        font-size: 11px;
+        text-align: center;
+    }
+
+    #admin-page-livros .admin-livros-tab svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    #admin-page-livros .admin-livros-editor-grid {
+        gap: 24px;
+    }
+
+    #admin-page-livros .admin-livros-filtros {
+        grid-template-columns: 1fr;
+    }
+
+    #admin-page-livros .admin-livros-filtros
+    .form-group:first-child {
+        grid-column: auto;
+    }
+
+    #admin-page-livros .admin-livro-item {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 13px;
+    }
+
+    #admin-page-livros .admin-livro-item-capa {
+        flex-basis: 65px;
+        width: 65px;
+        height: 90px;
+    }
+
+    #admin-page-livros .admin-livro-item-info {
+        flex: 1 1 calc(100% - 90px);
+    }
+
+    #admin-page-livros .admin-livro-item-acoes {
+        justify-content: flex-start;
+        width: 100%;
+        padding-top: 10px;
+        border-top: 1px solid var(--livros-borda);
+    }
+
+    #admin-page-livros .admin-livro-item-acoes button {
+        flex: 1;
+    }
+
+    #admin-page-livros .admin-livro-preview-conteudo {
+        padding: 18px;
+    }
+
+    #admin-page-livros .admin-livro-preview-capa {
+        min-height: 220px;
+    }
+}
+
+
+/* ==========================================
+   MODAL PROFISSIONAL - EXCLUIR LIVRO
+========================================== */
+
+.livros-modal-overlay[hidden] {
+    display: none !important;
+}
+
+.livros-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(20, 31, 26, .58);
+    backdrop-filter: blur(4px);
+}
+
+.livros-modal {
+    width: 100%;
+    max-width: 440px;
+    padding: 30px;
+    border: 1px solid #e5ebe6;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, .18);
+    animation: livrosModalEntrada .2s ease;
+}
+
+.livros-modal-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 20px;
+    border-radius: 14px;
+    background: #fff0ef;
+    color: #b94c49;
+}
+
+.livros-modal-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.livros-modal h2 {
+    margin: 0 0 10px;
+    color: #202b27;
+    font-size: 22px;
+    font-weight: 750;
+}
+
+.livros-modal > p {
+    margin: 0;
+    color: #728078;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.livros-modal-livro {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #e7ebe7;
+    border-radius: 11px;
+    background: #f7f9f7;
+    color: #253b2f;
+    font-size: 13px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.livros-modal .livros-modal-aviso {
+    color: #a45551;
+    font-size: 12px;
+}
+
+.livros-modal-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.livros-modal-acoes button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 43px;
+    padding: 11px 17px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.livros-modal-cancelar {
+    border: 1px solid #dfe6df;
+    background: #fff;
+    color: #43584a;
+}
+
+.livros-modal-confirmar {
+    border: 1px solid #b94c49;
+    background: #b94c49;
+    color: #fff;
+}
+
+.livros-modal-confirmar:hover {
+    background: #a33d3a;
+}
+
+.livros-modal-confirmar:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+.livros-modal-confirmar svg {
+    width: 15px;
+    height: 15px;
+}
+
+@keyframes livrosModalEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 480px) {
+    .livros-modal {
+        padding: 23px;
+    }
+
+    .livros-modal-acoes {
+        flex-direction: column-reverse;
+    }
+
+    .livros-modal-acoes button {
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   PSIFÁCIL - MODAL DE EXCLUSÃO E NOTIFICAÇÕES
+========================================================= */
+
+.livros-modal-overlay[hidden] {
+    display: none !important;
+}
+
+.livros-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(20, 31, 26, .58);
+    backdrop-filter: blur(4px);
+}
+
+.livros-modal {
+    width: 100%;
+    max-width: 440px;
+    padding: 30px;
+
+    border: 1px solid #e5ebe6;
+    border-radius: 20px;
+
+    background: #ffffff;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, .18);
+
+    animation: livrosModalEntrada .2s ease;
+}
+
+.livros-modal-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 52px;
+    height: 52px;
+
+    margin-bottom: 20px;
+
+    border-radius: 14px;
+    background: #fff0ef;
+    color: #b94c49;
+}
+
+.livros-modal-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.livros-modal h2 {
+    margin: 0 0 10px;
+
+    color: #202b27;
+    font-size: 22px;
+    font-weight: 750;
+}
+
+.livros-modal > p {
+    margin: 0;
+
+    color: #728078;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.livros-modal-livro {
+    margin: 20px 0;
+    padding: 15px;
+
+    border: 1px solid #e7ebe7;
+    border-radius: 11px;
+
+    background: #f7f9f7;
+    color: #253b2f;
+
+    font-size: 13px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.livros-modal .livros-modal-aviso {
+    color: #a45551;
+    font-size: 12px;
+}
+
+.livros-modal-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    margin-top: 25px;
+}
+
+.livros-modal-acoes button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    min-height: 43px;
+    padding: 11px 17px;
+
+    border-radius: 10px;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+    transition: background .2s ease;
+}
+
+.livros-modal-cancelar {
+    border: 1px solid #dfe6df;
+    background: #ffffff;
+    color: #43584a;
+}
+
+.livros-modal-cancelar:hover {
+    background: #f3f6f3;
+}
+
+.livros-modal-confirmar {
+    border: 1px solid #b94c49;
+    background: #b94c49;
+    color: #ffffff;
+}
+
+.livros-modal-confirmar:hover {
+    background: #a33d3a;
+}
+
+.livros-modal-confirmar:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+.livros-modal-confirmar svg {
+    width: 15px;
+    height: 15px;
+}
+
+.livros-notificacoes {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 100001;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    width: min(360px, calc(100vw - 40px));
+    pointer-events: none;
+}
+
+.livros-notificacao {
+    padding: 15px 18px;
+
+    border: 1px solid #d5e6d9;
+    border-left: 4px solid #4e806e;
+    border-radius: 12px;
+
+    background: #ffffff;
+    color: #2e5c43;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+
+    box-shadow: 0 12px 35px rgba(0, 0, 0, .12);
+    animation: livrosModalEntrada .2s ease;
+}
+
+.livros-notificacao.erro {
+    border-color: #f0d8d6;
+    border-left-color: #b94c49;
+    color: #a33d3a;
+}
+
+@keyframes livrosModalEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 480px) {
+    .livros-modal {
+        padding: 23px;
+    }
+
+    .livros-modal-acoes {
+        flex-direction: column-reverse;
+    }
+
+    .livros-modal-acoes button {
+        width: 100%;
+    }
+
+    .livros-notificacoes {
+        top: 12px;
+        right: 12px;
+    }
+}
+

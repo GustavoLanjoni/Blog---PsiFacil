@@ -125,6 +125,9 @@
 
     <link rel="stylesheet" href="css/style.css">
 
+    <link rel="stylesheet" href="css/biblioteca.css">
+
+
 </head>
 
 
@@ -173,6 +176,12 @@
                 <li>
                     <a href="#categorias">
                         Categorias
+                    </a>
+                </li>
+
+                <li>
+                    <a href="livros.html">
+                        Livros
                     </a>
                 </li>
 
@@ -707,6 +716,73 @@
         </section>
 
 
+
+
+        <!-- =====================================================
+     BIBLIOTECA PSIFÁCIL
+     LIVROS DINÂMICOS - POSTGRESQL
+====================================================== -->
+
+        <section class="biblioteca-section" id="biblioteca">
+
+            <div class="biblioteca-container">
+
+                <!-- CABEÇALHO -->
+                <div class="biblioteca-header">
+
+                    <div class="biblioteca-header-text">
+
+                        <h2>Biblioteca PsiFácil</h2>
+
+                        <p>
+                            Leituras selecionadas para ampliar seus conhecimentos
+                            sobre emoções, comportamento e autoconhecimento.
+                        </p>
+
+                    </div>
+
+                    <a href="livros.html" class="biblioteca-ver-todos">
+                        Ver todos
+                        <i data-lucide="arrow-up-right"></i>
+                    </a>
+
+                </div>
+
+                <!-- LIVROS CARREGADOS DO BANCO -->
+                <div class="biblioteca-grid" id="livrosHome">
+
+                    <div class="biblioteca-carregando">
+                        Carregando recomendações de leitura...
+                    </div>
+
+                </div>
+
+                <!-- INDICAÇÃO PARA DESLIZAR NO CELULAR -->
+                <div class="biblioteca-swipe-hint">
+                    <i data-lucide="move-horizontal"></i>
+                    Deslize para ver mais livros
+                </div>
+
+                <!-- AVISO DE AFILIADOS -->
+                <div class="biblioteca-aviso">
+
+                    <i data-lucide="info"></i>
+
+                    <p>
+                        Alguns links são de afiliados.
+                        O PsiFácil poderá receber comissão por
+                        compras qualificadas, sem custo adicional para você.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+
         <!-- =================================================
              SEÇÃO FINAL — VÍDEO, REDES E AVISO
         ================================================== -->
@@ -828,16 +904,26 @@
                         </a>
 
                         <!-- KWAI - MESMO SVG DA PÁGINA LINKS -->
+
+                        <!-- KWAI -->
+
                         <a href="https://k.kwai.com/u/@psifacil.oficial/LcAFgcCK" target="_blank"
                             rel="noopener noreferrer" aria-label="Kwai" title="Kwai" class="final-kwai">
-                            <svg viewBox="0 0 48 48" aria-hidden="true">
+
+                            <svg viewBox="0 0 48 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+
                                 <circle cx="18" cy="14" r="6" fill="none" stroke="#FF4F12" stroke-width="4" />
+
                                 <circle cx="30" cy="14" r="6" fill="none" stroke="#FF4F12" stroke-width="4" />
+
                                 <rect x="13" y="23" width="22" height="17" rx="4" fill="none" stroke="#FF4F12"
                                     stroke-width="4" />
-                                <path d="M13 27 6 23v17l7-4" fill="none" stroke="#FF4F12" stroke-width="4"
+
+                                <path d="M13 27 L6 23 L6 40 L13 36" fill="none" stroke="#FF4F12" stroke-width="4"
                                     stroke-linecap="round" stroke-linejoin="round" />
+
                             </svg>
+
                         </a>
 
                         <!-- FACEBOOK -->
@@ -1008,8 +1094,8 @@
                     Todos os artigos
                 </a>
 
-                <a href="ebooks.html">
-                    Ebooks
+                <a href="livros.html">
+                    Livros
                 </a>
 
 
@@ -1197,15 +1283,16 @@
              FOOTER INFERIOR
         ================================================== -->
 
-        <div class="footer-bottom">
 
+        <div class="footer-bottom">
 
             <!-- COPYRIGHT -->
 
             <div class="footer-bottom-content">
 
                 <p>
-                    © 2026 PsiFácil — Todos os direitos reservados.
+                    © <span id="anoAtual">2026</span> PsiFácil —
+                    Todos os direitos reservados.
                 </p>
 
                 <span>
@@ -1214,8 +1301,7 @@
 
             </div>
 
-
-            <!-- ASSINATURA -->
+            <!-- ASSINATURA E DIREITOS AUTORAIS -->
 
             <div class="footer-love">
 
@@ -1235,9 +1321,18 @@
                     Gustavo Lanjoni &amp; Milene Angelo
                 </strong>
 
+                <span class="footer-separator" aria-hidden="true">
+                    |
+                </span>
+
+                <a href="direitos-autorais.html" class="footer-direitos">
+                    Direitos Autorais
+                </a>
+
             </div>
 
         </div>
+
 
     </footer>
 
@@ -1268,6 +1363,7 @@
 
     <script defer src="js/momento.js"></script>
 
+    <script defer src="js/livros-home.js"></script>
 
 </body>
 

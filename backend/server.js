@@ -109,6 +109,8 @@ const pushRoutes = require("./routes/push");
 const notificacoesRoutes = require("./routes/notificacoes");
 const novidadesRoutes = require("./routes/novidades");
 const parceriasRouter = require("./routes/parcerias");
+const livrosRoutes = require("./routes/livros");
+
 
 /* =========================================
    NOVA ROTA: HISTÓRICO DE LEITURA
@@ -348,6 +350,12 @@ app.use(
   "/parcerias",
   parceriasRouter
 );
+
+app.use(
+  "/livros",
+  livrosRoutes
+);
+
 
 /* =========================================
    NOVA API: HISTÓRICO DE LEITURA

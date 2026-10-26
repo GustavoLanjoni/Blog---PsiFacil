@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f3ee">
+  <meta name="description"
+    content="Biblioteca PsiFácil: livros sobre psicologia, saúde mental, emoções e autoconhecimento.">
+  <title>Biblioteca de Livros | PsiFácil</title>
+  <link rel="canonical" href="https://psifacilblog.com.br/livros.html">
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Lora:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/livros.css">
+  <script src="js/livros-publico.js" defer></script>
+</head>
+
+<body>
+
+  <a class="skip-link" href="#explorar">Pular para os livros</a>
+
+  <!-- CABEÇALHO -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="psifacil.html" class="brand" aria-label="PsiFácil, página inicial">
+        <span class="brand-main">PsiFácil</span>
+        <span class="brand-sub">saúde mental</span>
+      </a>
+
+      <nav class="header-nav" aria-label="Navegação principal">
+        <a href="psifacil.html">Início</a>
+        <a href="conteudo.html">Artigos</a>
+        <a href="livros.html" class="active" aria-current="page">Biblioteca</a>
+        <a href="sobre.html">Sobre</a>
+      </nav>
+
+      <a href="psifacil.html" class="header-back">← Voltar ao site</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="heroTitulo">
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <span class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            BIBLIOTECA PSIFÁCIL
+          </span>
+
+          <h1 id="heroTitulo">
+            Histórias e conhecimentos
+            <em>que transformam.</em>
+          </h1>
+
+          <p>
+            Descubra livros selecionados sobre psicologia,
+            saúde mental, emoções e autoconhecimento.
+            Leituras que inspiram novas perspectivas
+            e acompanham sua jornada de bem-estar.
+          </p>
+
+          <a href="#explorar" class="hero-link">
+            Explorar biblioteca <span aria-hidden="true">↗</span>
+          </a>
+
+          <div class="hero-caption">
+            <span class="caption-line"></span>
+            Um espaço para aprender, refletir e evoluir.
+          </div>
+        </div>
+
+        <!-- ILUSTRAÇÃO DOS LIVROS -->
+        <div class="hero-art" aria-hidden="true">
+          <div class="art-halo"></div>
+          <div class="art-circle"></div>
+
+          <div class="book book-back">
+            <span class="back-book-label">PSIFÁCIL</span>
+            <b>UM NOVO<br>OLHAR</b>
+            <i>✳</i>
+          </div>
+
+          <div class="book book-front">
+            <div class="book-cover-brand">
+              <img src="img/favicon.svg" alt="">
+              <span>
+                <strong>PsiFácil</strong>
+                <small>SAÚDE MENTAL</small>
+              </span>
+            </div>
+
+            <div class="book-cover-title">
+              <span>UMA BIBLIOTECA PARA VOCÊ</span>
+              <b>LEITURAS<br>QUE<br>ACOLHEM.</b>
+              <div class="book-cover-line"></div>
+              <p>Conhecimento que inspira cuidado.</p>
+            </div>
+
+            <div class="book-cover-bottom">
+              <span>LER • REFLETIR • CRESCER</span>
+              <span class="book-cover-star">✳</span>
+            </div>
+          </div>
+
+          <span class="art-spark art-spark-one">✦</span>
+          <span class="art-spark art-spark-two">✳</span>
+          <span class="art-caption">Cada página, uma nova descoberta.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATÁLOGO -->
+    <section class="catalog-section" id="explorar" aria-labelledby="tituloCatalogo">
+      <div class="container">
+        <div class="section-intro">
+          <div>
+            <span class="eyebrow">ESCOLHA SUA PRÓXIMA LEITURA</span>
+            <h2 id="tituloCatalogo">Explore nossa <em>biblioteca</em></h2>
+            <p>Encontre títulos que despertam novas perspectivas.</p>
+          </div>
+          <span class="result-count" id="contadorLivros" aria-live="polite">Carregando...</span>
+        </div>
+
+        <div class="catalog-toolbar">
+          <label class="search-box" for="pesquisaLivros">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-4-4" />
+            </svg>
+            <input id="pesquisaLivros" type="search" placeholder="Pesquise por título, autor ou assunto..."
+              autocomplete="off">
+          </label>
+          <span class="toolbar-hint">Explore no seu tempo ✳</span>
+        </div>
+
+        <div class="categories" id="categoriasLivros" role="group" aria-label="Filtrar por categoria"></div>
+
+        <div class="book-grid" id="gradeLivros" aria-live="polite">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Preparando sua biblioteca...</p>
+          </div>
+        </div>
+
+        <div class="empty-state" id="estadoVazio" hidden>
+          <span class="empty-icon">⌕</span>
+          <h3>Nenhum livro encontrado</h3>
+          <p>Tente outro título, autor ou categoria.</p>
+          <button type="button" id="limparFiltros">Limpar filtros</button>
+        </div>
+
+        <div class="error-state" id="estadoErro" hidden>
+          <span class="empty-icon">!</span>
+          <h3>Não foi possível carregar os livros</h3>
+          <p>Confira sua conexão e tente novamente.</p>
+          <button type="button" id="tentarNovamente">Tentar novamente</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEMBRETE -->
+    <section class="reading-note">
+      <div class="container note-inner">
+        <div class="note-icon" aria-hidden="true">✳</div>
+        <div>
+          <span class="eyebrow">UM LEMBRETE COM CARINHO</span>
+          <h2>A leitura é companhia, não substituição.</h2>
+          <p>
+            Livros podem ajudar na reflexão e no autoconhecimento,
+            mas não substituem acompanhamento psicológico ou médico
+            quando necessário.
+          </p>
+        </div>
+        <a href="conteudo.html" class="note-link">Ler nossos artigos ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER DA HOME -->
+  <footer class="footer">
+    <div class="footer-container">
+
+      <div class="footer-brand">
+        <a href="psifacil.html" class="footer-logo">
+          <img src="img/favicon.svg" alt="" class="footer-logo-icon" width="34" height="34">
+          <span>PsiFácil</span>
+        </a>
+        <p>
+          Conteúdos sobre saúde emocional, autoconhecimento
+          e bem-estar em uma linguagem simples,
+          acessível e acolhedora.
+        </p>
+        <a href="sobre.html" class="footer-about-btn">Sobre o PsiFácil →</a>
+      </div>
+
+      <div class="footer-column">
+        <h3>Navegação</h3>
+        <a href="psifacil.html">Início</a>
+        <a href="conteudo.html">Artigos</a>
+        <a href="livros.html#categoriasLivros">Categorias</a>
+        <a href="sobre.html">Sobre</a>
+        <a href="parcerias.html">Parcerias</a>
+      </div>
+
+      <div class="footer-column">
+        <h3>Conteúdos</h3>
+        <a href="conteudo.html">Todos os artigos</a>
+        <a href="livros.html">Livros</a>
+        <a href="perfil.html">Meu perfil</a>
+      </div>
+
+      <div class="footer-column">
+        <h3>Acompanhe nas redes</h3>
+        <div class="social-icons">
+
+          <a href="https://www.instagram.com/psifacil.oficial/" target="_blank" rel="noopener noreferrer"
+            aria-label="Instagram" title="Instagram">
+            <svg viewBox="0 0 48 48" aria-hidden="true">
+              <defs>
+                <radialGradient id="igGrad" cx="30%" cy="107%" r="150%">
+                  <stop offset="0%" stop-color="#FDF497" />
+                  <stop offset="38%" stop-color="#FD5949" />
+                  <stop offset="62%" stop-color="#D6249F" />
+                  <stop offset="100%" stop-color="#285AEB" />
+                </radialGradient>
+              </defs>
+              <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#igGrad)" />
+              <rect x="11" y="11" width="26" height="26" rx="8" fill="none" stroke="white" stroke-width="3.2" />
+              <circle cx="24" cy="24" r="6.5" fill="none" stroke="white" stroke-width="3.2" />
+              <circle cx="33" cy="15" r="2" fill="white" />
+            </svg>
+          </a>
+
+          <a href="https://www.youtube.com/@PSIFACIL.OFICIAL" target="_blank" rel="noopener noreferrer"
+            aria-label="YouTube" title="YouTube">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#ff0000"
+                d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.3 31.3 0 0 0 0 12a31.3 31.3 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.3 31.3 0 0 0 24 12a31.3 31.3 0 0 0-.5-5.8Z" />
+              <path fill="white" d="m9.6 15.6 6.3-3.6-6.3-3.6v7.2Z" />
+            </svg>
+          </a>
+
+          <a href="https://youtube.com/@psifacilcortesoficial?si=TnN9fs2Z7VY8cUKR" target="_blank"
+            rel="noopener noreferrer" aria-label="YouTube Shorts" title="YouTube Shorts">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#ff0000"
+                d="M17.77 10.32l-2.38-1.18 2.34-1.2c2.13-1.09 2.69-3.83 1.16-5.67a4.18 4.18 0 0 0-5.03-1.08L6.22 5.08a4.19 4.19 0 0 0 .04 7.49l2.35 1.17-2.34 1.2a4.18 4.18 0 0 0-1.16 6.75 4.18 4.18 0 0 0 5.03 1.08l7.64-3.89a4.19 4.19 0 0 0-.01-7.56Z" />
+              <path fill="white" d="M10.1 8.65v6.7L15.55 12 10.1 8.65Z" />
+            </svg>
+          </a>
+
+          <span class="social-disabled" aria-label="TikTok indisponível" title="TikTok">
+            <svg viewBox="0 0 48 48" aria-hidden="true">
+              <path fill="#25F4EE" transform="translate(-1 1)"
+                d="M27 8V29C27 34.5 22.5 39 17 39S7 34.5 7 29 11.5 19 17 19c1 0 2 .1 3 .4V25c-3.4-1.8-7.8.5-7.8 4S14.3 34 17 34s4.7-2.3 4.7-5V8Z" />
+              <path fill="#FE2C55" transform="translate(1 -1)"
+                d="M27 8c1.2 6.3 4.8 10 11 11v5c-4-.2-7.6-1.8-11-4.5V29c0 5.5-4.5 10-10 10S7 34.5 7 29s4.5-10 10-10c1 0 2 .1 3 .4V25c-3.4-1.8-7.8.5-7.8 4s2.1 5 4.8 5 4.7-2.3 4.7-5V8Z" />
+              <path fill="#111"
+                d="M27 8c1.2 6.3 4.8 10 11 11v5c-4-.2-7.6-1.8-11-4.5V29c0 5.5-4.5 10-10 10S7 34.5 7 29s4.5-10 10-10c1 0 2 .1 3 .4V25c-3.4-1.8-7.8.5-7.8 4s2.1 5 4.8 5 4.7-2.3 4.7-5V8Z" />
+            </svg>
+          </span>
+
+          <a href="https://k.kwai.com/u/@psifacil.oficial/LcAFgcCK" target="_blank" rel="noopener noreferrer"
+            aria-label="Kwai" title="Kwai">
+            <svg viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="18" cy="14" r="6" fill="none" stroke="#FF4F12" stroke-width="4" />
+              <circle cx="30" cy="14" r="6" fill="none" stroke="#FF4F12" stroke-width="4" />
+              <rect x="13" y="23" width="22" height="17" rx="4" fill="none" stroke="#FF4F12" stroke-width="4" />
+              <path d="M13 27 6 23v17l7-4" fill="none" stroke="#FF4F12" stroke-width="4" stroke-linejoin="round" />
+            </svg>
+          </a>
+
+          <span class="social-disabled" aria-label="Facebook indisponível" title="Facebook">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#1877F2"
+                d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99A10 10 0 0 0 22 12Z" />
+            </svg>
+          </span>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+    <div class="footer-bottom">
+
+      <!-- CRÉDITOS E DIREITOS AUTORAIS -->
+      <div class="footer-love">
+
+        <span>Desenvolvido com muito</span>
+
+        <span class="footer-heart" aria-label="amor">
+          ♥
+        </span>
+
+        <span>por</span>
+
+        <strong>
+          Gustavo Lanjoni &amp; Milene Angelo
+        </strong>
+
+        <span class="footer-separator" aria-hidden="true">
+          |
+        </span>
+
+        <a href="direitos-autorais.html" class="footer-direitos">
+          Direitos Autorais
+        </a>
+
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- MODAL DE DETALHES -->
+  <div class="detail-overlay" id="detalheOverlay" hidden>
+    <div class="detail-backdrop" data-fechar-detalhe></div>
+    <section class="detail-dialog" role="dialog" aria-modal="true" aria-labelledby="detalheTitulo" tabindex="-1">
+      <button class="detail-close" id="fecharDetalhe" type="button" aria-label="Fechar detalhes">×</button>
+      <div class="detail-layout">
+        <div class="detail-visual">
+          <div class="detail-image-wrap" id="detalheImagem"></div>
+        </div>
+        <div class="detail-content">
+          <span class="eyebrow">BIBLIOTECA PSIFÁCIL</span>
+          <span class="detail-category" id="detalheCategoria"></span>
+          <h2 id="detalheTitulo"></h2>
+          <p class="detail-author" id="detalheAutor"></p>
+          <div class="detail-divider"></div>
+          <h3>Sobre esta leitura</h3>
+          <p class="detail-description" id="detalheDescricao"></p>
+          <a class="amazon-button detail-amazon" id="detalheAmazon" target="_blank" rel="sponsored noopener noreferrer"
+            hidden>Ver livro na Amazon ↗</a>
+          <p class="affiliate-small">Este link pode ser de afiliado. A compra não tem custo adicional para você.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+
+</html>
