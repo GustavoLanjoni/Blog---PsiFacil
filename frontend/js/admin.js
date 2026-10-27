@@ -5449,7 +5449,7 @@ function desenharCalendarioEditorial() {
     const eventos = eventosCalendarioEditorial();
     const hoje = hojeCalendarioEditorial();
 
-    
+
     /* ==========================================
        RESUMO MENSAL DO CALENDÁRIO
     ========================================== */
@@ -5495,7 +5495,7 @@ function desenharCalendarioEditorial() {
         indicadorAgendados.textContent = agendadosNoMes;
     }
 
-    
+
     grade.innerHTML = "";
 
     for (let i = 0; i < deslocamento; i++) {
@@ -5572,7 +5572,23 @@ function mostrarArtigosDiaCalendario(eventos) {
         dataSelecionadaCalendario
     );
 
-    const artigos = eventos.get(dataSelecionadaCalendario) || [];
+
+    const artigos = [
+        ...(eventos.get(dataSelecionadaCalendario) || [])
+    ].sort((a, b) => {
+
+        const dataA = a.status === "agendado"
+            ? a.agendado_para
+            : a.publicado_em;
+
+        const dataB = b.status === "agendado"
+            ? b.agendado_para
+            : b.publicado_em;
+
+        return new Date(dataA) - new Date(dataB);
+
+    });
+
 
     if (!artigos.length) {
         lista.innerHTML = `
@@ -5714,6 +5730,21 @@ function criarArtigoPeloCalendario() {
         return;
     }
 
+
+    const horarioSugerido = sugerirHorarioCalendario(
+        dataSelecionadaCalendario
+    );
+
+    if (!horarioSugerido) {
+        mostrarToast(
+            "Não existe horário futuro disponível para sugerir nesta data. Escolha outro dia.",
+            "error"
+        );
+        return;
+    }
+
+
+
     // Garantir que estamos criando um novo artigo.
     postEditandoId = null;
 
@@ -5809,16 +5840,21 @@ function criarArtigoPeloCalendario() {
         grupoAgendamento.style.display = "";
     }
 
-    // Preencher a data escolhida no calendário.
-    // 09:00 é apenas um horário sugerido.
+
+    // Preencher o próximo horário disponível.
+    // Prioridade: 09:00 e 20:00.
+
     if (campoData) {
+
         campoData.value =
-            `${dataSelecionadaCalendario}T09:00`;
+            `${dataSelecionadaCalendario}T${horarioSugerido}`;
 
         campoData.dispatchEvent(
             new Event("change", { bubbles: true })
         );
+
     }
+
 
     // Atualizar a prévia.
     if (typeof atualizarPreview === "function") {
@@ -5827,6 +5863,82 @@ function criarArtigoPeloCalendario() {
 
     renderizarIcones();
 }
+
+
+
+/* ==========================================
+   HORÁRIOS DO CALENDÁRIO PSIFÁCIL
+   Padrão: 09:00 e 20:00
+========================================== */
+
+function sugerirHorarioCalendario(dataSelecionada) {
+
+    const eventos = eventosCalendarioEditorial();
+
+    const artigosDoDia =
+        eventos.get(dataSelecionada) || [];
+
+    // Identificar os horários já utilizados.
+    const horariosOcupados = new Set();
+
+    artigosDoDia.forEach(post => {
+
+        const dataPost =
+            post.status === "agendado"
+                ? post.agendado_para
+                : post.publicado_em;
+
+        const horarioLocal =
+            converterParaDatetimeLocal(dataPost);
+
+        if (horarioLocal) {
+            horariosOcupados.add(
+                horarioLocal.slice(11, 16)
+            );
+        }
+
+    });
+
+    // Horários prioritários do PsiFácil.
+    const horarios = ["09:00", "20:00"];
+
+    // Outros horários para postagens adicionais.
+    for (let hora = 10; hora <= 23; hora++) {
+
+        const horario =
+            String(hora).padStart(2, "0") + ":00";
+
+        if (!horarios.includes(horario)) {
+            horarios.push(horario);
+        }
+    }
+
+    for (const horario of horarios) {
+
+        if (horariosOcupados.has(horario)) {
+            continue;
+        }
+
+        const dataHora =
+            `${dataSelecionada}T${horario}`;
+
+        const dataISO =
+            converterHorarioBrasiliaParaISO(dataHora);
+
+        // Sugerir apenas horários futuros.
+        if (
+            dataISO &&
+            new Date(dataISO).getTime() >
+            Date.now() + 5 * 60 * 1000
+        ) {
+            return horario;
+        }
+    }
+
+    return null;
+}
+
+
 
 document.getElementById("btnCriarArtigoCalendario")
     ?.addEventListener("click", criarArtigoPeloCalendario);
